@@ -1,0 +1,304 @@
+﻿/**
+  * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
+  * See LICENSE in the project root for license information.
+*/
+[
+  {
+    "controller": "O365AuthController",
+    "action": "o365LoginHint",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/app/Http/Controllers/O365AuthController.php"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/resources/views/auth/o365loginhint.blade.php"
+      }
+    ]
+  },
+  {
+    "controller": "LoginController",
+    "action": "showLoginForm",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/app/Http/Controllers/Auth/LoginController.php"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/resources/views/auth/login.blade.php"
+      }
+    ]
+  },
+  {
+    "controller": "RegisterController",
+    "action": "showRegistrationForm",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/app/Http/Controllers/Auth/RegisterController.php"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/resources/views/auth/register.blade.php"
+      }
+    ]
+  },
+  {
+    "controller": "SchoolsController",
+    "action": "index",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/app/Http/Controllers/SchoolsController.php"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/resources/views/schools/schools.blade.php"
+      },
+      {
+        "title": "EducationServiceClient",
+        "url": "/blob/master/app/Services/EducationService.php"
+      },
+     {
+        "title": "SchoolsViewModel",
+        "url": "/blob/master/app/ViewModel/School.php"
+      }
+    ]
+  },
+  {
+    "controller": "SchoolsController",
+    "action": "classes",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/app/Http/Controllers/SchoolsController.php"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/resources/views/schools/classes.blade.php"
+      },
+      {
+        "title": "EducationServiceClient",
+        "url": "/blob/master/app/Services/EducationServiceClient.php"
+      },
+      {
+        "title": "SectionsViewModel",
+        "url": "/blob/master/app/ViewModel/Section.php"
+      },
+      {
+        "title": "SchoolsViewModel",
+        "url": "/blob/master/app/ViewModel/School.php"
+      }
+    ]
+  },
+  {
+    "controller": "SchoolsController",
+    "action": "users",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/app/Http/Controllers/SchoolsController.php"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/resources/views/schools/users.blade.php"
+      },
+      {
+        "title": "SchoolsService",
+        "url": "/blob/master/app/Services/EducationService.php"
+      },
+      {
+        "title": "SchoolUsersViewModel",
+        "url": "/blob/master/app/ViewModel/SectionUser.php"
+      },
+      {
+        "title": "StudentViewModel",
+        "url": "/blob/master/app/ViewModel/Student.php"
+      },
+      {
+        "title": "TeacherViewModel",
+        "url": "/blob/master/app/ViewModel/Teacher.php"
+      },
+      {
+        "title": "SchoolsViewModel",
+        "url": "/blob/master/app/ViewModel/School.php"
+      }
+    ]
+  },
+  {
+    "controller": "SchoolsController",
+    "action": "classDetail",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/app/Http/Controllers/SchoolsController.php"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/resources/views/schools/classdetail.blade.php"
+      },
+      {
+        "title": "SchoolsService",
+        "url": "/blob/master/app/Services/EducationService.php"
+      },
+      {
+        "title": "SchoolsViewModel",
+        "url": "/blob/master/app/ViewModel/School.php"
+      }
+    ]
+  },
+
+  {
+    "controller": "admin",
+    "action": "index",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/src/EDUGraphAPI.Web/Controllers/AdminController.cs"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/src/EDUGraphAPI.Web/Views/Admin/Index.cshtml"
+      },
+      {
+        "title": "ApplicationService",
+        "url": "/blob/master/src/EDUGraphAPI.Web/Services/ApplicationService.cs"
+      },
+      {
+        "title": "AdminContext",
+        "url": "/blob/master/src/EDUGraphAPI.Web/Models/AdminContext.cs"
+      }
+    ]
+  },
+  {
+    "controller": "admin",
+    "action": "linkedaccounts",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/src/EDUGraphAPI.Web/Controllers/AdminController.cs"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/src/EDUGraphAPI.Web/Views/Admin/LinkedAccounts.cshtml"
+      },
+      {
+        "title": "ApplicationService",
+        "url": "/blob/master/src/EDUGraphAPI.Web/Services/ApplicationService.cs"
+      }
+    ]
+  },
+  {
+    "controller": "admin",
+    "action": "unlinkaccounts",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/src/EDUGraphAPI.Web/Controllers/AdminController.cs"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/src/EDUGraphAPI.Web/Views/Admin/UnlinkAccounts.cshtml"
+      },
+      {
+        "title": "ApplicationService",
+        "url": "/blob/master/src/EDUGraphAPI.Web/Services/ApplicationService.cs"
+      }
+    ]
+  },
+  {
+    "controller": "admin",
+    "action": "consent",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/src/EDUGraphAPI.Web/Controllers/AdminController.cs"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/src/EDUGraphAPI.Web/Views/Admin/Consent.cshtml"
+      }
+    ]
+  },
+
+  {
+    "controller": "LinkController",
+    "action": "index",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/app/Http/Controllers/LinkController.php"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/resources/views/link/index.blade.php"
+      },
+      {
+        "title": "AADGraphClient",
+        "url": "/blob/master/app/Services/AADGraphClient.php"
+      }
+    ]
+  },
+  {
+    "controller": "LinkController",
+    "action": "loginLocal",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/app/Http/Controllers/LinkController.php"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/resources/views/link/loginlocal.blade.php"
+      }
+    ]
+  },
+  {
+    "controller": "LinkController",
+    "action": "createLocalAccount",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/app/Http/Controllers/LinkController.php"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/resources/views/link/createlocalaccount.blade.php"
+      }
+    ]
+  },
+  {
+    "controller": "LinkController",
+    "action": "logino365required",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/app/Http/Controllers/LinkController.php"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/resources/views/link/loginO365Required.blade.php"
+      }
+    ]
+  },
+  {
+    "controller": "AboutMeController",
+    "action": "index",
+    "links": [
+      {
+        "title": "Controller",
+        "url": "/blob/master/app/Http/Controllers/Auth/AboutMeController.php"
+      },
+      {
+        "title": "View",
+        "url": "/blob/master/resources/views/auth/aboutme.blade.php"
+      },
+      {
+        "title": "Services",
+        "url": "/blob/master/app/Services/EducationServiceClient.php"
+      }
+    ]
+  }
+]

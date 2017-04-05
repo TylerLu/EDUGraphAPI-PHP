@@ -93,9 +93,9 @@ class TokenCacheService
     {
         try {
             $provider = new \League\OAuth2\Client\Provider\GenericProvider([
-                'clientId' => Constants::CLIENT_ID,
-                'clientSecret' => Constants::CLIENT_SECRET,
-                'redirectUri' => Constants::REDIRECT_URI,
+                'clientId' => env(Constants::CLIENT_ID),
+                'clientSecret' => env(Constants::CLIENT_SECRET),
+                'redirectUri' => env(Constants::REDIRECT_URI),
                 'urlAuthorize' => Constants::AUTHORITY_URL . Constants::AUTHORIZE_ENDPOINT,
                 'urlAccessToken' => Constants::AUTHORITY_URL . Constants::TOKEN_ENDPOINT,
                 'urlResourceOwnerDetails' => ''

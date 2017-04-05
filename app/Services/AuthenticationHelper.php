@@ -15,12 +15,12 @@ class AuthenticationHelper
      * @param string $redirectUri
      * @return \League\OAuth2\Client\Provider\GenericProvider
      */
-    public  function GetProvider($redirectUri=Constants::REDIRECT_URI)
+    public  function GetProvider($redirectUri)
     {
         $provider = new \League\OAuth2\Client\Provider\GenericProvider([
-            'clientId' => Constants::CLIENT_ID,
-            'clientSecret' => Constants::CLIENT_SECRET,
-            'redirectUri' => $redirectUri,
+            'clientId' => env(Constants::CLIENT_ID),
+            'clientSecret' => env(Constants::CLIENT_SECRET),
+            'redirectUri' => env($redirectUri),
             'urlAuthorize' => Constants::AUTHORITY_URL . Constants::AUTHORIZE_ENDPOINT,
             'urlAccessToken' => Constants::AUTHORITY_URL . Constants::TOKEN_ENDPOINT,
             'urlResourceOwnerDetails' => ''

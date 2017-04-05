@@ -38,8 +38,8 @@ return [
     ],
 
     'O365' => [
-        'client_id' =>  Constants::CLIENT_ID,
-        'client_secret' => Constants::CLIENT_SECRET,
-        'redirect' => Constants::REDIRECT_URI,
+        'client_id' => env(Constants::CLIENT_ID),
+        'client_secret' => env(Constants::CLIENT_SECRET),
+        'redirect' => env(Constants::REDIRECT_URI),
     ],
 ];

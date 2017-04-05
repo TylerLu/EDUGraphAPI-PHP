@@ -49,7 +49,7 @@ class SchoolsController extends Controller
         $cookieServices = new CookieService();
         $cookieServices->SetCookies($me->displayName, $me->mail);
 
-        $data = ["me" => $me, "schools" => $schools, "bingMapKey" => Constants::BINGMAPKEY];
+        $data = ["me" => $me, "schools" => $schools, "bingMapKey" => env(Constants::BINGMAPKEY)];
         return view('schools.schools', $data);
     }
 

@@ -141,7 +141,7 @@ class AdminController extends Controller
         $o365UserId = $user->o365UserId;
         $token = (new TokenCacheService)->GetAADToken($o365UserId);
         $tenantId = (new AADGraphClient)->GetTenantIdByUserId($o365UserId);
-        $url = Constants::AADGraph . '/' . $tenantId . '/servicePrincipals/?api-version=1.6&$filter=appId%20eq%20\'' . Constants::CLIENT_ID . '\'';
+        $url = Constants::AADGraph . '/' . $tenantId . '/servicePrincipals/?api-version=1.6&$filter=appId%20eq%20\'' . env(Constants::CLIENT_ID) . '\'';
         $client = new \GuzzleHttp\Client();
         $result = $client->request('GET', $url, [
             'headers' => [
@@ -206,7 +206,7 @@ class AdminController extends Controller
         $o365UserId = $user->o365UserId;
         $token = (new TokenCacheService)->GetAADToken($o365UserId);
         $tenantId = (new AADGraphClient)->GetTenantIdByUserId($o365UserId);
-        $url = Constants::AADGraph . '/' . $tenantId . '/servicePrincipals/?api-version=1.6&$filter=appId%20eq%20\'' . Constants::CLIENT_ID . '\'';
+        $url = Constants::AADGraph . '/' . $tenantId . '/servicePrincipals/?api-version=1.6&$filter=appId%20eq%20\'' . env(Constants::CLIENT_ID) . '\'';
         $client = new \GuzzleHttp\Client();
         $app = null;
         $authHeader = [

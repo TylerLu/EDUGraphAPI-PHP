@@ -70,7 +70,7 @@ function getJsonArray()
     ?>
             <li>
                 <p class="title"><?php echo $link->title; ?></p>
-                <p><a href="<?php echo Constants::SOURCECODERESPOSITORYURL . $link->url; ?>" target="_blank"><?php echo Constants::SOURCECODERESPOSITORYURL.$link->url; ?></a></p>
+                <p><a href="<?php echo env(Constants::SOURCECODERESPOSITORYURL) . $link->url; ?>" target="_blank"><?php echo env(Constants::SOURCECODERESPOSITORYURL).$link->url; ?></a></p>
             </li>
 <?php
     }

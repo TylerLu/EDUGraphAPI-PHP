@@ -27,17 +27,17 @@ namespace Microsoft\Graph\Connect;
 class Constants
 {
 
-    const CLIENT_ID            = 'f313dc1a-6235-4b1f-8333-67abde6cc805';
-    const CLIENT_SECRET        = '0T7jPPAhw9eGkFbxyv5ghPwh4vouYwAT9RMRLLUF0+Y=';
-    const REDIRECT_URI         = 'http://localhost/oauth.php';
+    const CLIENT_ID            =env('CLIENT_ID');// 'f313dc1a-6235-4b1f-8333-67abde6cc805';
+    const CLIENT_SECRET        =env('CLIENT_SECRET');// '0T7jPPAhw9eGkFbxyv5ghPwh4vouYwAT9RMRLLUF0+Y=';
+    const REDIRECT_URI         = env('REDIRECT_URI');//'http://localhost/oauth.php';
 
     const AUTHORITY_URL        = 'https://login.microsoftonline.com/common';
     const AUTHORIZE_ENDPOINT   = '/oauth2/authorize';
     const TOKEN_ENDPOINT       = '/oauth2/token';
     const RESOURCE_ID          = 'https://graph.microsoft.com';
     const AADGraph             = 'https://graph.windows.net';
-    const BINGMAPKEY           = 'AgWV4amBPg2dzbgGPB8Ya5GDfGqBnueTJUfu1oAAilDje_vXB0RpKGF4mDabOmwB';
-    const SOURCECODERESPOSITORYURL= 'https://github.com/hearticy888/Edu';
+    const BINGMAPKEY           = env('BINGMAPKEY');//'AgWV4amBPg2dzbgGPB8Ya5GDfGqBnueTJUfu1oAAilDje_vXB0RpKGF4mDabOmwB';
+    const SOURCECODERESPOSITORYURL=env('SOURCECODERESPOSITORYURL');// 'https://github.com/hearticy888/Edu';
     const O365GroupConversationsUrlFormat = "https://outlook.office.com/owa/?path=/group/%s/mail&exsvurl=1&ispopout=0";
 
 

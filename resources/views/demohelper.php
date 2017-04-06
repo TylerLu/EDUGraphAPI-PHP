@@ -31,7 +31,6 @@ function getActionAndController()
     $result=["controller" => '', "action"=>''];
     $route = Route::current();
     $actionName = $route->getActionName();
-echo $actionName;
     if(strpos($actionName,'@')<0)
         return $result;
     $var = explode('@',$actionName);

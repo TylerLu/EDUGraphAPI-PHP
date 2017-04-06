@@ -9,6 +9,7 @@
 
 @section('content')
     <?php
+            use App\Config\Roles;
     ?>
 
     <div class="row schools sections">

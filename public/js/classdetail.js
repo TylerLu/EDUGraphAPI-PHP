@@ -117,7 +117,7 @@ function enableDragAndDrop() {
         var position = $(this).attr("position");
         var container = $(this).find(".deskcontainer");
         if (container.length > 0 || id.length === 0) {
-            if (container.attr("position") === position) {
+            if (container.attr("prev-position") === position) {
                 container.removeAttr("prev-position");
             }
             return;

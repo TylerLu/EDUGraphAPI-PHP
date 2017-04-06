@@ -85,7 +85,7 @@ class AdminController extends Controller
      */
     public function AdminConsent()
     {
-        $redirectUrl = $_SERVER['APP_URL'] . '/admin/processcode';
+        $redirectUrl = $_SERVER['HTTP_HOST'] . '/admin/processcode';
         $state = uniqid();
         $_SESSION[SiteConstants::Session_State] = $state;
 
@@ -113,7 +113,7 @@ class AdminController extends Controller
             return back()->with('msg', 'Invalid operation. Please try again.');
         }
         if ($code) {
-            $redirectUrl = $_SERVER['APP_URL'] . '/admin/processcode';
+            $redirectUrl = $_SERVER['HTTP_HOST'] . '/admin/processcode';
             $provider = (new AuthenticationHelper())->GetProvider($redirectUrl);
             $microsoftToken = $provider->getAccessToken('authorization_code', [
                 'code' => $code,

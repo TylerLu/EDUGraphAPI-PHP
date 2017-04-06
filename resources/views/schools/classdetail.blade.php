@@ -6,7 +6,7 @@
 ?>
 
 @extends('layouts.app')
-
+@section('title', 'Class Details')
 @section('content')
     <div class="row schools class-details">
         <div class="tophero">

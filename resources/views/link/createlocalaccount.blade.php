@@ -6,6 +6,7 @@
 ?>
 
 @extends('layouts.app')
+@section('title', 'Create new local account')
 @section('content')
     <h4>Link to your local account - Create new local account</h4>
     <hr>

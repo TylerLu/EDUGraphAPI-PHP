@@ -6,7 +6,7 @@
 ?>
 
 @extends('layouts.app')
-
+@section('title', 'Classes')
 @section('content')
     <?php
             use App\Config\Roles;

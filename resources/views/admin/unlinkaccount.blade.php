@@ -6,6 +6,7 @@
 ?>
 
 @extends('layouts.app')
+@section('title', 'Unlink Accounts')
 @section('content')
     <div class="container body-content">
         <h2>Unlink Accounts</h2>

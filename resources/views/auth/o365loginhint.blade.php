@@ -6,7 +6,7 @@
 ?>
 
 @extends('layouts.app')
-
+@section('title', 'Sign in')
 @section('content')
     <link href="{{asset('/public/css/login.css')}}" rel="stylesheet">
 

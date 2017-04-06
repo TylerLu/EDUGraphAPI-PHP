@@ -6,6 +6,7 @@
 ?>
 
 @extends('layouts.app')
+@section('title', 'Linked Accounts')
 @section('content')
     <h2>Linked Accounts</h2>
     <table class="table table-striped table-bordered">

@@ -6,7 +6,7 @@
 ?>
 
 @extends('layouts.app')
-
+@section('title', 'About Me')
 @section('content')
     <div class="container ">
         <h2>About Me</h2>

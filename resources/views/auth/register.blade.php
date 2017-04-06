@@ -6,7 +6,7 @@
 ?>
 
 @extends('layouts.app')
-
+@section('title', 'Register')
 @section('content')
     <link href="{{url('/public/css/register.css')}}" rel="stylesheet">
 <div class="container">

@@ -6,6 +6,7 @@
 ?>
 
 @extends('layouts.app')
+@section('title', 'Admin')
 @section('content')
     @if(session('msg') || $msg)
         <div class="message-container bg-danger"> <p>{{session('msg') }} <?php echo $msg; ?></p>  </div>

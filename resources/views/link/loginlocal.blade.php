@@ -6,6 +6,7 @@
 ?>
 
 @extends('layouts.app')
+@section('title', 'Log in with your local account')
 @section('content')
     <h4>Link to your local account - Log in with your local account:</h4>
 

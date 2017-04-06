@@ -6,6 +6,7 @@
 ?>
 
 @extends('layouts.app')
+@section('title', 'Link Office 365 & Local Account')
 @section('content')
     @if(session('msg'))
         <div class="message-container bg-danger"> <p>{{session('msg')}}</p>  </div>

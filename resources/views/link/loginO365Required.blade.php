@@ -6,6 +6,7 @@
 ?>
 
 @extends('layouts.app')
+@section('title', 'Login to Office 365 is required')
 @section('content')
     <h2>Login to Office 365 is required</h2>
     <p>You were redirected to this page for one of the following reasons:</p>

@@ -9,19 +9,22 @@
 @section('title', 'Register')
 @section('content')
     <link href="{{url('/public/css/register.css')}}" rel="stylesheet">
-<div class="container">
+<div class="">
+    <h2>Register</h2>
+    <h4>Create a new account.</h4>
+    <hr />
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Register</div>
-                <div class="panel-body">
+        <div class="col-md-12 ">
+            <div >
+
+                <div class="">
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
                         {{ csrf_field() }}
 
 
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">Email</label>
+                            <label for="email" class="col-md-2 control-label">Email</label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
@@ -35,7 +38,7 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Password</label>
+                            <label for="password" class="col-md-2 control-label">Password</label>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control" name="password" required>
@@ -49,7 +52,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
+                            <label for="password-confirm" class="col-md-2 control-label">Confirm Password</label>
 
                             <div class="col-md-6">
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
@@ -58,7 +61,7 @@
 
 
                         <div class="form-group">
-                            <label for="favorite_color" class="col-md-4 control-label">Favorite color</label>
+                            <label for="favorite_color" class="col-md-2 control-label">Favorite color</label>
 
                             <div class="col-md-6">
 
@@ -71,8 +74,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
+                            <div class="col-md-6 col-md-offset-2">
+                                <button type="submit" class="btn btn-default">
                                     Register
                                 </button>
                             </div>

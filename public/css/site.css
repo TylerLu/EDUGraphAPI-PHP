@@ -533,3 +533,5 @@ ul.dropdown-menu{padding-bottom: 20px;}
     padding-bottom: 0;}
 .navbar-right > li > a img{
     margin-left: 6px;}
+
+#app .container .navbar-header{padding-left: 0;}

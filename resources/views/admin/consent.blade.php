@@ -7,11 +7,21 @@
 
 @extends('layouts.app')
 @section('title', 'Admin Consent')
+@section('registerarea')
+    <style>
+        .navbar-right li.dropdown{
+            display: none;}
+    </style>
+    <ul class="nav navbar-nav">
+        <li><a href="{{url('register')}}" id="registerLink">Register</a></li>
+        <li><a href="{{url('login')}}" id="loginLink">Log in</a></li>
+    </ul>
+    @endsection
 @section('content')
     @if(session('msg') || $msg)
         <div class="message-container bg-success"> <p>{{session('msg') }} <?php echo $msg; ?></p>  </div>
     @endif
-    <h2>Admin</h2>
+
 @if(!$consented)
     <div>
         <h3>Admin Consent</h3>

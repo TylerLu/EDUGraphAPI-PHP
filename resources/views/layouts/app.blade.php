@@ -104,7 +104,9 @@ use App\Services\UserRolesService;use Illuminate\Http\Request;use Illuminate\Sup
                     ?>
                     </ul>
                     <!-- Right Side Of Navbar -->
+
                     <ul class="nav navbar-nav navbar-right">
+                        @yield('registerarea')
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle aboutme" data-toggle="dropdown" role="button" aria-expanded="false">
                                     <?php

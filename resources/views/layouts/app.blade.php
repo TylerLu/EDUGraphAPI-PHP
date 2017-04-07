@@ -144,7 +144,7 @@ use App\Services\UserRolesService;use Illuminate\Http\Request;use Illuminate\Sup
                                     <li><a href="/link">Link</a></li>
                                     <li>
                                         <a href="{{ url('/userlogout') }}">
-                                            Logout
+                                            Log off
                                         </a>
 
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

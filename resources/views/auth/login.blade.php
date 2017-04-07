@@ -16,6 +16,18 @@
         <div class="col-md-5 ">
             <div >
                 <h4 class="margin-btm-20">Use your local account to log in</h4>
+                <div class="validation-summary-errors text-danger">
+                @if ($errors->has('email'))
+                    <ul>
+                        <li>{{ $errors->first('email') }}</li>
+                    </ul>
+                @endif
+                @if ($errors->has('password'))
+                        <ul>
+                        <li>{{ $errors->first('password') }}</li>
+                        </ul>
+                @endif
+                </div>
                 <div >
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
@@ -26,11 +38,7 @@
                             <div class="col-md-12">
                                 <input id="email" type="email" class="form-control logincontrol" name="email" value="{{ old('email') }}" required autofocus placeholder="Email">
 
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
+
                             </div>
                         </div>
 
@@ -40,11 +48,7 @@
                             <div class="col-md-12">
                                 <input id="password" type="password" class="form-control logincontrol" name="password" required placeholder="Password">
 
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
+
                             </div>
                         </div>
 

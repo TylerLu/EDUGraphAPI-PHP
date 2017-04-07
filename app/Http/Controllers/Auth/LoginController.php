@@ -53,4 +53,9 @@ class LoginController extends Controller
     {
         $this->middleware('guest', ['except' => 'logout']);
     }
+
+    public function getFailedLoginMessage()
+    {
+        return 'what you want here.';
+    }
 }

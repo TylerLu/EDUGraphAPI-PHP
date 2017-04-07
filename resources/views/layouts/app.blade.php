@@ -103,7 +103,7 @@ use App\Services\UserRolesService;use Illuminate\Http\Request;use Illuminate\Sup
                      <?php
                             }
                         ?>
-                   
+
                     </ul>
                     <!-- Right Side Of Navbar -->
 

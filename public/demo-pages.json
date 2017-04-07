@@ -151,7 +151,7 @@
   },
 
   {
-    "controller": "admin",
+    "controller": "admincontroller",
     "action": "index",
     "links": [
       {
@@ -173,8 +173,8 @@
     ]
   },
   {
-    "controller": "admin",
-    "action": "linkedaccounts",
+    "controller": "admincontroller",
+    "action": "mangelinkedaccounts",
     "links": [
       {
         "title": "Controller",
@@ -191,8 +191,8 @@
     ]
   },
   {
-    "controller": "admin",
-    "action": "unlinkaccounts",
+    "controller": "admincontroller",
+    "action": "unlinkaccount",
     "links": [
       {
         "title": "Controller",
@@ -209,7 +209,7 @@
     ]
   },
   {
-    "controller": "admin",
+    "controller": "admincontroller",
     "action": "consent",
     "links": [
       {

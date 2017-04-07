@@ -120,7 +120,7 @@
             "CLIENT_SECRET": "[parameters('clientSecret')]",
             "SOURCECODERESPOSITORYURL": "[parameters('SourceCodeRepositoryUrl')]",
             "BINGMAPKEY": "[parameters('bingMapKey')]",
-			"PHP_INI_SCAN_DIR":"d:\home\site\wwwroot"
+			"PHP_INI_SCAN_DIR":"d:\\home\\site\\wwwroot"
           }
         },
         {

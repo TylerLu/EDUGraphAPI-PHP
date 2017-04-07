@@ -41,7 +41,7 @@ use App\Services\UserRolesService;use Illuminate\Http\Request;use Illuminate\Sup
 <body>
     <div id="app" class="navbar navbar-inverse navbar-fixed-top">
         <nav >
-            <div class="container">
+            <div class="container topnavcontainer">
                 <div class="navbar-header">
 
                     <!-- Collapsed Hamburger -->

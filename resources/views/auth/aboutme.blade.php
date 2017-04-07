@@ -47,10 +47,12 @@
                 <b>Classes:</b>
                 <br />
                 <div>
-                @foreach($classes as $class)
-                    {{$class->DisplayName}}
-                    <br/>
-                    @endforeach
+                    @if(count($classes)>0)
+                         @foreach($classes as $class)
+                            {{$class->displayName}}
+                            <br/>
+                        @endforeach
+                    @endif
                 </div>
             </div>
     </div>

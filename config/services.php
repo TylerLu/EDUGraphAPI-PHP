@@ -40,6 +40,6 @@ return [
     'O365' => [
         'client_id' => env(Constants::CLIENT_ID),
         'client_secret' => env(Constants::CLIENT_SECRET),
-        'redirect' => $_SERVER['APP_URL'].'/oauth.php',
+        'redirect' => 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'].'/oauth.php',
     ],
 ];

@@ -88,20 +88,22 @@ use App\Services\UserRolesService;use Illuminate\Http\Request;use Illuminate\Sup
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         <li><a href="{{ url('/') }}">Home</a></li>
+
                     <?php
-                    if($role && $role==Roles::Admin){
-                    ?>
-                        <li><a href="{{ url('admin') }}">Admin</a></li>
-                    <?php
-                    }
+
                     if($isInASchool && $objectId){
                     ?>
                         <li><a href="{{ url('/classes/'.$objectId) }}">Classes</a></li>
                         <li><a href="{{ url('/users/'.$objectId) }}">Teachers & Students</a></li>
                     <?php
                       }
-
-                    ?>
+                        if($role && $role==Roles::Admin){
+                        ?>
+                        <li><a href="{{ url('admin') }}">Admin</a></li>
+                     <?php
+                            }
+                        ?>
+                   
                     </ul>
                     <!-- Right Side Of Navbar -->
 

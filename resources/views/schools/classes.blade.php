@@ -36,7 +36,7 @@
                 <div class="infocontainer">
                     <div class="infoheader">Grade levels</div>
                     <div class="infobody" title="{{$school->lowestGrade}}-{{$school->highestGrade}}">
-                        {{$school->lowestGrade}}-{{$school->highestGrade}}
+                        {{$school->lowestGrade}} - {{$school->highestGrade}}
                     </div>
                 </div>
             </div>

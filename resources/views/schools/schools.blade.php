@@ -50,7 +50,13 @@
                     @foreach($schools as $school)
                         <tr class="tr-content {{$school->isMySchool ? 'td-green' : ''}}">
                             <td>{{$school->displayName }}</td>
-                            <td>{{$school->principalName }}</td>
+                            <td>
+                                @if($school->principalName)
+                                    {{$school->principalName }}
+                                 @else
+                                    -
+                                @endif
+                            </td>
                             <td>{{$school->lowestGrade }} - {{$school->highestGrade }}</td>
                             <td>
                                 <div class="schooladdress">
@@ -59,6 +65,9 @@
                                         <br/>
                                     @endif
                                     {{$school->getCompoundAddress() }}
+                                    @if(!$school->address && !$school->city)
+                                        -
+                                    @endif
                                 </div>
                                 @if($school->longitude && $school->latitude)
                                     <div class="schoolmap">

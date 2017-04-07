@@ -21,6 +21,9 @@
                     <div class="infoheader">PRINCIPAL</div>
                     <div class="infobody" title="{{$school->principalName}}">
                         {{$school->principalName}}
+                        @if(!$school->principalName )
+                            -
+                        @endif
                     </div>
                 </div>
                 <div class="infocontainer">

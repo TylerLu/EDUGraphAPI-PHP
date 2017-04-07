@@ -81,7 +81,7 @@
       },
       {
         "title": "EducationServiceClient",
-        "url": "/blob/master/app/Services/EducationServiceClient.php"
+        "url": "/blob/master/app/Services/EducationService.php"
       },
       {
         "title": "SectionsViewModel",

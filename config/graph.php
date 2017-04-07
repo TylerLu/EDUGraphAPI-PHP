@@ -29,7 +29,6 @@ class Constants
 
     const CLIENT_ID               = 'CLIENT_ID';
     const CLIENT_SECRET           = 'CLIENT_SECRET';
-    const REDIRECT_URI            = 'REDIRECT_URI';
     const BINGMAPKEY              = 'BINGMAPKEY';
     const SOURCECODERESPOSITORYURL= 'SOURCECODERESPOSITORYURL';
 

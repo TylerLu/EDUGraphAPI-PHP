@@ -116,11 +116,10 @@
             "APP_KEY": "base64:2gggZXjNnBmubCHktdgkNW9oq2tENivo3F8rhHYHxf8=",
             "APP_DEBUG": "true",
             "APP_LOG_LEVEL": "debug",
-            "clientId": "[parameters('clientId')]",
-            "clientSecret": "[parameters('clientSecret')]",
-            "sourceCodeRepositoryUrl": "[parameters('SourceCodeRepositoryUrl')]",
-            "SQLiteDB": "database.sqlite",
-            "BingMapKey": "[parameters('bingMapKey')]"
+            "CLIENT_ID": "[parameters('clientId')]",
+            "CLIENT_SECRET": "[parameters('clientSecret')]",
+            "SOURCECODERESPOSITORYURL": "[parameters('SourceCodeRepositoryUrl')]",
+            "BINGMAPKEY": "[parameters('bingMapKey')]"
           }
         },
         {

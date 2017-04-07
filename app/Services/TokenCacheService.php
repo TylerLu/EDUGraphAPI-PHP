@@ -91,11 +91,12 @@ class TokenCacheService
      */
     public function RefreshToken($userId, $refreshToken, $resource, $returnExpires = false)
     {
+        $aq=$_SERVER['APP_URL'];
         try {
             $provider = new \League\OAuth2\Client\Provider\GenericProvider([
                 'clientId' => env(Constants::CLIENT_ID),
                 'clientSecret' => env(Constants::CLIENT_SECRET),
-                'redirectUri' => env(Constants::REDIRECT_URI),
+                'redirectUri' => $_SERVER['APP_URL'].'/oauth.php',
                 'urlAuthorize' => Constants::AUTHORITY_URL . Constants::AUTHORIZE_ENDPOINT,
                 'urlAccessToken' => Constants::AUTHORITY_URL . Constants::TOKEN_ENDPOINT,
                 'urlResourceOwnerDetails' => ''

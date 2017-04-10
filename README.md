@@ -362,34 +362,35 @@ The **EducationServiceClient** is the core class of the library. It is used to e
 ~~~
 
 ~~~typescript
-getSchoolById(id: string): Observable<any> {
-    return this.dataService.getObject(this.urlBase + '/administrativeUnits/' + id + '?api-version=beta');
-}
+ public function getSchool($objectId)
+    {
+        return $this->getResponse("get", "/administrativeUnits/" . $objectId . "?api-version=beta", School::class, null, null);
+    }
 ~~~
 
 **Get classes**
 
 ~~~typescript
-getClasses(schoolId: string, nextLink: string): Observable<PagedCollection<any>> {
-    let url: string = this.urlBase + "/groups?api-version=beta&$top=12&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20'Section'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20'" + schoolId + "'" +
-        (nextLink ? "&" + GraphHelper.getSkipToken(nextLink) : '');
-    return this.dataService.getPagedCollection<any>(url);
-}
+    public function getSections($schoolId, $top, $skipToken)
+    {
+        return $this->getResponse("get", '/groups?api-version=beta&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20\'Section\'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20\'' . $schoolId . '\'', Section::class, $top, $skipToken);
+    }
 ~~~
 
 ```typescript
-getClassById(classId: string): Observable<any> {
-    return this.dataService.getObject<any>(this.urlBase + "/groups/" + classId + "?api-version=beta&$expand=members");
-}
+    public function getSectionWithMembers($objectId)
+    {
+        return $this->getResponse("get", '/groups/' . $objectId . '?api-version=beta&$expand=members', Section::class, null, null);
+    }
+
 ```
 **Get users**
 
 ```typescript
-getUsers(schoolId: string, nextLink: string): Observable<PagedCollection<any>> {
-    var url = this.urlBase + "/administrativeUnits/" + schoolId + "/members?api-version=beta&$top=12" +
-        (nextLink ? "&" + GraphHelper.getSkipToken(nextLink) : '');
-    return this.dataService.getPagedCollection<any>(url);
-}
+    public function getMembers($objectId, $top, $skipToken)
+    {
+        return $this->getResponse("get", "/administrativeUnits/" . $objectId . "/members?api-version=beta", SectionUser::class, $top, $skipToken);
+    }
 ```
 Below are some screenshots of the sample app that show the education data.
 
@@ -401,13 +402,7 @@ Below are some screenshots of the sample app that show the education data.
 
 ![](Images/edu-class.png)
 
-In **/app/services/dataService.ts**, three generic methods simplify the invoking of REST APIs.
 
-* **getObject<T>**: sends a http GET request to the target endpoint, and deserializes the JSON response string to T, and return the result object.  
-* **getPagedCollection<T>**:  sends a http GET request to the target endpoint, and deserializes the JSON response string to PagedCollection<T>, and return the result object. 
-* **getArray<T>**: sends a http GET request to the target endpoint, and deserializes the JSON response string to array, and return the array.
-
-For http GET request sent by the 3 methods above, an access token is included in the bearer authentication header.
 
 ### Authentication Flows
 
@@ -453,17 +448,14 @@ There are two distinct Graph APIs used in this sample:
 Below is a piece of code shows how to get "me" from the Microsoft Graph API.
 
 ```typescript
-public getMe(): Promise<any> {
-    return new Promise((resolve, reject) => {
-        request
-            .get(Constants.MSGraphResource + "/v1.0/me/?$select=id,givenName,surname,userPrincipalName,assignedLicenses")
-            .set('Authorization', 'Bearer ' + this.accessToken)
-            .end((err, res) => {
-                if (err) { return reject(err) }
-                resolve(res.body);
-            })
-    })
-}
+   public function getMe()
+    {
+        $json = $this->getResponse("get", "/me?api-version=1.5", null, null, null);
+        $assignedLicenses = array_map(function ($license) {
+            return new Model\AssignedLicense($license);
+        }, $json["assignedLicenses"]);
+      ...
+    }
 ```
 
 Note that in the AAD Application settings, permissions for each Graph API are configured separately:

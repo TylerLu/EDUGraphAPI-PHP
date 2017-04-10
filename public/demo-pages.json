@@ -156,19 +156,15 @@
     "links": [
       {
         "title": "Controller",
-        "url": "/blob/master/src/EDUGraphAPI.Web/Controllers/AdminController.cs"
+        "url": "/blob/master/app/Http/Controllers/Admin/AdminController.php"
       },
       {
         "title": "View",
-        "url": "/blob/master/src/EDUGraphAPI.Web/Views/Admin/Index.cshtml"
+        "url": "/blob/master/resources/views/admin/index.blade.php"
       },
       {
-        "title": "ApplicationService",
-        "url": "/blob/master/src/EDUGraphAPI.Web/Services/ApplicationService.cs"
-      },
-      {
-        "title": "AdminContext",
-        "url": "/blob/master/src/EDUGraphAPI.Web/Models/AdminContext.cs"
+        "title": "Service",
+        "url": "/blob/master/app/Services/OrganizationsService.php"
       }
     ]
   },
@@ -178,15 +174,11 @@
     "links": [
       {
         "title": "Controller",
-        "url": "/blob/master/src/EDUGraphAPI.Web/Controllers/AdminController.cs"
+        "url": "/blob/master/app/Http/Controllers/Admin/AdminController.php"
       },
       {
         "title": "View",
-        "url": "/blob/master/src/EDUGraphAPI.Web/Views/Admin/LinkedAccounts.cshtml"
-      },
-      {
-        "title": "ApplicationService",
-        "url": "/blob/master/src/EDUGraphAPI.Web/Services/ApplicationService.cs"
+        "url": "/blob/master/resources/views/admin/manageaccounts.blade.php"
       }
     ]
   },
@@ -196,15 +188,11 @@
     "links": [
       {
         "title": "Controller",
-        "url": "/blob/master/src/EDUGraphAPI.Web/Controllers/AdminController.cs"
+        "url": "/blob/master/app/Http/Controllers/Admin/AdminController.php"
       },
       {
         "title": "View",
-        "url": "/blob/master/src/EDUGraphAPI.Web/Views/Admin/UnlinkAccounts.cshtml"
-      },
-      {
-        "title": "ApplicationService",
-        "url": "/blob/master/src/EDUGraphAPI.Web/Services/ApplicationService.cs"
+        "url": "/blob/master/resources/views/admin/unlinkaccount.blade.php"
       }
     ]
   },
@@ -214,11 +202,11 @@
     "links": [
       {
         "title": "Controller",
-        "url": "/blob/master/src/EDUGraphAPI.Web/Controllers/AdminController.cs"
+        "url": "/blob/master/app/Http/Controllers/Admin/AdminController.php"
       },
       {
         "title": "View",
-        "url": "/blob/master/src/EDUGraphAPI.Web/Views/Admin/Consent.cshtml"
+        "url": "/blob/master/resources/views/admin/consent.blade.php"
       }
     ]
   },

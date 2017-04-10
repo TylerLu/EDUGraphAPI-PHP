@@ -113,7 +113,7 @@ class AdminController extends Controller
             return back()->with('msg', 'Invalid operation. Please try again.');
         }
         if ($code) {
-            $redirectUrl = $_SERVER['APP_URL'] . '/admin/processcode';
+            $redirectUrl = 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST']. '/admin/processcode';
             $provider = (new AuthenticationHelper())->GetProvider($redirectUrl);
             $microsoftToken = $provider->getAccessToken('authorization_code', [
                 'code' => $code,

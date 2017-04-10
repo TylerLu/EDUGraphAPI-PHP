@@ -85,7 +85,7 @@ Create a key to enable Bing Maps API features in the app:
 
 4. Input a **Name**, and select **Web app / API** as **Application Type**.
 
-   Input **Sign-on URL**: https://localhost:44380/
+   Input **Sign-on URL**: http://localhost. 
 
    ![](Images/aad-create-app-02.png)
 
@@ -140,20 +140,16 @@ The following tools are also required:
 
 Debug the **EDUGraphAPI.Web**:
 
-1. Configure **Environment Variables**. Right click the project in Solution Explorer, then click **Properties**.
+1. Configure **Environment Variables**. Create a local .env file and input like below:
 
-   ![](/Images/web-app-properties.png)
+   ![env](/Images/env.jpg)
 
    - **clientId**: use the Client Id of the app registration you created earlier.
    - **clientSecret**: use the Key value of the app registration you created earlier.
    - **BingMapKey**: use the key of Bing Map you got earlier. This setting is optional.
    - **SourceCodeRepositoryURL**: use the repository URL of your fork.
 
-2. In the Solution Explorer, right click **npm**, then click **Install Missing npm Packages**:
-
-   ![](/Images/install-missing-npm-packages.png)
-
-3. Press **F5**. 
+2. Run the site.
 
 ## Deploy the sample to Azure
 
@@ -245,7 +241,7 @@ Debug the **EDUGraphAPI.Web**:
 
    ![](Images/aad-add-reply-url.png)
 
-   > Note: to debug the sample locally, make sure that https://localhost:44380/ is in the reply URLs.
+   > Note: to debug the sample locally, make sure that http://localhost is in the reply URLs.
 
 4. Click **SAVE**.
 
@@ -255,56 +251,29 @@ Debug the **EDUGraphAPI.Web**:
 
 **Solution Component Diagram**
 
-![](Images/solution-component-diagram.png)
+![solution](/Images/solution.jpg)
 
-The top layer of the solution contains the two parts of the EDUGraphAPI.Web project:
 
-* The server side Node.js app.
-* The client side Angular 2 app.
 
-The bottom layers contain the three data sources.
+### **EDUGraphAPI Web - Server**
 
-* The EDUGraphAPI database.
-* Education data exposed by REST APIs.
-* Azure AD data exposed by Graph APIs.
-
-### **EDUGraphAPI.Web - Server**
-
-The server side app is based on Node.js and implemented with Typescript.
+The server side app is based on Laravel 5.4
 
 **Authentication Mechanisms**
 
-Passport and its 2 plugins are used to enable local and O365 authentications:
+OAuth 2.0 Client plugin is used to enable local and O365 authentications:
 
-* **[passport-azure-ad](https://github.com/AzureAD/passport-azure-ad)**: a collection of [Passport](http://passportjs.org/) Strategies to help you integrate with Azure Active Directory. It includes OpenID Connect, WS-Federation, and SAML-P authentication and authorization. These providers let you integrate your Node app with Microsoft Azure AD so you can use its many features, including web single sign-on (WebSSO), Endpoint Protection with OAuth, and JWT token issuance and validation.
-* **[passport-local](https://github.com/jaredhanson/passport-local)**: this module lets you authenticate using a username and password in your Node.js applications. By plugging into Passport, local authentication can be easily and unobtrusively integrated into any application or framework that supports [Connect](http://www.senchalabs.org/connect/)-style middleware, including [Express](http://expressjs.com/).
+* **[oAuth 2.0 Client](https://github.com/thephpleague/oauth2-client)**: This OAuth 2.0 client library will work with any OAuth provider that conforms to the OAuth 2.0 standard. Out-of-the-box, we provide a GenericProvider that may be used to connect to any service provider that uses Bearer tokens.
 
-The 2 kinds of authentication are implemented in the **/auth/appAuth.ts** file.
+Microsoft Graph SDK for PHP is used to get tokens from AAD.
 
-**Web APIs**
+- **[Microsoft Graph SDK for PHP](https://github.com/microsoftgraph/msgraph-sdk-php)**: The Microsoft Graph SDK for PHP does not include any default authentication implementations. Instead, you can authenticate with the library of your choice, or against the OAuth endpoint directly.
 
-The server app exposes several Web APIs:
-
-| Path                                     | Method   | Description                              |
-| ---------------------------------------- | -------- | ---------------------------------------- |
-| /api/me                                  | GET      | Return the current user and the user's organization and roles |
-| /api/me/favoriteColor                    | POST     | Update current user's favorite color     |
-| /api/me/accesstoken                      | GET      | Get current user's access token          |
-| /api/tenant                              | POST     | Update information (isAdminConsented) of current user's tenant |
-| /api/tenant/unlinkAllUsers               | POST     | Unlink all users in current user's tenant |
-| /api/users/linked                        | GET      | Get all linked users                     |
-| /api/users/:userId/unlink                | POST     | Unlink the specified user                |
-| /api/admin/consent                       | GET      | Redirect the user to login page to perform admin consent |
-| /api/admin/consented                     | POST     | Will be invoked after admin consented    |
-| /api/schools/seatingArrangements/:classId | GET/POST | Get or set the seating arrangement of the specified class |
-
-These APIs are defined in the **/routes** folder.
+The 2 kinds of authentication are implemented in the **/app/Services/TokenCacheService.php** file.
 
 **Data Access**
 
-[Sequelize](http://docs.sequelizejs.com/en/v3/) is used in this sample to access data from a SQL Database. 
-
-The **DbContext** exposes the models and methods that are used to access data.
+SQLITE database is used in this app.
 
 The tables used in this demo:
 
@@ -316,7 +285,7 @@ The tables used in this demo:
 | TokenCache                   | Contains the users' access/refresh tokens. |
 | ClassroomSeatingArrangements | Contains the classroom seating arrangements. |
 
-You will find the **DbContext** class and related model interfaces in the **/data/dbContext.ts** file.
+
 
 **Services**
 
@@ -324,9 +293,9 @@ The services used by the server side app:
 
 | Service           | Description                              |
 | ----------------- | ---------------------------------------- |
-| MSGraphClient     | Contains methods used to access MS Graph APIs |
-| SchoolService     | Contains two methods: get/update seating arrangements |
-| TenantService     | Contains methods that operate tenants in the database |
+| AADGraphClient    | Contains methods used to access MS Graph APIs |
+| EducationService  | Contains two methods: get/update seating arrangements |
+| CookieService     | Contains methods that used to manage cookies |
 | TokenCacheService | Contains method used to get and update cache from the database |
 | UserService       | Contains method used to manipulate users in the database |
 
@@ -344,53 +313,36 @@ Users from any Azure Active Directory tenant can access this app. Some permissio
 
 For more information, see [Build a multi-tenant SaaS web application using Azure AD & OpenID Connect](https://azure.microsoft.com/en-us/resources/samples/active-directory-dotnet-webapp-multitenant-openidconnect/).
 
-### **EDUGraphAPI.Web - Client**
-
-The client side app which resides in the /app folder is based on Angular 2 and is also implemented with Typescript 2.
-
-> Note:  Getting and using declaration files in TypeScript 2.0 is much easier than in TypeScript 1. To get declarations for a library like lodash for example, all you need is npm:
->
-> ```
-> npm install --save @types/lodash
-> ```
+### **EDUGraphAPI Web Site**
 
 **Components**
 
 These components are used in the client app.
 
-| Folder      | Component             |
-| ----------- | --------------------- |
-| /           | App                   |
-| /aboutme    | AboutMe               |
-| /admin      | Admin                 |
-|             | LinkedAccounts        |
-|             | Consent               |
-| /demoHeoper | DemoHelper            |
-| /header     | Header                |
-| /link       | Link                  |
-|             | LinkCreateLocal       |
-|             | LinkLoginLocal        |
-|             | LinkLoginO365Requried |
-| /login      | Login                 |
-| /O365login  | O365login             |
-| /register   | Register              |
-| /schools    | Schools               |
-|             | Classes               |
-|             | MyClasses             |
-|             | ClassDetails          |
+| Folder               | Component                                |
+| -------------------- | ---------------------------------------- |
+| /app                 | Including controller, services, model and provider |
+| /app/Http/Controller | Controllers                              |
+| /app/Http/Middleware | Middleware                               |
+| /app/Model           | Models                                   |
+| /app/Providers       | Site providers                           |
+| /app/Services        | Services                                 |
+| /app/ViewModel       | ViewModel for blade pages                |
+| /database            | SQLITE database                          |
+| /public              | Images, css and js                       |
+| /resources/views     | Blade views                              |
+| /routes              | Site routes                              |
+|                      |                                          |
+|                      |                                          |
+|                      |                                          |
+|                      |                                          |
+|                      |                                          |
+|                      |                                          |
+|                      |                                          |
 
-**Services**
 
-| Folder      | Name              |
-| ----------- | ----------------- |
-| /aboutme    | AboutMeService    |
-| /admin      | AdminService      |
-| /demoHelper | DemoHelperService |
-| /link       | LinkService       |
-| /services   | MeService         |
-|             | UserService       |
-|             | UserPhotoService  |
-|             | DataService       |
+
+
 
 ### Office 365 Education API
 
@@ -403,9 +355,10 @@ The **EducationServiceClient** is the core class of the library. It is used to e
 **Get schools**
 
 ~~~typescript
-getSchools(): Observable<any[]> {
-    return this.dataService.getArray<any>(this.urlBase + "/administrativeUnits?api-version=beta");
-}
+  public function getSchools()
+    {
+        return $this->getAllPages("get", "/administrativeUnits?api-version=beta", School::class);
+    }
 ~~~
 
 ~~~typescript

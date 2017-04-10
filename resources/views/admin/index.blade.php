@@ -26,7 +26,7 @@
         <div class="form-group">
             <form method="post" action="{{url('/admin/adminconsent')}}">
             {{csrf_field()}}
-            <input type="submit" value="Admin Consent" class="btn btn-default" />
+            <input type="submit" value="Consent" class="btn btn-primary" />
         </form>
         </div>
 

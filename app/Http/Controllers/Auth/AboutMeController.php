@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Auth;
 use App\Config\SiteConstants;
 use App\Http\Controllers\Controller;
 use App\Services\EducationService;
+use App\Services\TokenCacheService;
 use App\Services\UserRolesService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -34,7 +35,8 @@ class AboutMeController extends Controller
         if (isset($_SESSION[SiteConstants::Session_O365_User_ID]))
             $o365UserId = $_SESSION[SiteConstants::Session_O365_User_ID];
         if ($o365UserId) {
-            $classes = (new EducationService)->getMySections(false);
+            $token = (new TokenCacheService())->GetAADToken($o365UserId);
+            $classes = (new EducationService($token))->getMySections(false);
         }
         $arrData = array(
             'displayName' => $displayName,

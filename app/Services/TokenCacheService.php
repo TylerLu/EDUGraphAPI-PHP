@@ -34,7 +34,7 @@ class TokenCacheService
      * @param $userId
      * @return array|string
      */
-    public function GetMicrosoftToken($userId)
+    public function GetMsGraphToken($userId)
     {
         return $this->getToken($userId, Constants::RESOURCE_ID);
     }

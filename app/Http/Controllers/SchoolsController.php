@@ -10,6 +10,7 @@ use App\Services\CookieService;
 use App\Services\EducationService;
 use App\Services\MapService;
 use App\Services\MSGraphService;
+use App\Services\TokenCacheService;
 use App\Services\UserService;
 use App\ViewModel\Student;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +19,13 @@ use Microsoft\Graph\Connect\Constants;
 
 class SchoolsController extends Controller
 {
+    private $educationService;
+
+    public function __construct()
+    {
+
+    }
+
     /**
      * Show all the schools.
      *
@@ -25,9 +33,10 @@ class SchoolsController extends Controller
      */
     public function index()
     {
-        $educationService = new EducationService();
-        $me = $educationService->getMe();
-        $schools = $educationService->getSchools();
+        $this->educationService = $this->getEduServices();
+
+        $me = $this->educationService->getMe();
+        $schools = $this->educationService->getSchools();
         foreach ($schools as $school) {
             $school->isMySchool = $school->schoolId === $me->schoolId;
             $location = MapService::getLatitudeAndLongitude($school->state, $school->city, $school->address);
@@ -63,11 +72,11 @@ class SchoolsController extends Controller
      */
     public function users($objectId)
     {
-        $educationService = new EducationService();
-        $school = $educationService->getSchool($objectId);
-        $users = $educationService->getMembers($objectId, 12, null);
-        $students = $educationService->getStudents($school->schoolId, 12, null);
-        $teachers = $educationService->getTeachers($school->schoolId, 12, null);
+        $this->educationService = $this->getEduServices();
+        $school = $this->educationService->getSchool($objectId);
+        $users = $this->educationService->getMembers($objectId, 12, null);
+        $students = $this->educationService->getStudents($school->schoolId, 12, null);
+        $teachers = $this->educationService->getTeachers($school->schoolId, 12, null);
         $data = ["school" => $school, "users" => $users, "students" => $students, "teachers" => $teachers];
 
         return view('schools.users', $data);
@@ -83,8 +92,8 @@ class SchoolsController extends Controller
      */
     public function usersNext($objectId, $skipToken)
     {
-        $educationService = new EducationService();
-        $users = $educationService->getMembers($objectId, 12, $skipToken);
+        $this->educationService = $this->getEduServices();
+        $users = $this->educationService->getMembers($objectId, 12, $skipToken);
         return response()->json($users);
     }
 
@@ -98,9 +107,9 @@ class SchoolsController extends Controller
      */
     public function studentsNext($objectId, $skipToken)
     {
-        $educationService = new EducationService();
-        $school = $educationService->getSchool($objectId);
-        $students = $educationService->getStudents($school->schoolId, 12, $skipToken);
+        $this->educationService = $this->getEduServices();
+        $school = $this->educationService->getSchool($objectId);
+        $students = $this->educationService->getStudents($school->schoolId, 12, $skipToken);
         return response()->json($students);
     }
 
@@ -114,9 +123,9 @@ class SchoolsController extends Controller
      */
     public function teachersNext($objectId, $skipToken)
     {
-        $educationService = new EducationService();
-        $school = $educationService->getSchool($objectId);
-        $teachers = $educationService->getTeachers($school->schoolId, 12, $skipToken);
+        $this->educationService = $this->getEduServices();
+        $school = $this->educationService->getSchool($objectId);
+        $teachers = $this->educationService->getTeachers($school->schoolId, 12, $skipToken);
         return response()->json($teachers);
     }
 
@@ -131,14 +140,15 @@ class SchoolsController extends Controller
     public function classDetail($objectId, $classId)
     {
         $curUser = Auth::user();
-        $educationService = new EducationService();
-        $me = $educationService->getMe();
-        $school = $educationService->getSchool($objectId);
-        $section = $educationService->getSectionWithMembers($classId);
+        $this->educationService = $this->getEduServices();
+        $me = $this->educationService->getMe();
+        $school = $this->educationService->getSchool($objectId);
+        $section = $this->educationService->getSectionWithMembers($classId);
         foreach ($section->getStudents() as $student) {
             $student->position = UserService::getSeatPositionInClass($student->o365UserId, $classId);
             $student->favoriteColor = UserService::getFavoriteColor($student->o365UserId);
         }
+
 
         $msGraph = new MSGraphService();
         $conversations = $msGraph->getGroupConversations($classId);
@@ -168,12 +178,12 @@ class SchoolsController extends Controller
      */
     public function classes($objectId)
     {
-        $educationService = new EducationService();
-        $me = $educationService->getMe();
-        $school = $educationService->getSchool($objectId);
+        $this->educationService = $this->getEduServices();
+        $me = $this->educationService->getMe();
+        $school = $this->educationService->getSchool($objectId);
         $schoolId = $school->schoolId;
-        $myClasses = $educationService->getMySectionsOfSchool($schoolId);
-        $allClasses = $educationService->getSections($schoolId, 12, null);
+        $myClasses = $this->educationService->getMySectionsOfSchool($schoolId);
+        $allClasses = $this->educationService->getSections($schoolId, 12, null);
         $this->checkIfMyClasses($allClasses, $myClasses);
 
         $data = ["myClasses" => $myClasses, "allClasses" => $allClasses, "school" => $school, "me" => $me];
@@ -188,9 +198,9 @@ class SchoolsController extends Controller
      */
     public function classesNext($schoolId, $skipToken)
     {
-        $educationService = new EducationService();
-        $myClasses = $educationService->getMySectionsOfSchool($schoolId);
-        $allClasses = $educationService->getSections($schoolId, 12, $skipToken);
+        $this->educationService = $this->getEduServices();
+        $myClasses = $this->educationService->getMySectionsOfSchool($schoolId);
+        $allClasses = $this->educationService->getSections($schoolId, 12, $skipToken);
         $this->checkIfMyClasses($allClasses, $myClasses);
         return response()->json($allClasses);
     }
@@ -227,5 +237,12 @@ class SchoolsController extends Controller
                 }
             }
         }
+    }
+
+    private function getEduServices()
+    {
+        $user=Auth::user();
+        $token = (new TokenCacheService())->GetAADToken($user->o365UserId);
+        return new EducationService($token);
     }
 }

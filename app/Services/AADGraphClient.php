@@ -33,7 +33,7 @@ class AADGraphClient
      */
     public function GetCurrentUserAndUpdateUserRoles($userId)
     {
-        $token = (new TokenCacheService)->GetMicrosoftToken($userId);
+        $token = (new TokenCacheService)->GetMsGraphToken($userId);
         if ($token) {
             $graph = new Graph();
             $graph->setAccessToken($token);
@@ -63,7 +63,7 @@ class AADGraphClient
      */
     public function GetTenantByUserId($userId)
     {
-        $token = (new TokenCacheService)->GetMicrosoftToken($userId);
+        $token = (new TokenCacheService)->GetMsGraphToken($userId);
         return $this->GetTenantByToken($token);
     }
 
@@ -95,6 +95,32 @@ class AADGraphClient
     {
         $tenant = $this->GetTenantByUserId($userId);
         return $this->GetTenantId($tenant);
+    }
+
+
+    public function IsUserStudent($licenses)
+    {
+        while ($license = each($licenses)) {
+            if (is_array($license['value']))
+                return false;
+            if ($license['value']->getSkuId() === O365ProductLicenses::Student || $license['value']->getSkuId() === O365ProductLicenses::StudentPro) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function IsUserTeacher($licenses)
+    {
+        while ($license = each($licenses)) {
+            if (is_array($license['value']))
+                return false;
+            if ($license['value']->getSkuId() === O365ProductLicenses::Faculty || $license['value']->getSkuId() === O365ProductLicenses::FacultyPro) {
+                return true;
+            }
+        }
+        return false;
+
     }
 
 
@@ -153,30 +179,4 @@ class AADGraphClient
 
         return $members = json_decode($result->getBody())->value;
     }
-
-    public function IsUserStudent($licenses)
-    {
-        while ($license = each($licenses)) {
-            if (is_array($license['value']))
-                return false;
-            if ($license['value']->getSkuId() === O365ProductLicenses::Student || $license['value']->getSkuId() === O365ProductLicenses::StudentPro) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public function IsUserTeacher($licenses)
-    {
-        while ($license = each($licenses)) {
-            if (is_array($license['value']))
-                return false;
-            if ($license['value']->getSkuId() === O365ProductLicenses::Faculty || $license['value']->getSkuId() === O365ProductLicenses::FacultyPro) {
-                return true;
-            }
-        }
-        return false;
-
-    }
-
 }

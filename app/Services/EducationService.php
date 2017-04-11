@@ -23,13 +23,14 @@ class  EducationService
     private $tokenCacheService;
     private $o365UserId;
     private $aadGraphClient;
+    private $token;
 
     /**
      * Create a new instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($token)
     {
         $this->tokenCacheService = new TokenCacheService();
         $this->aadGraphClient = new AADGraphClient();
@@ -41,7 +42,7 @@ class  EducationService
                 $this->o365UserId = $user->o365UserId;
             }
         }
-
+        $this->token = $token;
     }
 
     /**
@@ -292,7 +293,7 @@ class  EducationService
         if (!isset($this->o365UserId) || strlen($this->o365UserId) == 0) {
             return null;
         }
-        return $this->tokenCacheService->GetAADToken($this->o365UserId);
+        return $this->token;
     }
 
     /**

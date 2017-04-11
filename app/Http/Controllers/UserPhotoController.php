@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\MSGraphService;
+use App\Services\TokenCacheService;
 
 class UserPhotoController extends Controller
 {
@@ -15,7 +16,9 @@ class UserPhotoController extends Controller
      */
     public function userPhoto($o365UserId)
     {
+
         $msGraph = new MSGraphService();
+
         $stream = $msGraph->getUserPhoto($o365UserId);
         if ($stream) {
             $contents = $stream->getContents();

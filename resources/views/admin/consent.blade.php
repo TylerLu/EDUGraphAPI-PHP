@@ -8,6 +8,9 @@
 @extends('layouts.app')
 @section('title', 'Admin Consent')
 @section('registerarea')
+    <?php
+    if(!Auth::user()){
+    ?>
     <style>
         .navbar-right li.dropdown{
             display: none;}
@@ -16,7 +19,10 @@
         <li><a href="{{url('register')}}" id="registerLink">Register</a></li>
         <li><a href="{{url('login')}}" id="loginLink">Log in</a></li>
     </ul>
-    @endsection
+    <?php
+    }
+    ?>
+ @endsection
 @section('content')
     @if(session('msg') || $msg)
         <div class="message-container bg-success"> <p>{{session('msg') }} <?php echo $msg; ?></p>  </div>

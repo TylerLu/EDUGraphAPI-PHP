@@ -9,6 +9,7 @@ namespace App\Services;
 use App\Config\O365ProductLicenses;
 use App\Config\Roles;
 use App\Config\SiteConstants;
+use Exception;
 use GuzzleHttp\Client;
 use Microsoft\Graph\Connect\Constants;
 use Microsoft\Graph\Graph;
@@ -156,6 +157,8 @@ class AADGraphClient
     public function IsUserStudent($licenses)
     {
         while ($license = each($licenses)) {
+            if (is_array($license['value']))
+                return false;
             if ($license['value']->getSkuId() === O365ProductLicenses::Student || $license['value']->getSkuId() === O365ProductLicenses::StudentPro) {
                 return true;
             }
@@ -166,11 +169,14 @@ class AADGraphClient
     public function IsUserTeacher($licenses)
     {
         while ($license = each($licenses)) {
+            if (is_array($license['value']))
+                return false;
             if ($license['value']->getSkuId() === O365ProductLicenses::Faculty || $license['value']->getSkuId() === O365ProductLicenses::FacultyPro) {
                 return true;
             }
         }
         return false;
+
     }
 
 }

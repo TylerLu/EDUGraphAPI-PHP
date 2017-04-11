@@ -29,6 +29,16 @@ class RegisterController extends Controller
     use RegistersUsers;
 
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('guest');
+    }
+
+    /**
      * Where to redirect users after registration.
      *
      * @var string
@@ -46,15 +56,6 @@ class RegisterController extends Controller
         }
 
         return '/schools';
-    }
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest');
     }
 
     /**

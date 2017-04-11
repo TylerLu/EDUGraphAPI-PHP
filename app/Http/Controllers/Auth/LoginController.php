@@ -26,6 +26,16 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('guest', ['except' => 'logout']);
+    }
+
+    /**
      * Where to redirect users after login.
      *
      * @var string
@@ -42,16 +52,6 @@ class LoginController extends Controller
         }
 
         return '/schools';
-    }
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest', ['except' => 'logout']);
     }
 
     public function getFailedLoginMessage()

@@ -51,7 +51,6 @@ class LinkController extends Controller
                 //Local user login but not linked. Should show link to existing o365 account link and then login to o365.
                 $showLinkToExistingO365Account = true;
             }else{
-
                 $areAccountsLinked = true;
             }
         }
@@ -62,7 +61,7 @@ class LinkController extends Controller
             'o365UserEmail'=>$o365UserEmailInDB,
             'showLinkToExistingO365Account' =>$showLinkToExistingO365Account
         );
-        return view("link.index",$arrData);
+        return view("link.index", $arrData);
     }
 
     /**
@@ -92,7 +91,7 @@ class LinkController extends Controller
         }else{
             return view("link.createlocalaccount");
         }
-        }
+    }
 
     /**
      * If there's a local user with same email as o365 email on db, link this account to o365 account directly and then go to schools page.
@@ -105,12 +104,12 @@ class LinkController extends Controller
             //Post from page. Link o365 user to an existing local account.
            $email = $input['email'];
            $password = $input['password'];
-            $credentials = [
+           $credentials = [
                 'email' => $email,
                 'password' => $password,
             ];
             if (Auth::attempt($credentials)) {
-               $user = Auth::user();
+                $user = Auth::user();
                 $user->o365UserId=$_SESSION[SiteConstants::Session_O365_User_ID];
                 $user->o365Email=$o365email;
                 $user->firstName = $_SESSION[SiteConstants::Session_O365_User_First_name];

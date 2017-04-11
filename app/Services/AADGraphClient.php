@@ -16,6 +16,7 @@ use Microsoft\Graph\Model;
 
 class AADGraphClient
 {
+
     /**
      * Create a new instance.
      *

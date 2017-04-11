@@ -45,7 +45,7 @@ Route::get('/userlogout', function () {
 Auth::routes();
 
 //all schools, teachers and students, classes, class details.
-Route::group(['middleware' => ['web', 'auth', 'SchoolMiddleware']], function () {
+Route::group(['middleware' => ['web', 'auth', 'LinkRequired']], function () {
     Route::get('/schools', 'SchoolsController@index');
     Route::get('/users/{objectId}', 'SchoolsController@users');
     Route::get('/users/next/{objectId}/{skipToken}', 'SchoolsController@usersNext');
@@ -77,7 +77,7 @@ Route::group(['namespace' => 'Admin'], function () {
 Route::get('/o365loginrequired', 'LinkController@loginO365Required');
 
 //Admin functions.
-Route::group(['middleware' => ['web', 'auth', 'Admin.Login'], 'namespace' => 'Admin'], function () {
+Route::group(['middleware' => ['web', 'auth', 'AdminOnly'], 'namespace' => 'Admin'], function () {
     Route::get('/admin', 'AdminController@index');
     Route::post('/admin/adminunconsent', 'AdminController@AdminUnconsent');
     Route::post('/admin/enableuseraccess', 'AdminController@EnableUserAccess');

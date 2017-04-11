@@ -6,14 +6,13 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\UserRolesService;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class AdminLogin
+class LinkRequiredMiddleware
 {
     /**
-     * Only admin can go to admin page and do tasks link consent.
+     * Only linked accounts can go to schools, classes and class detail page.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure $next
@@ -22,9 +21,10 @@ class AdminLogin
     public function handle($request, Closure $next)
     {
         $user = Auth::user();
-        $isAdmin = (new UserRolesService)->IsUserAdmin($user->o365UserId);
-        if (!$isAdmin)
-            return redirect("/login");
+        if (!$user->isLinked()) {
+            return redirect('/link');
+        }
+
         return $next($request);
     }
 }

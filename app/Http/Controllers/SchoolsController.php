@@ -30,10 +30,10 @@ class SchoolsController extends Controller
         $schools = $educationService->getSchools();
         foreach ($schools as $school) {
             $school->isMySchool = $school->schoolId === $me->schoolId;
-            $ll = MapService::getLatitudeAndLongitude($school->state, $school->city, $school->address);
-            if ($ll) {
-                $school->latitude = $ll[0];
-                $school->longitude = $ll[1];
+            $location = MapService::getLatitudeAndLongitude($school->state, $school->city, $school->address);
+            if ($location) {
+                $school->latitude = $location[0];
+                $school->longitude = $location[1];
             }
         }
 
@@ -174,7 +174,7 @@ class SchoolsController extends Controller
         $schoolId = $school->schoolId;
         $myClasses = $educationService->getMySectionsOfSchool($schoolId);
         $allClasses = $educationService->getSections($schoolId, 12, null);
-        $this->checkClasses($allClasses, $myClasses);
+        $this->checkIfMyClasses($allClasses, $myClasses);
 
         $data = ["myClasses" => $myClasses, "allClasses" => $allClasses, "school" => $school, "me" => $me];
         return view('schools.classes', $data);
@@ -191,7 +191,7 @@ class SchoolsController extends Controller
         $educationService = new EducationService();
         $myClasses = $educationService->getMySectionsOfSchool($schoolId);
         $allClasses = $educationService->getSections($schoolId, 12, $skipToken);
-        $this->checkClasses($allClasses, $myClasses);
+        $this->checkIfMyClasses($allClasses, $myClasses);
         return response()->json($allClasses);
     }
 
@@ -244,7 +244,7 @@ class SchoolsController extends Controller
      *
      * @return void
      */
-    private function checkClasses($allClasses, $myClasses)
+    private function checkIfMyClasses($allClasses, $myClasses)
     {
         foreach ($allClasses->value as $class1) {
             $class1->isMySection = false;

@@ -47,9 +47,12 @@ class O365AuthController extends Controller
         //If user doesn't exists on db, add user information like o365 user id, first name, last name to session and then go to link page.
         $userInDB = User::where('o365UserId', $o365UserId)->first();
         if ($userInDB) {
-            if (!$userInDB->isLinked()) {
+            if(Auth::check() && $userInDB->email !=Auth::user()->email){
                 return redirect('/link');
-            } else {
+            }
+            if (!$userInDB->isLinked() ) {
+                return redirect('/link');
+            }else {
                 Auth::loginUsingId($userInDB->id);
                 if (Auth::check()) {
                     return redirect("/schools");

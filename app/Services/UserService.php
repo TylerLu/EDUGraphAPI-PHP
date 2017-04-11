@@ -8,6 +8,7 @@ namespace App\Services;
 
 use App\Model\ClassroomSeatingArrangements;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserService
 {
@@ -76,5 +77,17 @@ class UserService
     {
         $user = User::where('o365UserId', $o365UserId)->first();
         return $user ? $user->favorite_color : "";
+    }
+
+    public static function SaveUserInfo($o365UserId,$o365Email,$givenName, $surname,$orgId)
+    {
+        $localUser = Auth::user();
+        $localUser->o365UserId = $o365UserId;
+        $localUser->o365Email = $o365Email;
+        $localUser->firstName = $givenName;
+        $localUser->lastName = $surname;
+        $localUser->password = '';
+        $localUser->OrganizationId = $orgId;
+        $localUser->save();
     }
 }

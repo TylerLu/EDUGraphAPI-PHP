@@ -104,8 +104,8 @@ class TokenCacheService
             $aadGraphTokenResult = '';
             $aadTokenExpires = '';
 
-            $microsoftTokenResult = '';
-            $microsoftTokenExpires = '';
+            $msGraphTokenResult = '';
+            $msGraphTokenExpires = '';
 
             $newRefreshToken = $refreshToken;
             if ($resource === Constants::RESOURCE_ID) {
@@ -115,8 +115,8 @@ class TokenCacheService
                 ]);
                 $ts = $microsoftToken->getExpires();
                 $date = new \DateTime("@$ts");
-                $microsoftTokenExpires = $date->format('Y-m-d H:i:s');
-                $microsoftTokenResult = $microsoftToken->getToken();
+                $msGraphTokenExpires = $date->format('Y-m-d H:i:s');
+                $msGraphTokenResult = $microsoftToken->getToken();
                 $newRefreshToken = $microsoftToken->getRefreshToken();
             } else {
                 $aadGraphToken = $provider->getAccessToken('refresh_token', [
@@ -138,17 +138,17 @@ class TokenCacheService
                     $aadTokenExpires = $array[Constants::AADGraph]['expiresOn'];
                     $aadGraphTokenResult = $array[Constants::AADGraph]['value'];
                 } else {
-                    $microsoftTokenExpires = $array[Constants::RESOURCE_ID]['expiresOn'];
-                    $microsoftTokenResult = $array[Constants::RESOURCE_ID]['value'];
+                    $msGraphTokenExpires = $array[Constants::RESOURCE_ID]['expiresOn'];
+                    $msGraphTokenResult = $array[Constants::RESOURCE_ID]['value'];
                 }
             }
-            $format = '{"%s":{"expiresOn":"%s","value":"%s"},"%s":{"expiresOn":"%s","value":"%s"}}';
-            $tokensArray = sprintf($format, Constants::AADGraph, $aadTokenExpires, $aadGraphTokenResult, Constants::RESOURCE_ID, $microsoftTokenExpires, $microsoftTokenResult);
+
+            $tokensArray = $this->FormatToken($aadTokenExpires,$aadGraphTokenResult,$msGraphTokenExpires,$msGraphTokenResult);
             $this->UpdateOrInsertCache($userId, $newRefreshToken, $tokensArray);
             if ($resource === Constants::RESOURCE_ID) {
                 if ($returnExpires)
-                    return ["token" => $microsoftTokenResult, "expires" => $microsoftTokenExpires];
-                return $microsoftTokenResult;
+                    return ["token" => $msGraphTokenResult, "expires" => $msGraphTokenExpires];
+                return $msGraphTokenResult;
             } else {
                 if ($returnExpires)
                     return ["token" => $aadGraphTokenResult, "expires" => $aadTokenExpires];
@@ -159,5 +159,11 @@ class TokenCacheService
             exit();
         }
 
+    }
+
+    public function FormatToken($aadTokenExpires, $aadGraphTokenResult, $msGraphTokenExpires, $msGraphTokenResult)
+    {
+        $format = '{"%s":{"expiresOn":"%s","value":"%s"},"%s":{"expiresOn":"%s","value":"%s"}}';
+        return sprintf($format, Constants::AADGraph, $aadTokenExpires, $aadGraphTokenResult, Constants::RESOURCE_ID, $msGraphTokenExpires, $msGraphTokenResult);
     }
 }

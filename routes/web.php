@@ -58,7 +58,7 @@ Route::group(['middleware' => ['web', 'auth', 'LinkRequired']], function () {
 });
 
 //user photo.
-Route::get('/userPhoto/{o365UserId}', 'SchoolsController@userPhoto');
+Route::get('/userPhoto/{o365UserId}', 'UserPhotoController@userPhoto');
 
 //link
 Route::group(['middleware' => ['web']], function () {

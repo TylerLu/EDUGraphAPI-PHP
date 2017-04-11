@@ -15,8 +15,10 @@ use App\Services\TokenCacheService;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use Lcobucci\JWT\Token;
 use Microsoft\Graph\Connect\Constants;
 use Socialize;
+use App\Services\UserService;
 
 
 class O365AuthController extends Controller
@@ -33,12 +35,12 @@ class O365AuthController extends Controller
         $o365UserId = $user->id;
         $o365Email = $user->email;
 
-        $microsoftTokenArray = (new TokenCacheService())->refreshToken($user->id, $refreshToken, Constants::RESOURCE_ID, true);
-        $tokensArray = $this->getTokenArray($user, $microsoftTokenArray);
+        $msGraphTokenArray = (new TokenCacheService())->refreshToken($user->id, $refreshToken, Constants::RESOURCE_ID, true);
+        $tokensArray = $this->getTokenArray($user, $msGraphTokenArray);
         (new TokenCacheService)->UpdateOrInsertCache($o365UserId, $refreshToken, $tokensArray);
 
         $graph = new AADGraphClient;
-        $tenant = $graph->GetTenantByToken($microsoftTokenArray['token']);
+        $tenant = $graph->GetTenantByToken($msGraphTokenArray['token']);
         $tenantId = $graph->GetTenantId($tenant);
         $orgId = (new OrganizationsService)->CreateOrganization($tenant, $tenantId);
         $this->linkLocalUserToO365IfLogin($user, $o365Email, $o365UserId, $orgId);
@@ -75,14 +77,12 @@ class O365AuthController extends Controller
     /**
      * Return token array and will be insert into tokencache table.
      */
-    private function getTokenArray($user, $microsoftTokenArray)
+    private function getTokenArray($user, $msGraphTokenArray)
     {
         $ts = $user->accessTokenResponseBody['expires_on'];
         $date = new \DateTime("@$ts");
         $aadTokenExpires = $date->format('Y-m-d H:i:s');
-        $format = '{"%s":{"expiresOn":"%s","value":"%s"},"%s":{"expiresOn":"%s","value":"%s"}}';
-        return sprintf($format,Constants::AADGraph, $aadTokenExpires, $user->token,Constants::RESOURCE_ID, $microsoftTokenArray['expires'], $microsoftTokenArray['token']);
-
+        return (new TokenCacheService())->FormatToken($aadTokenExpires,$user->token,$msGraphTokenArray['expires'], $msGraphTokenArray['token']);
     }
 
     /**
@@ -101,14 +101,7 @@ class O365AuthController extends Controller
             if (User::where('o365Email', $o365Email)->first())
                 return back()->with('msg', 'Failed to link accounts. The Office 365 account ' . $o365Email . ' is already linked to another local account.');
 
-            $localUser = Auth::user();
-            $localUser->o365UserId = $o365UserId;
-            $localUser->o365Email = $o365Email;
-            $localUser->firstName = $user->user['givenName'];
-            $localUser->lastName = $user->user['surname'];
-            $localUser->password = '';
-            $localUser->OrganizationId = $orgId;
-            $localUser->save();
+            UserService::SaveUserInfo($o365UserId,$o365Email,$user->user['givenName'],$user->user['surname'],$orgId);
             return redirect("/schools");
         }
     }

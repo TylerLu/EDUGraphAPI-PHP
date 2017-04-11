@@ -10,6 +10,7 @@ use App\Config\SiteConstants;
 use App\Http\Controllers\Controller;
 use App\Model\Organizations;
 use App\Services\AADGraphClient;
+use App\Services\AdminService;
 use App\Services\AuthenticationHelper;
 use App\Services\OrganizationsService;
 use App\Services\TokenCacheService;
@@ -88,16 +89,7 @@ class AdminController extends Controller
         $redirectUrl = $_SERVER['HTTP_ORIGIN'] . '/admin/processcode';
         $state = uniqid();
         $_SESSION[SiteConstants::Session_State] = $state;
-
-        $provider = (new AuthenticationHelper())->GetProvider($redirectUrl);
-
-        $url = $provider->getAuthorizationUrl([
-            'response_type' => 'code',
-            'resource' => Constants::AADGraph,
-            'state' => $state,
-            'prompt' => SiteConstants::AdminConsent
-        ]);
-
+        $url = (new AdminService)->getAuthorizationUrl($state,$redirectUrl);
         header('Location: ' . $url);
         exit();
     }
@@ -114,12 +106,8 @@ class AdminController extends Controller
         }
         if ($code) {
             $redirectUrl = 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST']. '/admin/processcode';
-            $provider = (new AuthenticationHelper())->GetProvider($redirectUrl);
-            $microsoftToken = $provider->getAccessToken('authorization_code', [
-                'code' => $code,
-                'resource' => Constants::RESOURCE_ID
-            ]);
-            $idToken = $microsoftToken->getValues()['id_token'];
+            $msGraphToken =(new AdminService)->getMsGraphToken($redirectUrl,$code);
+            $idToken = $msGraphToken->getValues()['id_token'];
             $parsedToken = (new Parser())->parse((string)$idToken);
             $tenantId = $parsedToken->getClaim('tid');
             (new OrganizationsService)->SetTenantConsentResult($tenantId, true);
@@ -141,25 +129,7 @@ class AdminController extends Controller
         $o365UserId = $user->o365UserId;
         $token = (new TokenCacheService)->GetAADToken($o365UserId);
         $tenantId = (new AADGraphClient)->GetTenantIdByUserId($o365UserId);
-        $url = Constants::AADGraph . '/' . $tenantId . '/servicePrincipals/?api-version=1.6&$filter=appId%20eq%20\'' . env(Constants::CLIENT_ID) . '\'';
-        $client = new \GuzzleHttp\Client();
-        $result = $client->request('GET', $url, [
-            'headers' => [
-                'Content-Type' => 'application/json;odata.metadata=minimal;odata.streaming=true',
-                'Authorization' => 'Bearer ' . $token
-            ]
-        ]);
-        $app = json_decode($result->getBody())->value;
-        $appId = $app[0]->objectId;
-        $url = Constants::AADGraph . '/' . $tenantId . '/servicePrincipals/' . $appId . '?api-version=1.6';
-        $result = $client->request('DELETE', $url, [
-            'headers' => [
-                'Content-Type' => 'application/json;odata.metadata=minimal;odata.streaming=true',
-                'Authorization' => 'Bearer ' . $token
-            ]
-        ]);
-        (new OrganizationsService)->SetTenantConsentResult($tenantId, false);
-
+        (new AdminService())->unconsent($tenantId,$token);
         header('Location: ' . '/admin?consented=false');
         exit();
 

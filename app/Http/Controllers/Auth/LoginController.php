@@ -56,6 +56,6 @@ class LoginController extends Controller
 
     public function getFailedLoginMessage()
     {
-        return 'what you want here.';
+        return 'Invalid login attempt.';
     }
 }

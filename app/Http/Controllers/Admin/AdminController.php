@@ -86,7 +86,7 @@ class AdminController extends Controller
      */
     public function AdminConsent()
     {
-        $redirectUrl = $_SERVER['HTTP_ORIGIN'] . '/admin/processcode';
+        $redirectUrl = 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'] . '/admin/processcode';
         $state = uniqid();
         $_SESSION[SiteConstants::Session_State] = $state;
         $url = (new AdminService)->getAuthorizationUrl($state,$redirectUrl);

@@ -269,7 +269,7 @@ Microsoft Graph SDK for PHP is used to get tokens from AAD.
 
 - **[Microsoft Graph SDK for PHP](https://github.com/microsoftgraph/msgraph-sdk-php)**: The Microsoft Graph SDK for PHP does not include any default authentication implementations. Instead, you can authenticate with the library of your choice, or against the OAuth endpoint directly.
 
-The 2 kinds of authentication are implemented in the **/app/Services/TokenCacheService.php** file.
+The 2 kinds of authentication are implemented in the **/app/Services/TokenCacheService.php** file and **/app/Http/Controller/O365AuthController.php**.
 
 **Data Access**
 
@@ -294,10 +294,13 @@ The services used by the server side app:
 | Service           | Description                              |
 | ----------------- | ---------------------------------------- |
 | AADGraphClient    | Contains methods used to access MS Graph APIs |
-| EducationService  | Contains two methods: get/update seating arrangements |
+| EducationService  | Contains methods like get user information,  get schools, classes and users, get/update seating arrangements |
 | CookieService     | Contains methods that used to manage cookies |
-| TokenCacheService | Contains method used to get and update cache from the database |
+| TokenCacheService | Contains method used to get and update token cache from the database |
 | UserService       | Contains method used to manipulate users in the database |
+| AdminService      | Contains method used to unconsent.       |
+
+
 
 The services are in the **/services** folder.
 

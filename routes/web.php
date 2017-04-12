@@ -34,12 +34,7 @@ Route::get('/differentaccount', 'O365AuthController@differentAccountLogin');
 Route::get('/oauth.php', 'O365AuthController@oauth');
 Route::get('/o365login', 'O365AuthController@o365Login');
 
-Route::get('/userlogout', function () {
-    Session::flush();
-    session_destroy();
-    Auth::logout();
-    return Redirect::to('/');
-});
+Route::get('/userlogout', 'Auth\LogoutController@Logout');
 
 //login, register related.
 Auth::routes();

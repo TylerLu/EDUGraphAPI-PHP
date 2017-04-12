@@ -185,7 +185,7 @@ Debug the **EDUGraphAPI.Web**:
 
 **Deploy the Azure Components from GitHub**
 
-1. Check to ensure that the build is passing VSTS Build.
+1. Check to ensure that the build can run in local environment.
 
 2. Fork this repository to your GitHub account.
 

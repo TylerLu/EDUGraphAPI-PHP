@@ -59,7 +59,7 @@ class SchoolsController extends Controller
         $fullName = Auth::user()->firstName . ' '. Auth::user()->lastName ;
         $cookieServices->SetCookies($fullName, $me->mail);
 
-        $data = ["me" => $me, "schools" => $schools, "bingMapKey" => env(Constants::BINGMAPKEY)];
+        $data = ["me" => $me, "schools" => $schools, "bingMapKey" => env(Constants::BINGMAPKEY,'')];
         return view('schools.schools', $data);
     }
 

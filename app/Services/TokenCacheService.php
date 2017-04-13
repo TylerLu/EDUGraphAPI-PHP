@@ -50,36 +50,7 @@ class TokenCacheService
     }
 
 
-    /**
-     * Get token from DB first. If a token is expired, get a new one from O365 using refresh token and then update DB. If refresh token is expired, let user to relogin the site.
-     * @param $userId
-     * @param $resource
-     * @return array|string
-     */
-    private function getToken($userId, $resource)
-    {
-        $tokenCache = TokenCache::where('UserId', $userId)->first();
 
-        if ($tokenCache) {
-            //1. Check if token is expired. If expired, get a new token with refresh token.
-            $token = $tokenCache->accessTokens;
-            $array = array();
-            $array = json_decode($token, true);
-            $expired = $array[$resource]['expiresOn'];
-
-            $date1 = gmdate($expired);
-            $date2 = gmdate(date("Y-m-d h:i:s"));
-
-            if (!$expired || (strtotime($date1) < strtotime($date2))) {
-                return $this->RefreshToken($userId, $tokenCache->refreshToken, $resource);
-            } else
-                return $array[$resource]['value'];
-        } else {
-            header('Location: ' . '/o365loginrequired');
-            exit();
-        }
-
-    }
 
     /**
      * Get a new token with refresh token when a token is expired.
@@ -165,5 +136,36 @@ class TokenCacheService
     {
         $format = '{"%s":{"expiresOn":"%s","value":"%s"},"%s":{"expiresOn":"%s","value":"%s"}}';
         return sprintf($format, Constants::AADGraph, $aadTokenExpires, $aadGraphTokenResult, Constants::RESOURCE_ID, $msGraphTokenExpires, $msGraphTokenResult);
+    }
+
+    /**
+     * Get token from DB first. If a token is expired, get a new one from O365 using refresh token and then update DB. If refresh token is expired, let user to relogin the site.
+     * @param $userId
+     * @param $resource
+     * @return array|string
+     */
+    private function getToken($userId, $resource)
+    {
+        $tokenCache = TokenCache::where('UserId', $userId)->first();
+
+        if ($tokenCache) {
+            //1. Check if token is expired. If expired, get a new token with refresh token.
+            $token = $tokenCache->accessTokens;
+            $array = array();
+            $array = json_decode($token, true);
+            $expired = $array[$resource]['expiresOn'];
+
+            $date1 = gmdate($expired);
+            $date2 = gmdate(date("Y-m-d h:i:s"));
+
+            if (!$expired || (strtotime($date1) < strtotime($date2))) {
+                return $this->RefreshToken($userId, $tokenCache->refreshToken, $resource);
+            } else
+                return $array[$resource]['value'];
+        } else {
+            header('Location: ' . '/o365loginrequired');
+            exit();
+        }
+
     }
 }

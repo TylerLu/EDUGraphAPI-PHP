@@ -74,6 +74,36 @@ class O365AuthController extends Controller
         }
     }
 
+
+
+    /**
+     * If an O365 user is linked and login to the site, after logout, go to this page directly for quick login.
+     */
+    public function o365LoginHint()
+    {
+        $cookieServices = new CookieService();
+        $email = $cookieServices->GetCookiesOfEmail();
+        $userName = $cookieServices->GetCookiesOfUsername();
+        $data = ["email" => $email, "userName" => $userName];
+        return view('auth.o365loginhint', $data);
+
+    }
+
+    public function o365Login()
+    {
+        return Socialize::with('O365')->redirect();
+    }
+
+    /**
+     * This function is for O365 login hint page after a user clicks 'Login with a different account'. It will clean all cookies and then goes to login page.
+     */
+    public function differentAccountLogin()
+    {
+        $cookieServices = new CookieService();
+        $cookieServices->ClearCookies();
+        return redirect('/login');
+    }
+
     /**
      * Return token array and will be insert into tokencache table.
      */
@@ -105,33 +135,4 @@ class O365AuthController extends Controller
             return redirect("/schools");
         }
     }
-
-    /**
-     * If an O365 user is linked and login to the site, after logout, go to this page directly for quick login.
-     */
-    public function o365LoginHint()
-    {
-        $cookieServices = new CookieService();
-        $email = $cookieServices->GetCookiesOfEmail();
-        $userName = $cookieServices->GetCookiesOfUsername();
-        $data = ["email" => $email, "userName" => $userName];
-        return view('auth.o365loginhint', $data);
-
-    }
-
-    public function o365Login()
-    {
-        return Socialize::with('O365')->redirect();
-    }
-
-    /**
-     * This function is for O365 login hint page after a user clicks 'Login with a different account'. It will clean all cookies and then goes to login page.
-     */
-    public function differentAccountLogin()
-    {
-        $cookieServices = new CookieService();
-        $cookieServices->ClearCookies();
-        return redirect('/login');
-    }
-
 }

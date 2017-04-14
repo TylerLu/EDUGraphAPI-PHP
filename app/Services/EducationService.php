@@ -20,7 +20,7 @@ use Microsoft\Graph\Model;
 
 class  EducationService
 {
-    private $tokenCacheService;
+
     private $o365UserId;
     private $aadGraphClient;
     private $token;
@@ -32,8 +32,7 @@ class  EducationService
      */
     public function __construct($token)
     {
-        $this->tokenCacheService = new TokenCacheService();
-        $this->aadGraphClient = new AADGraphClient();
+        $this->aadGraphClient = new AADGraphService();
         if (isset($_SESSION[SiteConstants::Session_O365_User_ID])) {
             $this->o365UserId = $_SESSION[SiteConstants::Session_O365_User_ID];
         } else {
@@ -53,7 +52,7 @@ class  EducationService
      */
     public function getMe()
     {
-        $json = $this->getResponse("get", "/me?api-version=1.5", null, null, null);
+        $json = $this->getResponse( "/me?api-version=1.5", null, null, null);
         $assignedLicenses = array_map(function ($license) {
             return new Model\AssignedLicense($license);
         }, $json["assignedLicenses"]);
@@ -81,7 +80,7 @@ class  EducationService
      */
     public function getSchools()
     {
-        return $this->getAllPages("get", "/administrativeUnits?api-version=beta", School::class);
+        return $this->getAllPages( "/administrativeUnits?api-version=beta", School::class);
     }
 
     /**
@@ -94,7 +93,7 @@ class  EducationService
      */
     public function getSchool($objectId)
     {
-        return $this->getResponse("get", "/administrativeUnits/" . $objectId . "?api-version=beta", School::class, null, null);
+        return $this->getResponse( "/administrativeUnits/" . $objectId . "?api-version=beta", School::class, null, null);
     }
 
     /**
@@ -106,7 +105,7 @@ class  EducationService
      */
     public function getMySections($loadMembers)
     {
-        $memberOfs = $this->getAllPages("get", "/me/memberOf?api-version=1.5", Section::class);
+        $memberOfs = $this->getAllPages( "/me/memberOf?api-version=1.5", Section::class);
         $sections = [];
         if (empty($memberOfs)) {
             return $sections;
@@ -137,7 +136,7 @@ class  EducationService
      */
     public function getSectionWithMembers($objectId)
     {
-        return $this->getResponse("get", '/groups/' . $objectId . '?api-version=beta&$expand=members', Section::class, null, null);
+        return $this->getResponse( '/groups/' . $objectId . '?api-version=beta&$expand=members', Section::class, null, null);
     }
 
     /**
@@ -170,7 +169,7 @@ class  EducationService
      */
     public function getSections($schoolId, $top, $skipToken)
     {
-        return $this->getResponse("get", '/groups?api-version=beta&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20\'Section\'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20\'' . $schoolId . '\'', Section::class, $top, $skipToken);
+        return $this->getResponse( '/groups?api-version=beta&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20\'Section\'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20\'' . $schoolId . '\'', Section::class, $top, $skipToken);
     }
 
     /**
@@ -185,7 +184,7 @@ class  EducationService
      */
     public function getMembers($objectId, $top, $skipToken)
     {
-        return $this->getResponse("get", "/administrativeUnits/" . $objectId . "/members?api-version=beta", SectionUser::class, $top, $skipToken);
+        return $this->getResponse( "/administrativeUnits/" . $objectId . "/members?api-version=beta", SectionUser::class, $top, $skipToken);
     }
 
     /**
@@ -200,7 +199,7 @@ class  EducationService
      */
     public function getStudents($schoolId, $top, $skipToken)
     {
-        return $this->getResponse("get", "/users?api-version=1.5&\$filter=extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId eq '$schoolId' and extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType eq 'Student'", SectionUser::class, $top, $skipToken);
+        return $this->getResponse( "/users?api-version=1.5&\$filter=extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId eq '$schoolId' and extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType eq 'Student'", SectionUser::class, $top, $skipToken);
     }
 
     /**
@@ -215,17 +214,17 @@ class  EducationService
      */
     public function getTeachers($schoolId, $top, $skipToken)
     {
-        return $this->getResponse("get", "/users?api-version=1.5&\$filter=extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId eq '$schoolId' and extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType eq 'Teacher'", SectionUser::class, $top, $skipToken);
+        return $this->getResponse( "/users?api-version=1.5&\$filter=extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId eq '$schoolId' and extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType eq 'Teacher'", SectionUser::class, $top, $skipToken);
     }
 
     private function IsUserStudent($licenses)
     {
-        return $this->aadGraphClient->IsUserStudent($licenses);
+        return AADGraphService::IsUserStudent($licenses);
     }
 
     private function IsUserTeacher($licenses)
     {
-        return $this->aadGraphClient->IsUserTeacher($licenses);
+        return AADGraphService::IsUserTeacher($licenses);
     }
 
     /**
@@ -239,7 +238,7 @@ class  EducationService
      *
      * @return mixed Response of AAD Graph API
      */
-    private function getResponse($requestType, $endpoint, $returnType, $top, $skipToken)
+    private function getResponse( $endpoint, $returnType, $top, $skipToken,$requestType='get')
     {
         $token = $this->getToken();
         if ($token) {
@@ -250,7 +249,12 @@ class  EducationService
             if ($skipToken) {
                 $url = $this->appendParamToUrl($url, "\$skiptoken", $skipToken);
             }
-            $result = HttpService::getHttpResponse($requestType, $token, $url);
+            if($requestType==='get'){
+                $result = HttpUtils::getHttpResponse( $token, $url);
+            }else if($requestType==='post'){
+                $result = HttpUtils::postHttpResponse( $token, $url);
+            }
+
             $json = json_decode($result->getBody(), true);
             if ($returnType) {
                 $isArray = (array_key_exists('value', $json) && is_array($json['value']));
@@ -272,11 +276,11 @@ class  EducationService
      *
      * @return mixed All pages of data of AAD Graph API
      */
-    private function getAllPages($requestType, $endpoint, $returnType)
+    private function getAllPages( $endpoint, $returnType)
     {
-        $data = $nextPage = $this->getResponse($requestType, $endpoint, $returnType, 100, null);
+        $data = $nextPage = $this->getResponse( $endpoint, $returnType, 100, null);
         while ($nextPage->skipToken) {
-            $nextPage = $this->getResponse("get", "/administrativeUnits?api-version=beta", School::class, 100, $data->skipToken);
+            $nextPage = $this->getResponse($endpoint, $returnType, 100, $data->skipToken);
             $data->value = array_merge($data->value, $nextPage->value);
         }
         return $data->value;
@@ -306,7 +310,8 @@ class  EducationService
         if (array_key_exists(SiteConstants::Session_TenantId, $_SESSION)) {
             return $_SESSION[SiteConstants::Session_TenantId];
         }
-        return $this->aadGraphClient->GetTenantIdByUserId($this->o365UserId);
+        $token = (new TokenCacheService)->GetMSGraphToken($this->o365UserId);
+        return $this->aadGraphClient->GetTenantIdByUserId($this->o365UserId,$token);
     }
 
     /**

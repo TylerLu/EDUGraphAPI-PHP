@@ -61,5 +61,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'AdminOnly' =>\App\Http\Middleware\AdminOnlyMiddleware::class,
         'LinkRequired' =>\App\Http\Middleware\LinkRequiredMiddleware::class,
+        'LocalOrO365LoginRequired'=>\App\Http\Middleware\LocalOrO365LoginRequiredMiddleware::class,
     ];
 }

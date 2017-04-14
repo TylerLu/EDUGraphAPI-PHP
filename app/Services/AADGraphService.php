@@ -15,7 +15,7 @@ use Microsoft\Graph\Connect\Constants;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
 
-class AADGraphClient
+class AADGraphService
 {
 
     /**
@@ -31,10 +31,9 @@ class AADGraphClient
     /**
      * Get current user and roles from AAD. Update user roles to database.
      */
-    public function GetCurrentUserAndUpdateUserRoles($userId)
+    public function GetCurrentUserRoles($userId, $token)
     {
-        $token = (new TokenCacheService)->GetMsGraphToken($userId);
-        if ($token) {
+
             $graph = new Graph();
             $graph->setAccessToken($token);
             $me = $graph->createRequest("get", "/me")
@@ -46,13 +45,11 @@ class AADGraphClient
             $roles = array();
             if ($this->IsUserAdmin($userId))
                 array_push($roles, Roles::Admin);
-            if ($this->IsUserStudent($licenses))
+            if (self::IsUserStudent($licenses))
                 array_push($roles, Roles::Student);
-            if ($this->IsUserTeacher($licenses))
+            if (self::IsUserTeacher($licenses))
                 array_push($roles, Roles::Faculty);
-            (new UserRolesService)->CreateOrUpdateUserRoles($roles, $userId);
-
-        }
+            return $roles;
 
     }
 
@@ -61,9 +58,8 @@ class AADGraphClient
      * @param $userId
      * @return mixed|null
      */
-    public function GetTenantByUserId($userId)
+    public function GetTenantByUserId($userId,$token)
     {
-        $token = (new TokenCacheService)->GetMsGraphToken($userId);
         return $this->GetTenantByToken($token);
     }
 
@@ -91,14 +87,14 @@ class AADGraphClient
         return $array->id;
     }
 
-    public function GetTenantIdByUserId($userId)
+    public function GetTenantIdByUserId($userId,$token)
     {
-        $tenant = $this->GetTenantByUserId($userId);
+        $tenant = $this->GetTenantByUserId($userId,$token);
         return $this->GetTenantId($tenant);
     }
 
 
-    public function IsUserStudent($licenses)
+    public static function IsUserStudent($licenses)
     {
         while ($license = each($licenses)) {
             if (is_array($license['value']))
@@ -110,7 +106,7 @@ class AADGraphClient
         return false;
     }
 
-    public function IsUserTeacher($licenses)
+    public static function IsUserTeacher($licenses)
     {
         while ($license = each($licenses)) {
             if (is_array($license['value']))
@@ -124,16 +120,17 @@ class AADGraphClient
     }
 
 
-    private function IsUserAdmin($userId)
+    private  function IsUserAdmin($userId)
     {
         $tenantId = '';
         if (isset($_SESSION[SiteConstants::Session_TenantId])) {
             $tenantId = $_SESSION[SiteConstants::Session_TenantId];
         } else {
-            $tenantId = $this->GetTenantIdByUserId($userId);
+            $token = (new TokenCacheService)->GetAADToken($userId);
+            $tenantId = $this->GetTenantIdByUserId($userId,$token);
         }
         $token = (new TokenCacheService)->GetAADToken($userId);
-        $adminRoles = $this->GetDirectoryAdminRole($userId, $tenantId, $token);
+        $adminRoles = $this->GetDirectoryAdminRole( $tenantId, $token);
         $adminMembers = $this->GetAdminDirectoryMembers($tenantId, $adminRoles['value']->objectId, $token);
         $isAdmin = false;
         while ($member = each($adminMembers)) {
@@ -144,20 +141,11 @@ class AADGraphClient
         return $isAdmin;
     }
 
-    private function GetDirectoryAdminRole($userId, $tenantId, $token)
+    private function GetDirectoryAdminRole($tenantId, $token)
     {
 
         $url = Constants::AADGraph . '/' . $tenantId . '/directoryRoles?api-version=1.6';
-        $client = new Client();
-
-        $result = $client->request('GET', $url, [
-            'headers' => [
-                'Content-Type' => 'application/json;odata.metadata=minimal;odata.streaming=true',
-                'Authorization' => 'Bearer ' . $token
-            ]
-        ]);
-
-        $roles = json_decode($result->getBody())->value;
+        $roles = HttpUtils::getHttpResponseJson($token,$url)->value;
         while ($role = each($roles)) {
             if ($role['value']->displayName === SiteConstants::AADCompanyAdminRoleName) {
                 return $role;
@@ -168,15 +156,7 @@ class AADGraphClient
     private function GetAdminDirectoryMembers($tenantId, $roleId, $token)
     {
         $url = Constants::AADGraph . '/' . $tenantId . '/directoryRoles/' . $roleId . '/$links/members?api-version=1.6';
-        $client = new Client();
+        return HttpUtils::getHttpResponseJson($token,$url)->value;
 
-        $result = $client->request('GET', $url, [
-            'headers' => [
-                'Content-Type' => 'application/json;odata.metadata=minimal;odata.streaming=true',
-                'Authorization' => 'Bearer ' . $token
-            ]
-        ]);
-
-        return $members = json_decode($result->getBody())->value;
     }
 }

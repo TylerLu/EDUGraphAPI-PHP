@@ -8,7 +8,7 @@ namespace App\Http\Controllers;
 
 
 use App\Config\SiteConstants;
-use App\Services\AADGraphClient;
+use App\Services\AADGraphService;
 use App\Services\CookieService;
 use App\Services\OrganizationsService;
 use App\Services\TokenCacheService;
@@ -30,17 +30,14 @@ class O365AuthController extends Controller
     public function oauth()
     {
         $user = Socialite::driver('O365')->user();
-
         $refreshToken = $user->refreshToken;
         $o365UserId = $user->id;
         $o365Email = $user->email;
 
-        $msGraphTokenArray = (new TokenCacheService())->refreshToken($user->id, $refreshToken, Constants::RESOURCE_ID, true);
-        $tokensArray = $this->getTokenArray($user, $msGraphTokenArray);
-        (new TokenCacheService)->UpdateOrInsertCache($o365UserId, $refreshToken, $tokensArray);
-
-        $graph = new AADGraphClient;
-        $tenant = $graph->GetTenantByToken($msGraphTokenArray['token']);
+        $tokensArray = (new TokenCacheService)->UpdateTokenWhenLogin($user,$refreshToken);
+        $msGraphToken = \GuzzleHttp\json_decode($tokensArray,true)[Constants::RESOURCE_ID]['value'];
+        $graph = new AADGraphService;
+        $tenant = $graph->GetTenantByToken($msGraphToken);
         $tenantId = $graph->GetTenantId($tenant);
         $orgId = (new OrganizationsService)->CreateOrganization($tenant, $tenantId);
         $this->linkLocalUserToO365IfLogin($user, $o365Email, $o365UserId, $orgId);

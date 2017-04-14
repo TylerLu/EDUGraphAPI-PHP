@@ -8,7 +8,7 @@ namespace App\Services;
 
 use Microsoft\Graph\Connect\Constants;
 
-class MapService
+class MapUtils
 {
     /**
      * Get the longitude and latitude of a place
@@ -27,7 +27,7 @@ class MapService
         }
         if ($state || $city || $address) {
             $url = sprintf("http://dev.virtualearth.net/REST/v1/Locations/US/%s/%s/%s?output=json&key=%s", $state, $city, $address, env(Constants::BINGMAPKEY,''));
-            $result = HttpService::getHttpResponse("get", null, $url);
+            $result = HttpUtils::getHttpResponse( null, $url);
             $json = json_decode($result->getBody());
             return $json->resourceSets[0]->resources[0]->point->coordinates;
         }

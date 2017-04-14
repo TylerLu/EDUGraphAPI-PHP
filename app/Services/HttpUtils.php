@@ -8,7 +8,7 @@ namespace App\Services;
 
 use GuzzleHttp\Client;
 
-class HttpService
+class HttpUtils
 {
     /**
      * Get response of AAD Graph API
@@ -19,15 +19,38 @@ class HttpService
      *
      * @return mixed Response of the HTTP request
      */
-    public static function getHttpResponse($requestType, $token, $url)
+    public static function getHttpResponse($token, $url)
+    {
+        return self::getResponse('get',$token,$url);
+    }
+
+    public static function postHttpResponse($token, $url)
+    {
+        return self::getResponse('post',$token,$url);
+    }
+
+    public static function getHttpResponseJson($token, $url)
+    {
+        $result = self::getHttpResponse($token,$url)->getBody();
+        return json_decode($result) ;
+    }
+
+    public static function deleteHttpResponseJson($token, $url)
+    {
+        return self::getResponse('DELETE',$token,$url);
+    }
+
+    private static  function getResponse($requestType, $token, $url)
     {
         $client = new Client();
         $authHeader = [];
         if ($token) {
-            $authHeader = HttpService::getAuthHeader($token);
+            $authHeader = HttpUtils::getAuthHeader($token);
         }
         return $client->request($requestType, $url, $authHeader);
     }
+
+
 
     /**
      * Get authorization header for http request
@@ -36,7 +59,7 @@ class HttpService
      *
      * @return array The authorization header for http request
      */
-    private static function getAuthHeader($token)
+    public static function getAuthHeader($token)
     {
         return [
             'headers' => [

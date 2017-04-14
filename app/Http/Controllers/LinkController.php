@@ -7,6 +7,7 @@
 namespace App\Http\Controllers;
 
 use App\Config\SiteConstants;
+use App\Services\UserRolesService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Input;
 use App\User;
 use App\Model\TokenCache;
 use App\Services\TokenCacheService;
-use App\Services\AADGraphClient;
+use App\Services\AADGraphService;
 
 
 class LinkController extends Controller
@@ -36,7 +37,9 @@ class LinkController extends Controller
                     $isLocalUserExists = true;
                     $localUserEmail = $_SESSION[SiteConstants::Session_O365_User_Email];
                 }
-                (new AADGraphClient)->GetCurrentUserAndUpdateUserRoles($o365userId);
+
+              $roles =  (new AADGraphService)->GetCurrentUserRoles($o365userId, (new TokenCacheService)->GetMSGraphToken($o365userId));
+              (new UserRolesService)->CreateOrUpdateUserRoles($roles, $o365userId);
             }
         }
 

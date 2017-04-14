@@ -55,9 +55,12 @@ Route::group(['middleware' => ['web', 'auth', 'LinkRequired']], function () {
 //user photo.
 Route::get('/userPhoto/{o365UserId}', 'UserPhotoController@userPhoto');
 
+Route::group(['middleware' => ['web','LocalOrO365LoginRequired']], function () {
+    Route::get('/link', 'LinkController@index');
+    Route::get('/auth/aboutme', 'Auth\AboutMeController@index');
+});
 //link
 Route::group(['middleware' => ['web']], function () {
-    Route::get('/link', 'LinkController@index');
     Route::any('/link/createlocalaccount', 'LinkController@createLocalAccount');
     Route::any('/link/loginlocal', 'LinkController@loginLocal');
 });
@@ -81,5 +84,5 @@ Route::group(['middleware' => ['web', 'auth', 'AdminOnly'], 'namespace' => 'Admi
     Route::post('/admin/dounlink/{userId}', 'AdminController@DoUnlink');
 });
 
-Route::get('/auth/aboutme', 'Auth\AboutMeController@index');
+
 Route::post('/auth/savefavoritecolor', 'Auth\AboutMeController@SaveFavoriteColor');

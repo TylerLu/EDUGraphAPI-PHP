@@ -29,12 +29,23 @@ class TokenCacheService
 
     }
 
+    public function UpdateTokenWhenLogin($user,$refreshToken)
+    {
+        $msGraphTokenArray = $this->refreshToken($user->id, $refreshToken, Constants::RESOURCE_ID, true);
+        $ts = $user->accessTokenResponseBody['expires_on'];
+        $date = new \DateTime("@$ts");
+        $aadTokenExpires = $date->format('Y-m-d H:i:s');
+        $tokensArray = $this->FormatToken($aadTokenExpires,$user->token,$msGraphTokenArray['expires'], $msGraphTokenArray['token']);
+        $this->UpdateOrInsertCache($user->id, $refreshToken, $tokensArray);
+        return $tokensArray;
+    }
+
     /**
      * Return token of Microsoft. This token will be used on schools related page.
      * @param $userId
      * @return array|string
      */
-    public function GetMsGraphToken($userId)
+    public function GetMSGraphToken($userId)
     {
         return $this->getToken($userId, Constants::RESOURCE_ID);
     }

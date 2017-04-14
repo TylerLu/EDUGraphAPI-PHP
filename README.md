@@ -32,7 +32,7 @@ The sample demonstrates:
 
   - [Office 365 Schools REST API reference](https://msdn.microsoft.com/office/office365/api/school-rest-operations)
 
-EDUGraphAPI is based on NodeJS (the server side) and Angular 2 (the client side).
+EDUGraphAPI is implemented with the PHP language and the [Laravel](https://laravel.com/) framework.
 
 ## Prerequisites
 
@@ -253,27 +253,18 @@ Debug the **EDUGraphAPI.Web**:
 
 ![solution](/Images/solution.jpg)
 
-
-
-### **EDUGraphAPI Web - Server**
-
-The server side app is based on Laravel 5.4
-
 **Authentication Mechanisms**
 
-OAuth 2.0 Client plugin is used to enable local and O365 authentications:
+We utilized the built-in [authentication](https://laravel.com/docs/5.4/authentication) of the Laravel framework to enable user login.
 
-* **[oAuth 2.0 Client](https://github.com/thephpleague/oauth2-client)**: This OAuth 2.0 client library will work with any OAuth provider that conforms to the OAuth 2.0 standard. Out-of-the-box, we provide a GenericProvider that may be used to connect to any service provider that uses Bearer tokens.
+- **Local users authentication**: implemented by the default Eloquent authentication driver. The `App\User` [Eloquent model](https://laravel.com/docs/5.4/eloquent) is included to access users stored in the database.
+- **O365 users authentication**: implemented by [Laravel Socialite](https://github.com/laravel/socialite) and `App\Providers\O365Provider` which is based on the [Microsoft Azure](http://socialiteproviders.github.io/providers/microsoft-azure/) service provider.
 
-Microsoft Graph SDK for PHP is used to get tokens from AAD.
-
-- **[Microsoft Graph SDK for PHP](https://github.com/microsoftgraph/msgraph-sdk-php)**: The Microsoft Graph SDK for PHP does not include any default authentication implementations. Instead, you can authenticate with the library of your choice, or against the OAuth endpoint directly.
-
-The 2 kinds of authentication are implemented in the **/app/Services/TokenCacheService.php** file and **/app/Http/Controller/O365AuthController.php**.
+[thephpleague/oauth2-client](https://github.com/thephpleague/oauth2-client) is used to handle tokens.
 
 **Data Access**
 
-SQLITE database is used in this app.
+[Eloquent](https://laravel.com/docs/5.4/eloquent) is used to access data stroed in the SQLite database.
 
 The tables used in this demo:
 
@@ -285,24 +276,33 @@ The tables used in this demo:
 | TokenCache                   | Contains the users' access/refresh tokens. |
 | ClassroomSeatingArrangements | Contains the classroom seating arrangements. |
 
+**Controllers**
 
+Below are the main controllers used by the sample.
+
+| Controller         | Description                              |
+| ------------------ | ---------------------------------------- |
+| LoginController    | contains actions for local users to login |
+| O365AuthController | contains actions for O365 users to login |
+| LinkController     | implements the **Local/O365 Login Authentication Flow**. Please check [Authentication Flows](https://github.com/TylerLu/EDUGraphAPI#authentication-flows) section for more details. |
+| AdminController    | contains the admin actions               |
+| SchoolsController  | contains actions to show schools and classes. `SchoolsService` class is mainly used by this controller. Please check [Office 365 Education API](https://github.com/TylerLu/EDUGraphAPI#office-365-education-api) section for more details. |
 
 **Services**
 
-The services used by the server side app:
+Below are the main services used by the sample:
 
 | Service           | Description                              |
 | ----------------- | ---------------------------------------- |
-| AADGraphClient    | Contains methods used to access MS Graph APIs |
+| AADGraphService   | Contains methods used to access AAD Graph REST APIs |
+| MSGraphService    | Contains methods used to access MS Graph REST APIs |
 | EducationService  | Contains methods like get user information,  get schools, classes and users, get/update seating arrangements |
 | CookieService     | Contains methods that used to manage cookies |
 | TokenCacheService | Contains method used to get and update token cache from the database |
 | UserService       | Contains method used to manipulate users in the database |
 | AdminService      | Contains method used to unconsent.       |
 
-
-
-The services are in the **/services** folder.
+All the services are in the **/app/Services** folder.
 
 **Multi-tenant app**
 
@@ -316,44 +316,13 @@ Users from any Azure Active Directory tenant can access this app. Some permissio
 
 For more information, see [Build a multi-tenant SaaS web application using Azure AD & OpenID Connect](https://azure.microsoft.com/en-us/resources/samples/active-directory-dotnet-webapp-multitenant-openidconnect/).
 
-### **EDUGraphAPI Web Site**
-
-**Components**
-
-These components are used in the client app.
-
-| Folder               | Component                                |
-| -------------------- | ---------------------------------------- |
-| /app                 | Including controller, services, model and provider |
-| /app/Http/Controller | Controllers                              |
-| /app/Http/Middleware | Middleware                               |
-| /app/Model           | Models                                   |
-| /app/Providers       | Site providers                           |
-| /app/Services        | Services                                 |
-| /app/ViewModel       | ViewModel for blade pages                |
-| /database            | SQLITE database                          |
-| /public              | Images, css and js                       |
-| /resources/views     | Blade views                              |
-| /routes              | Site routes                              |
-|                      |                                          |
-|                      |                                          |
-|                      |                                          |
-|                      |                                          |
-|                      |                                          |
-|                      |                                          |
-|                      |                                          |
-
-
-
 
 
 ### Office 365 Education API
 
 The [Office 365 Education APIs](https://msdn.microsoft.com/office/office365/api/school-rest-operations) return data from any Office 365 tenant which has been synced to the cloud by Microsoft School Data Sync. The APIs provide information about schools, sections, teachers, students, and rosters. The Schools REST API provides access to school entities in Office 365 for Education tenants.
 
-In this sample, the **Microsoft.Education** Class Library project encapsulates the Office 365 Education API. 
-
-The **EducationServiceClient** is the core class of the library. It is used to easily get education data.
+In this sample, the `App\Services\EducationService` class encapsulates the Office 365 Education API. 
 
 **Get schools**
 

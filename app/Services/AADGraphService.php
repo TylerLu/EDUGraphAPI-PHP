@@ -29,16 +29,16 @@ class AADGraphService
     }
 
     /**
-     * Get current user and roles from AAD. Update user roles to database.
+     * Get current roles from AAD. The roles will be updated to database.
      */
     public function GetCurrentUserRoles($userId, $token)
     {
 
             $graph = new Graph();
             $graph->setAccessToken($token);
-            $me = $graph->createRequest("get", "/me")
-                ->setReturnType(Model\User::class)
-                ->execute();
+//            $me = $graph->createRequest("get", "/me")
+//                ->setReturnType(Model\User::class)
+//                ->execute();
             $licenses = $graph->createRequest("get", "/me/assignedLicenses")
                 ->setReturnType(Model\AssignedLicense::class)
                 ->execute();
@@ -122,7 +122,7 @@ class AADGraphService
 
     private  function IsUserAdmin($userId)
     {
-        $tenantId = '';
+        $tenantId = null;
         if (isset($_SESSION[SiteConstants::Session_TenantId])) {
             $tenantId = $_SESSION[SiteConstants::Session_TenantId];
         } else {

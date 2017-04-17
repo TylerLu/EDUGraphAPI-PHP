@@ -101,16 +101,6 @@ class O365AuthController extends Controller
         return redirect('/login');
     }
 
-    /**
-     * Return token array and will be insert into tokencache table.
-     */
-    private function getTokenArray($user, $msGraphTokenArray)
-    {
-        $ts = $user->accessTokenResponseBody['expires_on'];
-        $date = new \DateTime("@$ts");
-        $aadTokenExpires = $date->format('Y-m-d H:i:s');
-        return (new TokenCacheService())->FormatToken($aadTokenExpires,$user->token,$msGraphTokenArray['expires'], $msGraphTokenArray['token']);
-    }
 
     /**
      * If a local user is login, link O365 user with local user.

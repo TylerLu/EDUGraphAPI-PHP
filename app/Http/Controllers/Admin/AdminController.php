@@ -43,10 +43,9 @@ class AdminController extends Controller
         $user = Auth::user();
         $o365UserId = $user->o365UserId;
         $token = $this->tokenCacheService->GetMSGraphToken($o365UserId);
-        $tenantId = $this->aadGraphService->GetTenantIdByUserId($o365UserId,$token);
+        $tenantId = $this->aadGraphService->GetTenantIdByUserId($o365UserId, $token);
         if ($tenantId) {
-
-            $org= $this->organizationsService->GetOrganization($tenantId);
+            $org = $this->organizationsService->GetOrganization($tenantId);
             if ($org && $org->isAdminConsented) {
                 $IsAdminConsented = true;
             } else {
@@ -54,7 +53,7 @@ class AdminController extends Controller
             }
         }
         $msg = '';
-        $successMsg='';
+        $successMsg = '';
         $consented = Input::get('consented');
         if ($consented != null) {
             if ($consented === 'true')
@@ -71,7 +70,7 @@ class AdminController extends Controller
         $arrData = array(
             'IsAdminConsented' => $IsAdminConsented,
             'msg' => $msg,
-            'successMsg'=>$successMsg
+            'successMsg' => $successMsg
         );
         return view('admin.index', $arrData);
     }
@@ -101,10 +100,10 @@ class AdminController extends Controller
      */
     public function AdminConsent()
     {
-        $redirectUrl = 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'] . '/admin/processcode';
+        $redirectUrl = 'http' . (empty($_SERVER['HTTPS']) ? '' : 's') . '://' . $_SERVER['HTTP_HOST'] . '/admin/processcode';
         $state = uniqid();
         $_SESSION[SiteConstants::Session_State] = $state;
-        $url = $this->adminService->getAuthorizationUrl($state,$redirectUrl);
+        $url = $this->adminService->getAuthorizationUrl($state, $redirectUrl);
         header('Location: ' . $url);
         exit();
     }
@@ -120,8 +119,8 @@ class AdminController extends Controller
             return back()->with('msg', 'Invalid operation. Please try again.');
         }
         if ($code) {
-            $redirectUrl = 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST']. '/admin/processcode';
-            $msGraphToken =$this->adminService->getMSGraphToken($redirectUrl,$code);
+            $redirectUrl = 'http' . (empty($_SERVER['HTTPS']) ? '' : 's') . '://' . $_SERVER['HTTP_HOST'] . '/admin/processcode';
+            $msGraphToken = $this->adminService->getMSGraphToken($redirectUrl, $code);
             $idToken = $msGraphToken->getValues()['id_token'];
             $parsedToken = (new Parser())->parse((string)$idToken);
             $tenantId = $parsedToken->getClaim('tid');
@@ -143,9 +142,9 @@ class AdminController extends Controller
         $user = Auth::user();
         $o365UserId = $user->o365UserId;
         $token = $this->tokenCacheService->GetMSGraphToken($o365UserId);
-        $tenantId = $this->aadGraphService->GetTenantIdByUserId($o365UserId,$token);
+        $tenantId = $this->aadGraphService->GetTenantIdByUserId($o365UserId, $token);
         $token = $this->tokenCacheService->GetAADToken($o365UserId);
-        $this->adminService->unconsent($tenantId,$token);
+        $this->adminService->unconsent($tenantId, $token);
         header('Location: ' . '/admin?consented=false');
         exit();
 
@@ -156,7 +155,7 @@ class AdminController extends Controller
         $user = Auth::user();
         $o365UserId = $user->o365UserId;
         $token = $this->tokenCacheService->GetMSGraphToken($o365UserId);
-        $tenantId = $this->aadGraphService->GetTenantIdByUserId($o365UserId,$token);
+        $tenantId = $this->aadGraphService->GetTenantIdByUserId($o365UserId, $token);
         $org = $this->organizationsService->GetOrganization($tenantId);
         $users = [];
         if ($org) {
@@ -191,8 +190,6 @@ class AdminController extends Controller
         set_time_limit(1200);
         $this->adminService->enableUsersAccess();
     }
-
-
 
 
 }

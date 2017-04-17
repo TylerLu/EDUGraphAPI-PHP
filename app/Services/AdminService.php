@@ -49,7 +49,7 @@ class AdminService
         $app = HttpUtils::getHttpResponseJson($token,$url)->value;
         $appId = $app[0]->objectId;
         $url = Constants::AADGraph . '/' . $tenantId . '/servicePrincipals/' . $appId . '?api-version=1.6';
-        HttpUtils::deleteHttpResponseJson($token,$url);
+        HttpUtils::deleteHttpResponse($token,$url);
         (new OrganizationsService)->SetTenantConsentResult($tenantId, false);
     }
 

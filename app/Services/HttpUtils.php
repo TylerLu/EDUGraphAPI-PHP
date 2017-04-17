@@ -13,7 +13,6 @@ class HttpUtils
     /**
      * Get response of AAD Graph API
      *
-     * @param string $requestType The HTTP method to use, e.g. "GET" or "POST"
      * @param string $token The access token
      * @param string $url The url to send the HTTP request to
      *
@@ -35,7 +34,7 @@ class HttpUtils
         return json_decode($result) ;
     }
 
-    public static function deleteHttpResponseJson($token, $url)
+    public static function deleteHttpResponse($token, $url)
     {
         return self::getResponse('DELETE',$token,$url);
     }

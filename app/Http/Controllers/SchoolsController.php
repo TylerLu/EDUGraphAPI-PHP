@@ -20,10 +20,11 @@ use Microsoft\Graph\Connect\Constants;
 class SchoolsController extends Controller
 {
     private $educationService;
+    private $userServices;
 
     public function __construct()
     {
-
+        $this->userServices = new UserService();
     }
 
     /**
@@ -144,9 +145,10 @@ class SchoolsController extends Controller
         $me = $this->educationService->getMe();
         $school = $this->educationService->getSchool($objectId);
         $section = $this->educationService->getSectionWithMembers($classId);
+
         foreach ($section->getStudents() as $student) {
-            $student->position = UserService::getSeatPositionInClass($student->o365UserId, $classId);
-            $student->favoriteColor = UserService::getFavoriteColor($student->o365UserId);
+            $student->position = $this->userServices->getSeatPositionInClass($student->o365UserId, $classId);
+            $student->favoriteColor = $this->userServices->getFavoriteColor($student->o365UserId);
         }
 
 
@@ -213,7 +215,7 @@ class SchoolsController extends Controller
      */
     public function saveSeatingArrangements()
     {
-        $succeeded = UserService::saveSeatingArrangements(Input::all());
+        $succeeded = $this->userServices->saveSeatingArrangements(Input::all());
         return response()->json([], $succeeded ? 200 : 500);
     }
 

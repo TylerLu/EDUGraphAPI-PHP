@@ -118,7 +118,7 @@ class O365AuthController extends Controller
             if (User::where('o365Email', $o365Email)->first())
                 return back()->with('msg', 'Failed to link accounts. The Office 365 account ' . $o365Email . ' is already linked to another local account.');
 
-            UserService::SaveUserInfo($o365UserId,$o365Email,$user->user['givenName'],$user->user['surname'],$orgId);
+            (new UserService)->saveCurrentLoginUserInfo($o365UserId,$o365Email,$user->user['givenName'],$user->user['surname'],$orgId);
             return redirect("/schools");
         }
     }

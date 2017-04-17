@@ -20,7 +20,7 @@ class UserService
      *
      * @return int The seat position of the user in the class
      */
-    public static function getSeatPositionInClass($o365UserId, $classId)
+    public  function getSeatPositionInClass($o365UserId, $classId)
     {
         $seat = ClassroomSeatingArrangements::where([
             ['o365UserId', $o365UserId],
@@ -36,7 +36,7 @@ class UserService
      *
      * @return bool whether the saving succeeded
      */
-    public static function saveSeatingArrangements($arrangements)
+    public function saveSeatingArrangements($arrangements)
     {
         if (!is_array($arrangements) || empty($arrangements)) {
             return false;
@@ -73,21 +73,90 @@ class UserService
      *
      * @return string The favorite color of the user
      */
-    public static function getFavoriteColor($o365UserId)
+    public function getFavoriteColor($o365UserId)
     {
         $user = User::where('o365UserId', $o365UserId)->first();
         return $user ? $user->favorite_color : "";
     }
 
-    public static function SaveUserInfo($o365UserId,$o365Email,$givenName, $surname,$orgId)
+    /**
+     * Update current login user information.
+     * @param $o365UserId
+     * @param $o365Email
+     * @param $givenName
+     * @param $surname
+     * @param $orgId
+     */
+    public function saveCurrentLoginUserInfo($o365UserId, $o365Email, $givenName, $surname, $orgId)
     {
         $localUser = Auth::user();
-        $localUser->o365UserId = $o365UserId;
-        $localUser->o365Email = $o365Email;
-        $localUser->firstName = $givenName;
-        $localUser->lastName = $surname;
-        $localUser->password = '';
-        $localUser->OrganizationId = $orgId;
-        $localUser->save();
+        $this->setUserInfo($localUser,$o365UserId,$o365Email,$givenName,$surname,$orgId,null,null);
+    }
+
+    /**
+     * Return all users of current organization
+     * @param $orgId
+     * @return mixed
+     */
+    public function getUsers($orgId)
+    {
+        return User::where('OrganizationId', $orgId)
+            ->where('o365UserId', '!=', null)
+            ->where('o365UserId', '!=', '')->get();
+    }
+
+    public function getUserById($userId)
+    {
+        return User::where('id', $userId)->first();
+    }
+
+    public function unlinkUser($userId)
+    {
+        $user = User::where('id', $userId)->first();
+        if (!$user)
+            return redirect('/admin/linkedaccounts');
+        $user->o365Email = null;
+        $user->o365UserId = null;
+        $user->save();
+    }
+
+    public function getUserByEmail($email)
+    {
+        return User::where('email', $email)->first();
+    }
+
+    public function create($o365UserId,$o365Email,$firstName,$lastName,$organizationId,$favorite_color,$email)
+    {
+        $user = new User();
+        $this->setUserInfo($user,$o365UserId,$o365Email,$firstName,$lastName,$organizationId,$favorite_color,$email);
+        return $user;
+    }
+
+    public function saveUserInfoByEmail($o365UserId,$o365Email,$firstName,$lastName,$organizationId)
+    {
+        $user = $this->getUserByEmail($o365Email);
+        if($user){
+            $this->setUserInfo($user,$o365UserId,$o365Email,$firstName,$lastName,$organizationId,null,null);
+        }
+    }
+
+    private function setUserInfo($user,$o365UserId,$o365Email,$firstName,$lastName,$organizationId,$favorite_color,$email)
+    {
+        if(isset($o365UserId))
+            $user->o365UserId=$o365UserId;
+        if(isset($o365Email))
+            $user->o365Email=$o365Email;
+        if(isset($firstName))
+            $user->firstName = $firstName;
+        if(isset($lastName))
+            $user->lastName = $lastName;
+        $user->password = '';
+        if(isset($organizationId))
+            $user->OrganizationId =$organizationId;
+        if(isset($favorite_color))
+            $user->favorite_color   =$favorite_color;
+        if(isset($email))
+            $user->email=$email;
+        $user->save();
     }
 }

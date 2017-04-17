@@ -44,9 +44,7 @@ class LoginController extends Controller
     {
         if (Auth::check()) {
             $user = Auth::user();
-            $o365UserIdInDB= $user->o365UserId;
-            $o365UserEmailInDB=$user->o365Email;
-            if( !$o365UserEmailInDB || ! $o365UserEmailInDB || $o365UserEmailInDB==='' || $o365UserIdInDB==='' ){
+            if( !$user->isLinked() ){
                 return '/link';
             }
         }

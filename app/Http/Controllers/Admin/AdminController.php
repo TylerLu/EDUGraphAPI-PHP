@@ -14,6 +14,7 @@ use App\Services\AdminService;
 use App\Services\AuthenticationHelper;
 use App\Services\OrganizationsService;
 use App\Services\TokenCacheService;
+use App\Services\UserService;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -27,6 +28,7 @@ class AdminController extends Controller
     private $tokenCacheService;
     private $adminService;
     private $organizationsService;
+    private $userServices;
 
     public function __construct()
     {
@@ -34,6 +36,7 @@ class AdminController extends Controller
         $this->tokenCacheService = new TokenCacheService();
         $this->adminService = new AdminService();
         $this->organizationsService = new OrganizationsService();
+        $this->userServices = new UserService();
     }
 
     public function index()
@@ -141,10 +144,8 @@ class AdminController extends Controller
     {
         $user = Auth::user();
         $o365UserId = $user->o365UserId;
-        $token = $this->tokenCacheService->GetMSGraphToken($o365UserId);
-        $tenantId = $this->aadGraphService->GetTenantIdByUserId($o365UserId, $token);
-        $token = $this->tokenCacheService->GetAADToken($o365UserId);
-        $this->adminService->unconsent($tenantId, $token);
+        $tenantId = $this->aadGraphService->GetTenantIdByUserId($o365UserId, $this->tokenCacheService->GetMSGraphToken($o365UserId));
+        $this->adminService->unconsent($tenantId, $this->tokenCacheService->GetAADToken($o365UserId));
         header('Location: ' . '/admin?consented=false');
         exit();
 
@@ -159,16 +160,14 @@ class AdminController extends Controller
         $org = $this->organizationsService->GetOrganization($tenantId);
         $users = [];
         if ($org) {
-            $users = User::where('OrganizationId', $org->id)
-                ->where('o365UserId', '!=', null)
-                ->where('o365UserId', '!=', '')->get();
+            $users = $this->userServices->getUsers($org->id);
         }
         return view('admin.manageaccounts', compact('users'));
     }
 
     public function UnlinkAccount($userId)
     {
-        $user = User::where('id', $userId)->first();
+        $user = $this->userServices->getUserById($userId);
         if (!$user)
             return redirect('/admin/linkedaccounts');
         return view('admin.unlinkaccount', compact('user'));
@@ -176,12 +175,7 @@ class AdminController extends Controller
 
     public function DoUnlink($userId)
     {
-        $user = User::where('id', $userId)->first();
-        if (!$user)
-            return redirect('/admin/linkedaccounts');
-        $user->o365Email = null;
-        $user->o365UserId = null;
-        $user->save();
+        $this->userServices->unlinkUser($userId);
         return redirect('/admin/linkedaccounts');
     }
 

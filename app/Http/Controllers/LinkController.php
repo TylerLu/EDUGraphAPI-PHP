@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
 
 use App\Config\SiteConstants;
 use App\Services\UserRolesService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,12 @@ use App\Services\AADGraphService;
 
 class LinkController extends Controller
 {
+    private $userServices;
+
+    public function __construct()
+    {
+        $this->userServices = new UserService();
+    }
     public  function index()
     {
 
@@ -32,7 +39,7 @@ class LinkController extends Controller
         if(isset($_SESSION[SiteConstants::Session_O365_User_ID])){
             $o365userId = $_SESSION[SiteConstants::Session_O365_User_ID];
             if($o365userId){
-                $user  = User::where('email', $_SESSION[SiteConstants::Session_O365_User_Email])->first();
+                $user  =$this->userServices->getUserByEmail($_SESSION[SiteConstants::Session_O365_User_Email]);
                 if($user){
                     $isLocalUserExists = true;
                     $localUserEmail = $_SESSION[SiteConstants::Session_O365_User_Email];
@@ -78,16 +85,8 @@ class LinkController extends Controller
             $o365UserId = $_SESSION[SiteConstants::Session_O365_User_ID];
             $o365Email = $_SESSION[SiteConstants::Session_O365_User_Email];
 
-            $user = new User();
-            $user->o365UserId=$o365UserId;
-            $user->o365Email=$o365Email;
-            $user->firstName = $_SESSION[SiteConstants::Session_O365_User_First_name];
-            $user->lastName = $_SESSION[SiteConstants::Session_O365_User_Last_name];
-            $user->password = '';
-            $user->OrganizationId =$_SESSION[SiteConstants::Session_OrganizationId];
-            $user->favorite_color   =$favoriteColor;
-            $user->email=$o365Email;
-            $user->save();
+            $user =  $this->userServices->create($o365UserId,$o365Email,$_SESSION[SiteConstants::Session_O365_User_First_name],$_SESSION[SiteConstants::Session_O365_User_Last_name],
+                $_SESSION[SiteConstants::Session_OrganizationId],$favoriteColor,$o365Email);
             Auth::loginUsingId($user->id);
             (new TokenCacheService)->UpdateOrInsertCache($o365UserId,$_SESSION[SiteConstants::Session_Refresh_Token],$_SESSION[SiteConstants::Session_Tokens_Array]);
             return redirect('/schools');
@@ -113,13 +112,8 @@ class LinkController extends Controller
             ];
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
-                $user->o365UserId=$_SESSION[SiteConstants::Session_O365_User_ID];
-                $user->o365Email=$o365email;
-                $user->firstName = $_SESSION[SiteConstants::Session_O365_User_First_name];
-                $user->lastName = $_SESSION[SiteConstants::Session_O365_User_Last_name];
-                $user->password = '';
-                $user->OrganizationId =$_SESSION[SiteConstants::Session_OrganizationId];
-                $user->save();
+                $this->userServices->saveCurrentLoginUserInfo($_SESSION[SiteConstants::Session_O365_User_ID],$o365email,$_SESSION[SiteConstants::Session_O365_User_First_name],
+                    $_SESSION[SiteConstants::Session_O365_User_Last_name], $_SESSION[SiteConstants::Session_OrganizationId]);
                 Auth::loginUsingId($user->id);
 
                 (new TokenCacheService)->UpdateOrInsertCache($_SESSION[SiteConstants::Session_O365_User_ID],$_SESSION[SiteConstants::Session_Refresh_Token],$_SESSION[SiteConstants::Session_Tokens_Array]);
@@ -133,16 +127,10 @@ class LinkController extends Controller
         }
         else{
             //If there's a local user with same email as o365 email on db, link this account to o365 account directly and then go to schools page.
-            $user  = User::where('email', $o365email)->first();
-
+            $user  = $this->userServices->getUserByEmail($o365email);
             if($user){
-                $user->o365UserId=$_SESSION[SiteConstants::Session_O365_User_ID];
-                $user->o365Email=$o365email;
-                $user->firstName = $_SESSION[SiteConstants::Session_O365_User_First_name];
-                $user->lastName = $_SESSION[SiteConstants::Session_O365_User_Last_name];
-                $user->password = '';
-                $user->OrganizationId =$_SESSION[SiteConstants::Session_OrganizationId];
-                $user->save();
+                $this->userServices->saveUserInfoByEmail($_SESSION[SiteConstants::Session_O365_User_ID],$o365email,$_SESSION[SiteConstants::Session_O365_User_First_name],
+                    $_SESSION[SiteConstants::Session_O365_User_Last_name], $_SESSION[SiteConstants::Session_OrganizationId]);
                 Auth::loginUsingId($user->id);
                 (new TokenCacheService)->UpdateOrInsertCache($_SESSION[SiteConstants::Session_O365_User_ID],$_SESSION[SiteConstants::Session_Refresh_Token],$_SESSION[SiteConstants::Session_Tokens_Array]);
                 if (Auth::check()) {

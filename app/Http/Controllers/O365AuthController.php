@@ -25,6 +25,11 @@ use App\Services\UserService;
 class O365AuthController extends Controller
 {
 
+    public function o365Login()
+    {
+        return Socialize::with('O365')->redirect();
+    }
+
     /**
      * This function is used for auth and redirect after O365 user login succeed.
      */
@@ -35,8 +40,8 @@ class O365AuthController extends Controller
         $o365UserId = $user->id;
         $o365Email = $user->email;
 
-        $tokensArray = (new TokenCacheService)->UpdateTokenWhenLogin($user,$refreshToken);
-        $msGraphToken = \GuzzleHttp\json_decode($tokensArray,true)[Constants::RESOURCE_ID]['value'];
+        $tokensArray = (new TokenCacheService)->UpdateTokenWhenLogin($user, $refreshToken);
+        $msGraphToken = \GuzzleHttp\json_decode($tokensArray, true)[Constants::RESOURCE_ID]['value'];
         $graph = new AADGraphService;
         $tenant = $graph->GetTenantByToken($msGraphToken);
         $tenantId = $graph->GetTenantId($tenant);
@@ -48,24 +53,22 @@ class O365AuthController extends Controller
         $userInDB = User::where('o365UserId', $o365UserId)->first();
         if ($userInDB) {
             SocializeAuthMiddleware::removeSocializeSessions();
-            if(Auth::check() && $userInDB->email !=Auth::user()->email){
+            if (Auth::check() && $userInDB->email != Auth::user()->email) {
                 return redirect('/link');
             }
-            if (!$userInDB->isLinked() ) {
+            if (!$userInDB->isLinked()) {
                 return redirect('/link');
-            }else {
+            } else {
                 Auth::loginUsingId($userInDB->id);
                 if (Auth::check()) {
                     return redirect("/schools");
                 }
             }
         } else {
-            SocializeAuthMiddleware::setSocializeSessions($user,$orgId,$tenantId);
+            SocializeAuthMiddleware::setSocializeSessions($user, $orgId, $tenantId);
             return redirect('/link');
         }
     }
-
-
 
     /**
      * If an O365 user is linked and login to the site, after logout, go to this page directly for quick login.
@@ -80,11 +83,6 @@ class O365AuthController extends Controller
 
     }
 
-    public function o365Login()
-    {
-        return Socialize::with('O365')->redirect();
-    }
-
     /**
      * This function is for O365 login hint page after a user clicks 'Login with a different account'. It will clean all cookies and then goes to login page.
      */
@@ -94,7 +92,6 @@ class O365AuthController extends Controller
         $cookieServices->ClearCookies();
         return redirect('/login');
     }
-
 
     /**
      * If a local user is login, link O365 user with local user.
@@ -112,7 +109,7 @@ class O365AuthController extends Controller
             if (User::where('o365Email', $o365Email)->first())
                 return back()->with('msg', 'Failed to link accounts. The Office 365 account ' . $o365Email . ' is already linked to another local account.');
 
-            (new UserService)->saveCurrentLoginUserInfo($o365UserId,$o365Email,$user->user['givenName'],$user->user['surname'],$orgId);
+            (new UserService)->saveCurrentLoginUserInfo($o365UserId, $o365Email, $user->user['givenName'], $user->user['surname'], $orgId);
             SocializeAuthMiddleware::removeSocializeSessions();
             return redirect("/schools");
         }

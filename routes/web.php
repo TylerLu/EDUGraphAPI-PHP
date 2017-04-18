@@ -29,13 +29,6 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
-Route::get('/o365loginhint', 'O365AuthController@o365LoginHint');
-Route::get('/differentaccount', 'O365AuthController@differentAccountLogin');
-Route::get('/oauth.php', 'O365AuthController@oauth');
-Route::get('/o365login', 'O365AuthController@o365Login');
-
-Route::get('/userlogout', 'Auth\LogoutController@Logout');
-
 //login, register related.
 Auth::routes();
 
@@ -52,17 +45,23 @@ Route::group(['middleware' => ['web', 'auth', 'LinkRequired']], function () {
     Route::post('/saveSeatingArrangements', 'SchoolsController@saveSeatingArrangements');
 });
 
-//user photo.
-Route::get('/userPhoto/{o365UserId}', 'UserPhotoController@userPhoto');
 
-Route::group(['middleware' => ['web','LocalOrO365LoginRequired']], function () {
-    Route::get('/link', 'LinkController@index');
-    Route::get('/auth/aboutme', 'Auth\AboutMeController@index');
-});
-//link
 Route::group(['middleware' => ['web']], function () {
+    Route::get('/link', 'LinkController@index');
     Route::any('/link/createlocalaccount', 'LinkController@createLocalAccount');
     Route::any('/link/loginlocal', 'LinkController@loginLocal');
+
+    Route::get('/userPhoto/{o365UserId}', 'UserPhotoController@userPhoto');
+    Route::get('/auth/aboutme', 'Auth\AboutMeController@index');
+
+    Route::get('/o365loginrequired', 'LinkController@loginO365Required');
+    Route::post('/auth/savefavoritecolor', 'Auth\AboutMeController@SaveFavoriteColor');
+    Route::get('/o365loginhint', 'O365AuthController@o365LoginHint');
+    Route::get('/differentaccount', 'O365AuthController@differentAccountLogin');
+    Route::get('/oauth.php', 'O365AuthController@oauth');
+    Route::get('/o365login', 'O365AuthController@o365Login');
+    Route::get('/userlogout', 'Auth\LogoutController@Logout');
+
 });
 
 Route::group(['namespace' => 'Admin'], function () {
@@ -71,8 +70,6 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::get('/admin/processcode', 'AdminController@ProcessCode');
 
 });
-
-Route::get('/o365loginrequired', 'LinkController@loginO365Required');
 
 //Admin functions.
 Route::group(['middleware' => ['web', 'auth', 'AdminOnly'], 'namespace' => 'Admin'], function () {
@@ -85,4 +82,3 @@ Route::group(['middleware' => ['web', 'auth', 'AdminOnly'], 'namespace' => 'Admi
 });
 
 
-Route::post('/auth/savefavoritecolor', 'Auth\AboutMeController@SaveFavoriteColor');

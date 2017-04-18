@@ -148,7 +148,8 @@ class MSGraphService
     private function getToken()
     {
         $user = Auth::user();
-        $o365UserId = isset($user->o365UserId) ? $user->o365UserId : (array_key_exists(SiteConstants::Session_O365_User_ID, $_SESSION) ? $_SESSION[SiteConstants::Session_O365_User_ID] : null);
+        $o365UserId = $user->o365UserId;
+
         if (!$o365UserId) {
             return null;
         }

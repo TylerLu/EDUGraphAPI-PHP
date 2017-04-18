@@ -15,6 +15,7 @@ class LogoutController extends Controller
     public function Logout()
     {
         Session::flush();
+        $_SESSION=array();
         session_destroy();
         Auth::logout();
         $redirectURl=urlencode('http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST']);

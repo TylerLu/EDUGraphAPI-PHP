@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
 
 
 use App\Config\SiteConstants;
+use App\Http\Middleware\SocializeAuthMiddleware;
 use App\Services\AADGraphService;
 use App\Services\CookieService;
 use App\Services\OrganizationsService;
@@ -46,6 +47,7 @@ class O365AuthController extends Controller
         //If user doesn't exists on db, add user information like o365 user id, first name, last name to session and then go to link page.
         $userInDB = User::where('o365UserId', $o365UserId)->first();
         if ($userInDB) {
+            SocializeAuthMiddleware::removeSocializeSessions();
             if(Auth::check() && $userInDB->email !=Auth::user()->email){
                 return redirect('/link');
             }
@@ -58,15 +60,7 @@ class O365AuthController extends Controller
                 }
             }
         } else {
-            //Below sessions are used for link users and create new local accounts.
-            $_SESSION[SiteConstants::Session_OrganizationId] = $orgId;
-            $_SESSION[SiteConstants::Session_TenantId] = $tenantId;
-            $_SESSION[SiteConstants::Session_Tokens_Array] = $tokensArray;
-            $_SESSION[SiteConstants::Session_Refresh_Token] = $refreshToken;
-            $_SESSION[SiteConstants::Session_O365_User_ID] = $o365UserId;
-            $_SESSION[SiteConstants::Session_O365_User_Email] = $o365Email;
-            $_SESSION[SiteConstants::Session_O365_User_First_name] = $user->user['givenName'];
-            $_SESSION[SiteConstants::Session_O365_User_Last_name] = $user->user['surname'];
+            SocializeAuthMiddleware::setSocializeSessions($user,$orgId,$tenantId);
             return redirect('/link');
         }
     }
@@ -119,6 +113,7 @@ class O365AuthController extends Controller
                 return back()->with('msg', 'Failed to link accounts. The Office 365 account ' . $o365Email . ' is already linked to another local account.');
 
             (new UserService)->saveCurrentLoginUserInfo($o365UserId,$o365Email,$user->user['givenName'],$user->user['surname'],$orgId);
+            SocializeAuthMiddleware::removeSocializeSessions();
             return redirect("/schools");
         }
     }

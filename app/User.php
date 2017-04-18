@@ -6,6 +6,7 @@
 
 namespace App;
 
+use App\Config\UserType;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -33,4 +34,8 @@ class User extends Authenticatable
     {
         return strlen($this->o365UserId) > 0 and strlen($this->o365Email) > 0;
     }
+
+    public $userType=UserType::Local;
+    public $tenantId;
+
 }

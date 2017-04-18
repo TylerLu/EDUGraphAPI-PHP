@@ -32,8 +32,7 @@ class AboutMeController extends Controller
             if (Auth::user())
                 $o365UserId = Auth::user()->o365UserId;
         }
-        if (isset($_SESSION[SiteConstants::Session_O365_User_ID]))
-            $o365UserId = $_SESSION[SiteConstants::Session_O365_User_ID];
+
         if ($o365UserId) {
             $token = (new TokenCacheService())->GetAADToken($o365UserId);
             $classes = (new EducationService($token))->getMySections(false);
@@ -71,9 +70,6 @@ class AboutMeController extends Controller
             $displayName = Auth::user()->email;
             if (Auth::user()->firstName != '')
                 $displayName = Auth::user()->firstName . ' ' . Auth::user()->lastName;
-        } else {
-            if (isset($_SESSION[SiteConstants::Session_O365_User_First_name]) && isset($_SESSION[SiteConstants::Session_O365_User_Last_name]))
-                $displayName = $_SESSION[SiteConstants::Session_O365_User_First_name] . ' ' . $_SESSION[SiteConstants::Session_O365_User_Last_name];
         }
         return $displayName;
     }
@@ -85,9 +81,6 @@ class AboutMeController extends Controller
         if (Auth::user())
             $o365userId = Auth::user()->o365UserId;
 
-        if (isset($_SESSION[SiteConstants::Session_O365_User_ID])) {
-            $o365userId = $_SESSION[SiteConstants::Session_O365_User_ID];
-        }
 
         if ($o365userId)
             $role = (new UserRolesService)->GetUserRole($o365userId);

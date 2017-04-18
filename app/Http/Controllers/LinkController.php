@@ -7,6 +7,8 @@
 namespace App\Http\Controllers;
 
 use App\Config\SiteConstants;
+use App\Config\UserType;
+use App\Http\Middleware\SocializeAuthMiddleware;
 use App\Services\UserRolesService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -34,25 +36,23 @@ class LinkController extends Controller
         $areAccountsLinked = false;
         $showLinkToExistingO365Account = false;
         $localUserEmail = '';
+        $o365UserEmailInDB='';
+        $user = Auth::user();
 
         //If session exists for O365 user, it's the first time that an O365 user login.
-        if(isset($_SESSION[SiteConstants::Session_O365_User_ID])){
-            $o365userId = $_SESSION[SiteConstants::Session_O365_User_ID];
+        if($user->userType===UserType::O365){
+            $o365userId = $user->o365UserId;
             if($o365userId){
-                $user  =$this->userServices->getUserByEmail($_SESSION[SiteConstants::Session_O365_User_Email]);
+                $user  =$this->userServices->getUserByEmail($user->o365Email);
                 if($user){
                     $isLocalUserExists = true;
-                    $localUserEmail = $_SESSION[SiteConstants::Session_O365_User_Email];
+                    $localUserEmail = $user->o365Email;
                 }
 
               $roles =  (new AADGraphService)->GetCurrentUserRoles($o365userId, (new TokenCacheService)->GetMSGraphToken($o365userId));
               (new UserRolesService)->CreateOrUpdateUserRoles($roles, $o365userId);
             }
-        }
-
-        //check if a user is login.
-        $o365UserEmailInDB='';
-        if (Auth::check()) {
+        }else {
             $user = Auth::user();
             $o365UserIdInDB= $user->o365UserId;
             $o365UserEmailInDB=$user->o365Email;
@@ -79,16 +79,16 @@ class LinkController extends Controller
      */
     public function createLocalAccount()
     {
-
+        $user = Auth::user();
         if($input =Input::all()){
             $favoriteColor = $input['FavoriteColor'];
-            $o365UserId = $_SESSION[SiteConstants::Session_O365_User_ID];
-            $o365Email = $_SESSION[SiteConstants::Session_O365_User_Email];
-
-            $user =  $this->userServices->create($o365UserId,$o365Email,$_SESSION[SiteConstants::Session_O365_User_First_name],$_SESSION[SiteConstants::Session_O365_User_Last_name],
-                $_SESSION[SiteConstants::Session_OrganizationId],$favoriteColor,$o365Email);
+            $o365UserId = $user->o365UserId;
+            $o365Email =$user->o365Email;
+            $user = Auth::user();
+            $user =  $this->userServices->create($o365UserId,$o365Email,$user->firstName,$user->lastName,
+                $user->OrganizationId,$favoriteColor,$o365Email);
             Auth::loginUsingId($user->id);
-            (new TokenCacheService)->UpdateOrInsertCache($o365UserId,$_SESSION[SiteConstants::Session_Refresh_Token],$_SESSION[SiteConstants::Session_Tokens_Array]);
+            SocializeAuthMiddleware::removeSocializeSessions();
             return redirect('/schools');
         }else{
             return view("link.createlocalaccount");
@@ -101,7 +101,8 @@ class LinkController extends Controller
      */
     public function loginLocal()
     {
-        $o365email = $_SESSION[SiteConstants::Session_O365_User_Email];
+        $localUser = Auth::user();
+        $o365email = $localUser->o365Email;
         if($input =Input::all()){
             //Post from page. Link o365 user to an existing local account.
            $email = $input['email'];
@@ -110,13 +111,13 @@ class LinkController extends Controller
                 'email' => $email,
                 'password' => $password,
             ];
+
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
-                $this->userServices->saveCurrentLoginUserInfo($_SESSION[SiteConstants::Session_O365_User_ID],$o365email,$_SESSION[SiteConstants::Session_O365_User_First_name],
-                    $_SESSION[SiteConstants::Session_O365_User_Last_name], $_SESSION[SiteConstants::Session_OrganizationId]);
+                $this->userServices->saveCurrentLoginUserInfo($localUser->o365UserId,$o365email,$localUser->firstName,
+                    $localUser->lastName, $localUser->o365UserId);
                 Auth::loginUsingId($user->id);
-
-                (new TokenCacheService)->UpdateOrInsertCache($_SESSION[SiteConstants::Session_O365_User_ID],$_SESSION[SiteConstants::Session_Refresh_Token],$_SESSION[SiteConstants::Session_Tokens_Array]);
+                SocializeAuthMiddleware::removeSocializeSessions();
                 if (Auth::check()) {
                     return redirect("/schools");
                 }
@@ -129,10 +130,10 @@ class LinkController extends Controller
             //If there's a local user with same email as o365 email on db, link this account to o365 account directly and then go to schools page.
             $user  = $this->userServices->getUserByEmail($o365email);
             if($user){
-                $this->userServices->saveUserInfoByEmail($_SESSION[SiteConstants::Session_O365_User_ID],$o365email,$_SESSION[SiteConstants::Session_O365_User_First_name],
-                    $_SESSION[SiteConstants::Session_O365_User_Last_name], $_SESSION[SiteConstants::Session_OrganizationId]);
+                $this->userServices->saveUserInfoByEmail($localUser->o365UserId,$o365email,$localUser->firstName,
+                    $localUser->lastName, $localUser->o365UserId);
                 Auth::loginUsingId($user->id);
-                (new TokenCacheService)->UpdateOrInsertCache($_SESSION[SiteConstants::Session_O365_User_ID],$_SESSION[SiteConstants::Session_Refresh_Token],$_SESSION[SiteConstants::Session_Tokens_Array]);
+                SocializeAuthMiddleware::removeSocializeSessions();
                 if (Auth::check()) {
                     return redirect("/schools");
                 }

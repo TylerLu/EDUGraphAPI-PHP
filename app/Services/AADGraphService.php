@@ -11,6 +11,7 @@ use App\Config\Roles;
 use App\Config\SiteConstants;
 use Exception;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Auth;
 use Microsoft\Graph\Connect\Constants;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
@@ -123,8 +124,8 @@ class AADGraphService
     private  function IsUserAdmin($userId)
     {
         $tenantId = null;
-        if (isset($_SESSION[SiteConstants::Session_TenantId])) {
-            $tenantId = $_SESSION[SiteConstants::Session_TenantId];
+        if (Auth::user()) {
+            $tenantId = Auth::user()->tenantId;
         } else {
             $token = (new TokenCacheService)->GetAADToken($userId);
             $tenantId = $this->GetTenantIdByUserId($userId,$token);

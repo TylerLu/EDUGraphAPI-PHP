@@ -64,10 +64,6 @@ use App\Services\UserRolesService;use Illuminate\Http\Request;use Illuminate\Sup
                 if(Auth::user())
                     $o365userId=Auth::user()->o365UserId;
 
-                if(isset($_SESSION[SiteConstants::Session_O365_User_ID])){
-                    $o365userId = $_SESSION[SiteConstants::Session_O365_User_ID];
-                }
-
                 if($o365userId)
                     $role = (new UserRolesService)->GetUserRole($o365userId);
 
@@ -126,10 +122,7 @@ use App\Services\UserRolesService;use Illuminate\Http\Request;use Illuminate\Sup
                                             $displayName =Auth::user()->firstName .' '. Auth::user()->lastName;
                                         echo 'Hello ' . $displayName;
                                     }
-                                    else{
-                                        if(isset($_SESSION[SiteConstants::Session_O365_User_First_name] ) && isset( $_SESSION[SiteConstants::Session_O365_User_Last_name]))
-                                            echo  'Hello '.  $_SESSION[SiteConstants::Session_O365_User_First_name] .' '. $_SESSION[SiteConstants::Session_O365_User_Last_name] ;
-                                    }
+
                                     if($o365userId){
                                         echo '<img src="/userPhoto/'.$o365userId.'"  />';
                                     }

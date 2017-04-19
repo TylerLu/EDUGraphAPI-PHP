@@ -46,7 +46,7 @@ class LinkController extends Controller
                 $user  =$this->userServices->getUserByEmail($user->o365Email);
                 if($user){
                     $isLocalUserExists = true;
-                    $localUserEmail = $user->o365Email;
+                    $localUserEmail = $user->email;
                 }
 
               $roles =  (new AADGraphService)->GetCurrentUserRoles($o365userId, (new TokenCacheService)->GetMSGraphToken($o365userId));

@@ -9,7 +9,7 @@ School data is kept in sync in O365 Education tenants by [Microsoft School Data 
 - [Sample Goals](#sample-goals)
 - [Prerequisites](#prerequisites)
 - [Register the application in Azure Active Directory](#register-the-application-in-azure-active-directory)
-- [Build and debug locally](#build-and-debug-locally)
+- [Debug locally](#debug-locally)
 - [Deploy the sample to Azure](#deploy-the-sample-to-azure)
 - [Understand the code](#understand-the-code)
 - [Questions and comments](#questions-and-comments)
@@ -32,7 +32,7 @@ The sample demonstrates:
 
   - [Office 365 Schools REST API reference](https://msdn.microsoft.com/office/office365/api/school-rest-operations)
 
-EDUGraphAPI is implemented with the PHP language and the [Laravel](https://laravel.com/) framework.
+The sample is implemented with the PHP language and the [Laravel](https://laravel.com/) framework.
 
 ## Prerequisites
 
@@ -49,8 +49,8 @@ EDUGraphAPI is implemented with the PHP language and the [Laravel](https://larav
   - [PHP 7.0](http://php.net/downloads.php)
   - [Composer](https://getcomposer.org/download/)
   - [Git](https://git-scm.com/download/win)
-  - PHP editor like PhPStorem
-  - Familiarity with PHP ([Laravel](https://laravel.com/)).
+  - PHP IDE like [PhpStorm](https://www.jetbrains.com/phpstorm/specials/phpstorm/phpstorm.html)
+  - Familiarity with PHP and [Laravel](https://laravel.com/).
 
 **Optional configuration**:
 
@@ -124,13 +124,13 @@ Create a key to enable Bing Maps API features in the app:
 
    Close the Settings window.
 
-## Build and debug locally
+## Debug locally
 
-This project can be opened with the edition like PHPStorm you already have.
+[PhpStorm](https://www.jetbrains.com/phpstorm/specials/phpstorm/phpstorm.html) is recommended to debug the sample locally.
 
-The following tools are also required:
+The following software and components are also required:
 
-- PHP >= 5.6.4
+- PHP >= 7.0.0
 - OpenSSL PHP Extension
 - PDO PHP Extension
 - Mbstring PHP Extension
@@ -140,7 +140,7 @@ The following tools are also required:
 
 Debug the **EDUGraphAPI.Web**:
 
-1. Configure **Environment Variables**. Create a local .env file and input like below:
+1. Configure **environment variables**. Create a local .env file and input like below:
 
    ![env](/Images/env.jpg)
 
@@ -264,15 +264,15 @@ We utilized the built-in [authentication](https://laravel.com/docs/5.4/authentic
 
 **Data Access**
 
-[Eloquent](https://laravel.com/docs/5.4/eloquent) is used to access data stroed in the SQLite database.
+[Eloquent](https://laravel.com/docs/5.4/eloquent) is used to access data stored in the SQLite database.
 
 The tables used in this demo:
 
 | Table                        | Description                              |
 | ---------------------------- | ---------------------------------------- |
-| Users                        | Contains the user's information: name, email, hashed password...<br>*O365UserId* and *O365Email* are used to connect the local user with an O365 user. |
+| Users                        | Contains the user's information: name, email, password...<br>*o365UserId* and *o365Email* are used to connect the local user with an O365 user. |
 | UserRoles                    | Contains users' role. Three roles are used in this sample: admin, teacher, and student. |
-| Organizations                | A row in this table represents a tenant in AAD.<br>*IsAdminConsented* column records than if the tenant consented by an administrator. |
+| Organizations                | A row in this table represents a tenant in AAD.<br>*isAdminConsented* column records than if the tenant consented by an administrator. |
 | TokenCache                   | Contains the users' access/refresh tokens. |
 | ClassroomSeatingArrangements | Contains the classroom seating arrangements. |
 
@@ -282,11 +282,25 @@ Below are the main controllers used by the sample.
 
 | Controller         | Description                              |
 | ------------------ | ---------------------------------------- |
-| LoginController    | contains actions for local users to login |
-| O365AuthController | contains actions for O365 users to login |
+| LoginController    | contains actions for local users to log in. |
+| O365AuthController | contains actions for O365 users to log in |
 | LinkController     | implements the **Local/O365 Login Authentication Flow**. Please check [Authentication Flows](https://github.com/TylerLu/EDUGraphAPI#authentication-flows) section for more details. |
 | AdminController    | contains the admin actions               |
 | SchoolsController  | contains actions to show schools and classes. `SchoolsService` class is mainly used by this controller. Please check [Office 365 Education API](https://github.com/TylerLu/EDUGraphAPI#office-365-education-api) section for more details. |
+
+All the controllers are under the **app/Http/Controller** folder.
+
+**Middlewares**
+
+We create several middlewares for authentication and authorization.
+
+| Middleware              | Description                              |
+| ----------------------- | ---------------------------------------- |
+| AdminOnlyMiddleware     | Only allows admin to access the protected routes. It is mainly used for AdminController. |
+| LinkRequiredMiddleware  | Redirects unlinked users to /link. It is mainly used for the SchoolsController. |
+| SocializeAuthMiddleware | Integrate O365 user with PHP authentication framework. The current O365 user could be got through ```Auth:user()```. |
+
+All the middleware are in the **app/Http/Middleware**.
 
 **Services**
 
@@ -294,15 +308,15 @@ Below are the main services used by the sample:
 
 | Service           | Description                              |
 | ----------------- | ---------------------------------------- |
-| AADGraphService   | Contains methods used to access AAD Graph REST APIs |
-| MSGraphService    | Contains methods used to access MS Graph REST APIs |
-| EducationService  | Contains methods like get user information,  get schools, classes and users, get/update seating arrangements |
-| CookieService     | Contains methods that used to manage cookies |
-| TokenCacheService | Contains method used to get and update token cache from the database |
-| UserService       | Contains method used to manipulate users in the database |
-| AdminService      | Contains method used to unconsent.       |
+| AADGraphService   | Contains methods used to access AAD Graph REST APIs. |
+| MSGraphService    | Contains methods used to access MS Graph REST APIs. |
+| EducationService  | Contains methods like get user information,  get schools/classes/users, get/update seating arrangements. |
+| CookieService     | Contains methods that used to manage cookies. |
+| TokenCacheService | Contains methods used to get and update token cache from the database. |
+| UserService       | Contains methods used to manipulate users in the database. |
+| AdminService      | Contains administrative methods like consent tenant, manage linked accounts. |
 
-All the services are in the **/app/Services** folder.
+All the services are in the **app/Services** folder.
 
 **Multi-tenant app**
 
@@ -316,8 +330,6 @@ Users from any Azure Active Directory tenant can access this app. Some permissio
 
 For more information, see [Build a multi-tenant SaaS web application using Azure AD & OpenID Connect](https://azure.microsoft.com/en-us/resources/samples/active-directory-dotnet-webapp-multitenant-openidconnect/).
 
-
-
 ### Office 365 Education API
 
 The [Office 365 Education APIs](https://msdn.microsoft.com/office/office365/api/school-rest-operations) return data from any Office 365 tenant which has been synced to the cloud by Microsoft School Data Sync. The APIs provide information about schools, sections, teachers, students, and rosters. The Schools REST API provides access to school entities in Office 365 for Education tenants.
@@ -327,42 +339,41 @@ In this sample, the `App\Services\EducationService` class encapsulates the Offic
 **Get schools**
 
 ~~~typescript
-  public function getSchools()
-    {
-        return $this->getAllPages("get", "/administrativeUnits?api-version=beta", School::class);
-    }
+public function getSchools()
+{
+    return $this->getAllPages("get", "/administrativeUnits?api-version=beta", School::class);
+}
 ~~~
 
 ~~~typescript
- public function getSchool($objectId)
-    {
-        return $this->getResponse("get", "/administrativeUnits/" . $objectId . "?api-version=beta", School::class, null, null);
-    }
+public function getSchool($objectId)
+{
+    return $this->getResponse("get", "/administrativeUnits/" . $objectId . "?api-version=beta", School::class, null, null);
+}
 ~~~
 
 **Get classes**
 
 ~~~typescript
-    public function getSections($schoolId, $top, $skipToken)
-    {
-        return $this->getResponse("get", '/groups?api-version=beta&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20\'Section\'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20\'' . $schoolId . '\'', Section::class, $top, $skipToken);
-    }
+public function getSections($schoolId, $top, $skipToken)
+{
+    return $this->getResponse("get", '/groups?api-version=beta&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20\'Section\'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20\'' . $schoolId . '\'', Section::class, $top, $skipToken);
+}
 ~~~
 
 ```typescript
-    public function getSectionWithMembers($objectId)
-    {
-        return $this->getResponse("get", '/groups/' . $objectId . '?api-version=beta&$expand=members', Section::class, null, null);
-    }
-
+public function getSectionWithMembers($objectId)
+{
+    return $this->getResponse("get", '/groups/' . $objectId . '?api-version=beta&$expand=members', Section::class, null, null);
+}
 ```
 **Get users**
 
 ```typescript
-    public function getMembers($objectId, $top, $skipToken)
-    {
-        return $this->getResponse("get", "/administrativeUnits/" . $objectId . "/members?api-version=beta", SectionUser::class, $top, $skipToken);
-    }
+public function getMembers($objectId, $top, $skipToken)
+{
+    return $this->getResponse("get", "/administrativeUnits/" . $objectId . "/members?api-version=beta", SectionUser::class, $top, $skipToken);
+}
 ```
 Below are some screenshots of the sample app that show the education data.
 
@@ -373,8 +384,6 @@ Below are some screenshots of the sample app that show the education data.
 ![](Images/edu-classes.png)
 
 ![](Images/edu-class.png)
-
-
 
 ### Authentication Flows
 
@@ -394,7 +403,7 @@ The first 2 flows (Local Login/O365 Login) enable users to login in with either 
 
 This flow shows how an administrator logs into the system and performs administrative operations.
 
-After logging into the app with an office 365 account,the administrator will be asked to link to a local account. This step is not required and can be skipped. 
+After logging into the app with an office 365 account, the administrator will be asked to link to a local account. This step is not required and can be skipped. 
 
 As mentioned earlier, the web app is a multi-tenant app which uses some application permissions, so tenant administrator must consent the app first.  
 
@@ -420,14 +429,14 @@ There are two distinct Graph APIs used in this sample:
 Below is a piece of code shows how to get "me" from the Microsoft Graph API.
 
 ```typescript
-   public function getMe()
-    {
-        $json = $this->getResponse("get", "/me?api-version=1.5", null, null, null);
-        $assignedLicenses = array_map(function ($license) {
-            return new Model\AssignedLicense($license);
-        }, $json["assignedLicenses"]);
-      ...
-    }
+public function getMe()
+{
+    $json = $this->getResponse("get", "/me?api-version=1.5", null, null, null);
+    $assignedLicenses = array_map(function ($license) {
+        return new Model\AssignedLicense($license);
+    }, $json["assignedLicenses"]);
+    ...
+}
 ```
 
 Note that in the AAD Application settings, permissions for each Graph API are configured separately:

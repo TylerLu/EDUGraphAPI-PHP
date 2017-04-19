@@ -32,6 +32,8 @@ class User extends Authenticatable
 
     public function isLinked()
     {
+        if($this->userType==UserType::O365)
+            return false;
         return strlen($this->o365UserId) > 0 and strlen($this->o365Email) > 0;
     }
 

@@ -39,29 +39,30 @@ class LinkController extends Controller
         $o365UserEmailInDB='';
         $user = Auth::user();
 
-        //If session exists for O365 user, it's the first time that an O365 user login.
-        if($user->userType===UserType::O365){
-            $o365userId = $user->o365UserId;
-            if($o365userId){
-                $user  =$this->userServices->getUserByEmail($user->o365Email);
-                if($user){
-                    $isLocalUserExists = true;
-                    $localUserEmail = $user->email;
-                }
+        if($user){
+            if($user->userType===UserType::O365){
+                $o365userId = $user->o365UserId;
+                if($o365userId){
+                    $user  =$this->userServices->getUserByEmail($user->o365Email);
+                    if($user){
+                        $isLocalUserExists = true;
+                        $localUserEmail = $user->email;
+                    }
 
-              $roles =  (new AADGraphService)->GetCurrentUserRoles($o365userId, (new TokenCacheService)->GetMSGraphToken($o365userId));
-              (new UserRolesService)->CreateOrUpdateUserRoles($roles, $o365userId);
-            }
-        }else {
-            $user = Auth::user();
-            $o365UserIdInDB= $user->o365UserId;
-            $o365UserEmailInDB=$user->o365Email;
-            $localUserEmail = $user->email;
-            if( !$o365UserEmailInDB || ! $o365UserIdInDB || $o365UserEmailInDB==='' || $o365UserIdInDB==='') {
-                //Local user login but not linked. Should show link to existing o365 account link and then login to o365.
-                $showLinkToExistingO365Account = true;
-            }else{
-                $areAccountsLinked = true;
+                  $roles =  (new AADGraphService)->GetCurrentUserRoles($o365userId, (new TokenCacheService)->GetMSGraphToken($o365userId));
+                  (new UserRolesService)->CreateOrUpdateUserRoles($roles, $o365userId);
+                }
+            }else {
+                $user = Auth::user();
+                $o365UserIdInDB= $user->o365UserId;
+                $o365UserEmailInDB=$user->o365Email;
+                $localUserEmail = $user->email;
+                if( !$o365UserEmailInDB || ! $o365UserIdInDB || $o365UserEmailInDB==='' || $o365UserIdInDB==='') {
+                    //Local user login but not linked. Should show link to existing o365 account link and then login to o365.
+                    $showLinkToExistingO365Account = true;
+                }else{
+                    $areAccountsLinked = true;
+                }
             }
         }
         $arrData = array(

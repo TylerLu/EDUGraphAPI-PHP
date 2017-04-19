@@ -42,4 +42,12 @@ class OrganizationsService
     {
         return Organizations::where('tenantId',$tenantId)->first();
     }
+
+    public function GetOrganizationId($tenantId){
+        $org = $this->GetOrganization($tenantId);
+        if($org){
+            return $org->id;
+        }
+        return null;
+    }
 }

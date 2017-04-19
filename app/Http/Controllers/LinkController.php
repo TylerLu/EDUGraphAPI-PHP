@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 use App\Config\SiteConstants;
 use App\Config\UserType;
 use App\Http\Middleware\SocializeAuthMiddleware;
+use App\Services\OrganizationsService;
 use App\Services\UserRolesService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -135,8 +136,9 @@ class LinkController extends Controller
             //If there's a local user with same email as o365 email on db, link this account to o365 account directly and then go to schools page.
             $user = $this->userServices->getUserByEmail($o365email);
             if ($user) {
+                $orgId = (new OrganizationsService())->GetOrganizationId($localUser->tenantId);
                 $this->userServices->saveUserInfoByEmail($localUser->o365UserId, $o365email, $localUser->firstName,
-                    $localUser->lastName, $localUser->o365UserId);
+                    $localUser->lastName, $orgId);
                 Auth::loginUsingId($user->id);
                 SocializeAuthMiddleware::removeSocializeSessions();
                 if (Auth::check()) {

@@ -61,9 +61,13 @@
         "title": "EducationServiceClient",
         "url": "/blob/master/app/Services/EducationService.php"
       },
-     {
+      {
         "title": "SchoolsViewModel",
         "url": "/blob/master/app/ViewModel/School.php"
+      },
+      {
+        "title": "MapUtils",
+        "url": "/blob/master/app/Services/MapUtils.php"
       }
     ]
   },
@@ -225,7 +229,7 @@
       },
       {
         "title": "AADGraphClient",
-        "url": "/blob/master/app/Services/AADGraphClient.php"
+        "url": "/blob/master/app/Services/AADGraphService.php"
       }
     ]
   },

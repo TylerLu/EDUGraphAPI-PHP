@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 
+use App\Config\UserType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use League\Flysystem\Exception;
 
 class LogoutController extends Controller
 {
@@ -17,7 +19,9 @@ class LogoutController extends Controller
         Session::flush();
         $_SESSION=array();
         session_destroy();
-        Auth::logout();
+        if(Auth::check() &&  Auth::user()->userType==UserType::Local)
+            Auth::logout();
+
         $redirectURl=urlencode('http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST']);
         $url = 'https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri='.$redirectURl;
         return Redirect::to($url);

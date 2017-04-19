@@ -118,7 +118,6 @@ class LinkController extends Controller
                 'email' => $email,
                 'password' => $password,
             ];
-
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
                 $this->userServices->saveCurrentLoginUserInfo($localUser->o365UserId, $o365email, $localUser->firstName,

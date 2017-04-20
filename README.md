@@ -126,9 +126,7 @@ Create a key to enable Bing Maps API features in the app:
 
 ## Debug locally
 
-[PhpStorm](https://www.jetbrains.com/phpstorm/specials/phpstorm/phpstorm.html) is recommended to debug the sample locally.
-
-The following software and components are also required:
+The following software and components are required:
 
 - PHP >= 7.0.0
 - OpenSSL PHP Extension
@@ -137,6 +135,16 @@ The following software and components are also required:
 - Tokenizer PHP Extension
 - XML PHP Extension
 - [Git](https://git-scm.com/download/win)
+
+[PhpStorm](https://www.jetbrains.com/phpstorm/specials/phpstorm/phpstorm.html) is recommended to debug the sample locally.
+
+1. Download the zip or clone source code from GitHub to local machine. 
+
+2. Open directory of source code with PhpStorm.
+
+3. Run "Composer update" command with terminal. 
+
+   ​
 
 Debug the **EDUGraphAPI.Web**:
 

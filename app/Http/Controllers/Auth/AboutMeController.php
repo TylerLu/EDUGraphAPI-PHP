@@ -49,9 +49,6 @@ class AboutMeController extends Controller
 
     }
 
-    /**
-     * Favorite edit function is only for auth user.
-     */
     public function SaveFavoriteColor()
     {
         if (!Auth::user())

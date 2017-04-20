@@ -12,7 +12,7 @@ use App\User;
 class SocializeAuthMiddleware
 {
     /**
-     * Handle an incoming request.
+     * Integrate O365 user with PHP authentication framework. The current O365 user could be got through Auth:user().
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure $next

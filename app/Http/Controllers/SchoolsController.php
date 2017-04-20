@@ -28,7 +28,7 @@ class SchoolsController extends Controller
     }
 
     /**
-     * Show all the schools.
+     * Show all schools.
      *
      * @return \Illuminate\Http\Response
      */
@@ -65,7 +65,7 @@ class SchoolsController extends Controller
     }
 
     /**
-     * Show teachers and students of a school
+     * Show teachers and students of the specified school.
      *
      * @param string $objectId The object id of the school
      *
@@ -84,7 +84,7 @@ class SchoolsController extends Controller
     }
 
     /**
-     * Get users of a school
+     * Get users of the specified school.
      *
      * @param string $objectId The object id of the school
      * @param string $skipToken The token used to retrieve the next subset of the requested collection
@@ -99,7 +99,7 @@ class SchoolsController extends Controller
     }
 
     /**
-     * Get students of a school.
+     * Get students of the specified school.
      *
      * @param string $objectId The object id of the school
      * @param string $skipToken The token used to retrieve the next subset of the requested collection
@@ -115,7 +115,7 @@ class SchoolsController extends Controller
     }
 
     /**
-     * Get teachers of a school.
+     * Get teachers of the specified school.
      *
      * @param string $objectId The object id of the school
      * @param string $skipToken The token used to retrieve the next subset of the requested collection
@@ -131,7 +131,7 @@ class SchoolsController extends Controller
     }
 
     /**
-     * Show details of a class
+     * Show details of the specified class.
      *
      * @param string $objectId The object id of the school
      * @param string $classId The object id of the class
@@ -174,7 +174,7 @@ class SchoolsController extends Controller
     }
 
     /**
-     * Show all classes of a school.
+     * Show classes of the specified school.
      * @param string $objectId The object id of the school
      * @return \Illuminate\Http\Response
      */
@@ -186,14 +186,14 @@ class SchoolsController extends Controller
         $schoolId = $school->schoolId;
         $myClasses = $this->educationService->getMySectionsOfSchool($schoolId);
         $allClasses = $this->educationService->getSections($schoolId, 12, null);
-        $this->checkIfMyClasses($allClasses, $myClasses);
+        $this->markMyClasses($allClasses, $myClasses);
 
         $data = ["myClasses" => $myClasses, "allClasses" => $allClasses, "school" => $school, "me" => $me];
         return view('schools.classes', $data);
     }
 
     /**
-     * Show next 12 schools for classes page.
+     * Get classes for the specified school.
      * @param string $schoolId The id of the school
      * @param string $skipToken The token used to retrieve the next subset of the requested collection
      * @return \Illuminate\Http\JsonResponse
@@ -203,13 +203,12 @@ class SchoolsController extends Controller
         $this->educationService = $this->getEduServices();
         $myClasses = $this->educationService->getMySectionsOfSchool($schoolId);
         $allClasses = $this->educationService->getSections($schoolId, 12, $skipToken);
-        $this->checkIfMyClasses($allClasses, $myClasses);
+        $this->markMyClasses($allClasses, $myClasses);
         return response()->json($allClasses);
     }
 
-
     /**
-     * Save the seat arrangements
+     * Save the seating arrangements.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -219,15 +218,7 @@ class SchoolsController extends Controller
         return response()->json([], $succeeded ? 200 : 500);
     }
 
-    /**
-     * Check every class if it's my class by comparing with known my classes, if true, set its members from the known my class
-     *
-     * @param array $allClasses The classes to check
-     * @param array $myClasses The known my classes
-     *
-     * @return void
-     */
-    private function checkIfMyClasses($allClasses, $myClasses)
+    private function markMyClasses($allClasses, $myClasses)
     {
         foreach ($allClasses->value as $class1) {
             $class1->isMySection = false;

@@ -11,7 +11,7 @@ use Microsoft\Graph\Connect\Constants;
 class MapUtils
 {
     /**
-     * Get the longitude and latitude of a place
+     * Get the longitude and latitude of a location.
      *
      * @param $state The state
      * @param $city The city

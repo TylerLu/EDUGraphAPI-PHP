@@ -12,36 +12,41 @@ use Microsoft\Graph\Connect\Constants;
 
 class TokenCacheService
 {
-    public function UpdateOrInsertCache($userId, $refreshToken, $accessToken)
+
+    /**
+     * $accessTokenArray:
+     * [
+     *    Constants::AADGraph => [
+     *      "expiresOn" => '',
+     *      "value" => ''
+     *    ],
+     *    Constants::RESOURCE_ID => [
+     *      "expiresOn" => '',
+     *      "value" => ''
+     *     ]
+     *    ...
+     * ]
+     */
+    public function cacheToken($userId, $refreshToken, $accessTokenArray)
     {
+        $accessTokenArray = \GuzzleHttp\json_encode($accessTokenArray);
         $tokenCache = TokenCache::where('UserId', $userId)->first();
         if ($tokenCache) {
             $tokenCache->refreshToken = $refreshToken;
-            $tokenCache->accessTokens = $accessToken;
+            $tokenCache->accessTokens = $accessTokenArray;
             $tokenCache->save();
         } else {
             $tokenCache = new TokenCache();
             $tokenCache->refreshToken = $refreshToken;
-            $tokenCache->accessTokens = $accessToken;
+            $tokenCache->accessTokens = $accessTokenArray;
             $tokenCache->UserId = $userId;
             $tokenCache->save();
         }
-
-    }
-
-    public function UpdateTokenWhenLogin($user,$refreshToken)
-    {
-        $msGraphTokenArray = $this->refreshToken($user->id, $refreshToken, Constants::RESOURCE_ID, true);
-        $ts = $user->accessTokenResponseBody['expires_on'];
-        $date = new \DateTime("@$ts");
-        $aadTokenExpires = $date->format('Y-m-d H:i:s');
-        $tokensArray = $this->FormatToken($aadTokenExpires,$user->token,$msGraphTokenArray['expires'], $msGraphTokenArray['token']);
-        $this->UpdateOrInsertCache($user->id, $refreshToken, $tokensArray);
-        return $tokensArray;
     }
 
     /**
-     * Return token of Microsoft. This token will be used on schools related page.
+     * Get MS Graph token.
+     * Token will be refreshed automatically.
      * @param $userId
      * @return array|string
      */
@@ -51,102 +56,14 @@ class TokenCacheService
     }
 
     /**
-     * Get AAD token. This token will be used on admin related page.
+     * Get AAD graph token.
+     * Token will be refreshed automatically.
      * @param $userId
      * @return array|string
      */
     public function GetAADToken($userId)
     {
         return $this->getToken($userId, Constants::AADGraph);
-    }
-
-
-
-
-    /**
-     * Get a new token with refresh token when a token is expired.
-     * @param $userId
-     * @param $refreshToken
-     * @param $resource
-     * @param bool $returnExpires
-     * @return array|string
-     */
-    public function RefreshToken($userId, $refreshToken, $resource, $returnExpires = false)
-    {
-
-        try {
-            $provider = new \League\OAuth2\Client\Provider\GenericProvider([
-                'clientId' => env(Constants::CLIENT_ID),
-                'clientSecret' => env(Constants::CLIENT_SECRET),
-                'redirectUri' => 'http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'].'/oauth.php',
-                'urlAuthorize' => Constants::AUTHORITY_URL . Constants::AUTHORIZE_ENDPOINT,
-                'urlAccessToken' => Constants::AUTHORITY_URL . Constants::TOKEN_ENDPOINT,
-                'urlResourceOwnerDetails' => ''
-            ]);
-            $aadGraphTokenResult = '';
-            $aadTokenExpires = '';
-
-            $msGraphTokenResult = '';
-            $msGraphTokenExpires = '';
-
-            $newRefreshToken = $refreshToken;
-            if ($resource === Constants::RESOURCE_ID) {
-                $microsoftToken = $provider->getAccessToken('refresh_token', [
-                    'refresh_token' => $refreshToken,
-                    'resource' => Constants::RESOURCE_ID
-                ]);
-                $ts = $microsoftToken->getExpires();
-                $date = new \DateTime("@$ts");
-                $msGraphTokenExpires = $date->format('Y-m-d H:i:s');
-                $msGraphTokenResult = $microsoftToken->getToken();
-                $newRefreshToken = $microsoftToken->getRefreshToken();
-            } else {
-                $aadGraphToken = $provider->getAccessToken('refresh_token', [
-                    'refresh_token' => $refreshToken,
-                    'resource' => Constants::AADGraph
-                ]);
-                $ts = $aadGraphToken->getExpires();
-                $date = new \DateTime("@$ts");
-                $aadTokenExpires = $date->format('Y-m-d H:i:s');
-                $aadGraphTokenResult = $aadGraphToken->getToken();
-                $newRefreshToken = $aadGraphToken->getRefreshToken();
-            }
-            $tokenCache = TokenCache::where('UserId', $userId)->first();
-            if ($tokenCache) {
-                $token = $tokenCache->accessTokens;
-                $array = array();
-                $array = json_decode($token, true);
-                if ($resource === Constants::RESOURCE_ID) {
-                    $aadTokenExpires = $array[Constants::AADGraph]['expiresOn'];
-                    $aadGraphTokenResult = $array[Constants::AADGraph]['value'];
-                } else {
-                    $msGraphTokenExpires = $array[Constants::RESOURCE_ID]['expiresOn'];
-                    $msGraphTokenResult = $array[Constants::RESOURCE_ID]['value'];
-                }
-            }
-
-            $tokensArray = $this->FormatToken($aadTokenExpires,$aadGraphTokenResult,$msGraphTokenExpires,$msGraphTokenResult);
-            $this->UpdateOrInsertCache($userId, $newRefreshToken, $tokensArray);
-            if ($resource === Constants::RESOURCE_ID) {
-                if ($returnExpires)
-                    return ["token" => $msGraphTokenResult, "expires" => $msGraphTokenExpires];
-                return $msGraphTokenResult;
-            } else {
-                if ($returnExpires)
-                    return ["token" => $aadGraphTokenResult, "expires" => $aadTokenExpires];
-                return $aadGraphTokenResult;
-            }
-        } catch (Exception $e) {
-            header('Location: ' . '/o365loginrequired');
-            exit();
-        }
-
-    }
-
-    public function FormatToken($aadTokenExpires, $aadGraphTokenResult, $msGraphTokenExpires, $msGraphTokenResult)
-    {
-        $format = '{"%s":{"expiresOn":"%s","value":"%s"},"%s":{"expiresOn":"%s","value":"%s"}}';
-        return sprintf($format, Constants::AADGraph, $aadTokenExpires, $aadGraphTokenResult, Constants::RESOURCE_ID, $msGraphTokenExpires, $msGraphTokenResult);
     }
 
     /**
@@ -158,25 +75,107 @@ class TokenCacheService
     private function getToken($userId, $resource)
     {
         $tokenCache = TokenCache::where('UserId', $userId)->first();
+        if (!$tokenCache) {
+            header('Location: ' . '/o365loginrequired');
+            exit();
+        }
 
-        if ($tokenCache) {
-            //1. Check if token is expired. If expired, get a new token with refresh token.
-            $token = $tokenCache->accessTokens;
-            $array = array();
-            $array = json_decode($token, true);
-            $expired = $array[$resource]['expiresOn'];
+        $tokens = $tokenCache->accessTokens;
+        if (!$tokens) {
+            return $this->RefreshToken($userId, $tokenCache->refreshToken, $resource);
+        }
 
-            $date1 = gmdate($expired);
-            $date2 = gmdate(date("Y-m-d h:i:s"));
+        $array = json_decode($tokens, true);
+        if (!array_key_exists($resource, $array)) {
+            return $this->RefreshToken($userId, $tokenCache->refreshToken, $resource);
+        }
 
-            if (!$expired || (strtotime($date1) < strtotime($date2))) {
-                return $this->RefreshToken($userId, $tokenCache->refreshToken, $resource);
-            } else
-                return $array[$resource]['value'];
-        } else {
+        $expired = $array[$resource]['expiresOn'];
+        $date1 = gmdate($expired);
+        $date2 = gmdate(date("Y-m-d h:i:s"));
+        if (!$expired || (strtotime($date1) < strtotime($date2))) {
+            return $this->RefreshToken($userId, $tokenCache->refreshToken, $resource);
+        }
+        return $array[$resource]['value'];
+    }
+
+    /**
+     * Get a new token with refresh token when a token is expired.
+     * @param $userId
+     * @param $refreshToken
+     * @param $resource
+     * @param bool $returnExpires
+     * @return array|string
+     */
+    private function RefreshToken($userId, $refreshToken, $resource, $returnExpires = false)
+    {
+        try {
+            $provider = new \League\OAuth2\Client\Provider\GenericProvider([
+                'clientId' => env(Constants::CLIENT_ID),
+                'clientSecret' => env(Constants::CLIENT_SECRET),
+                'redirectUri' => 'http' . (empty($_SERVER['HTTPS']) ? '' : 's') . '://' . $_SERVER['HTTP_HOST'] . '/oauth.php',
+                'urlAuthorize' => Constants::AUTHORITY_URL . Constants::AUTHORIZE_ENDPOINT,
+                'urlAccessToken' => Constants::AUTHORITY_URL . Constants::TOKEN_ENDPOINT,
+                'urlResourceOwnerDetails' => ''
+            ]);
+
+            $newToken = $this->getRefreshedToken($provider, $resource, $refreshToken);
+            $newRefreshToken = $newToken['refreshToken'];
+
+            $jsonArray =[
+                $resource => [
+                    "expiresOn" => $newToken['expiresOn'],
+                    "value" => $newToken['value']
+                ]
+            ] ;
+            $tokenCache = TokenCache::where('UserId', $userId)->first();
+            if ($tokenCache) {
+                $tokens = \GuzzleHttp\json_decode($tokenCache->accessTokens, true);
+                if (array_key_exists($resource, $tokens)) {
+                    $tokens[$resource] = [
+                        "expiresOn" => $newToken['expiresOn'],
+                        "value" => $newToken['value']
+                    ];
+                }
+                else{
+                    $tokens[$resource]=[
+                        "expiresOn" => $newToken['expiresOn'],
+                        "value" => $newToken['value']
+                    ];
+                }
+                $jsonArray = $tokens;
+            }
+
+            $this->cacheToken($userId, $newRefreshToken, $jsonArray);
+
+            if ($returnExpires)
+                return ["token" => $newToken['value'], "expires" => $newToken['expiresOn']];
+            return $newToken['value'];
+
+        } catch (Exception $e) {
             header('Location: ' . '/o365loginrequired');
             exit();
         }
 
     }
+
+
+    private function getRefreshedToken($provider, $resource, $refreshToken)
+    {
+        $token = $provider->getAccessToken('refresh_token', [
+            'refresh_token' => $refreshToken,
+            'resource' => $resource
+        ]);
+        $ts = $token->getExpires();
+        $date = new \DateTime("@$ts");
+        $msGraphTokenExpires = $date->format('Y-m-d H:i:s');
+        $msGraphTokenResult = $token->getToken();
+        $newRefreshToken = $token->getRefreshToken();
+        return [
+            'refreshToken' => $newRefreshToken,
+            'value' => $msGraphTokenResult,
+            'expiresOn' => $msGraphTokenExpires
+        ];
+    }
+
 }

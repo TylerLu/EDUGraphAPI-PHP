@@ -4,12 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 
 use App\Config\UserType;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
-use League\Flysystem\Exception;
 
 class LogoutController extends Controller
 {

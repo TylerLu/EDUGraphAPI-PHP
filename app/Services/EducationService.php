@@ -93,7 +93,7 @@ class  EducationService
     }
 
     /**
-     * Get all the sections the current logged in user belongs to
+     * Get all the sections the current logged in user belongs to.
      *
      * @param bool $loadMembers Whether get the members of the sections
      *

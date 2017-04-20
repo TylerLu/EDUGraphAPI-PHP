@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class LinkRequiredMiddleware
 {
     /**
-     * Only linked accounts can go to schools, classes and class detail page.
+     * Redirects unlinked users to /link. It is mainly used for the SchoolsController.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure $next

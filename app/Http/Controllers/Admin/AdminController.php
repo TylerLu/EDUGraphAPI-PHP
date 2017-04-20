@@ -23,7 +23,6 @@ use Microsoft\Graph\Connect\Constants;
 
 class AdminController extends Controller
 {
-
     private $aadGraphService;
     private $tokenCacheService;
     private $adminService;
@@ -41,7 +40,6 @@ class AdminController extends Controller
 
     public function index()
     {
-
         $IsAdminConsented = false;
         $user = Auth::user();
         $o365UserId = $user->o365UserId;
@@ -79,7 +77,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Admin can do consent directly without login to the APP.
+     * Consent without login.
      */
     public function consent()
     {
@@ -99,20 +97,20 @@ class AdminController extends Controller
     }
 
     /**
-     * Redirect admin to O365 login and consent page.
+     * Redirect admin to consent page.
      */
     public function AdminConsent()
     {
         $redirectUrl = 'http' . (empty($_SERVER['HTTPS']) ? '' : 's') . '://' . $_SERVER['HTTP_HOST'] . '/admin/processcode';
         $state = uniqid();
         $_SESSION[SiteConstants::Session_State] = $state;
-        $url = $this->adminService->getAuthorizationUrl($state, $redirectUrl);
+        $url = $this->adminService->getConsentUrl($state, $redirectUrl);
         header('Location: ' . $url);
         exit();
     }
 
     /**
-     * Process consent result after consent and return from O365.
+     * Process consent result after consent.
      */
     public function ProcessCode()
     {
@@ -138,7 +136,6 @@ class AdminController extends Controller
         header('Location: ' . $redirectUrl . '?consented=true');
         exit();
     }
-
 
     public function AdminUnconsent()
     {
@@ -184,6 +181,4 @@ class AdminController extends Controller
         set_time_limit(1200);
         $this->adminService->enableUsersAccess();
     }
-
-
 }

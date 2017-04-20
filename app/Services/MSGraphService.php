@@ -16,6 +16,9 @@ use Microsoft\Graph\Model\DriveItem;
 
 class MSGraphService
 {
+    private $tokenCacheService;
+    private $graph;
+
     /**
      * Create a new instance.
      *
@@ -29,7 +32,7 @@ class MSGraphService
 
     /**
      *
-     * Get the photo of a user
+     * Get the photo of a user.
      *
      * @param string $o365UserId The Office 365 user id of the user
      *
@@ -53,7 +56,7 @@ class MSGraphService
 
     /**
      *
-     * Get all conversations of a group
+     * Get all conversations of a group.
      *
      * @param string $groupId The group id
      *
@@ -66,7 +69,7 @@ class MSGraphService
 
     /**
      *
-     * Get all drive items of a group
+     * Get all drive items of a group.
      *
      * @param string $groupId The group id
      *
@@ -79,7 +82,7 @@ class MSGraphService
 
     /**
      *
-     * Get the drive root of a group
+     * Get the drive root of a group.
      *
      * @param string $groupId The group id
      *
@@ -91,7 +94,7 @@ class MSGraphService
     }
 
     /**
-     * Get all pages of data of MS Graph API
+     * Get all pages.
      *
      * @param string $requestType The HTTP method to use, e.g. "GET" or "POST"
      * @param string $endpoint The Graph endpoint to call
@@ -118,15 +121,6 @@ class MSGraphService
         return $pages;
     }
 
-    /**
-     * Get data of MS Graph API
-     *
-     * @param string $requestType The HTTP method to use, e.g. "GET" or "POST"
-     * @param string $endpoint The Graph endpoint to call
-     * @param string $returnType The type of the return object or object of an array
-     *
-     * @return mixed data of MS Graph API
-     */
     private function getResponse($requestType, $endpoint, $returnType)
     {
         $token = $this->getToken();
@@ -140,11 +134,6 @@ class MSGraphService
         return null;
     }
 
-    /**
-     * Get access token
-     *
-     * @return string The access token
-     */
     private function getToken()
     {
         $user = Auth::user();
@@ -155,7 +144,4 @@ class MSGraphService
         }
         return $this->tokenCacheService->GetMSGraphToken($o365UserId);
     }
-
-    private $tokenCacheService;
-    private $graph;
 }

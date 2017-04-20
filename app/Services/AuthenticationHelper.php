@@ -11,13 +11,10 @@ use Microsoft\Graph\Connect\Constants;
 class AuthenticationHelper
 {
     /**
-     * Create a new provider for login O365 and get token.
-     * @param string $redirectUri
-     * @return \League\OAuth2\Client\Provider\GenericProvider
+     * Create a new O365 OAuth2 provider.
      */
     public  function GetProvider($redirectUri)
     {
-
         $provider = new \League\OAuth2\Client\Provider\GenericProvider([
             'clientId' => env(Constants::CLIENT_ID),
             'clientSecret' => env(Constants::CLIENT_SECRET),

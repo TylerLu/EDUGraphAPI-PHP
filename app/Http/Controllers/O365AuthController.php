@@ -7,41 +7,59 @@
 namespace App\Http\Controllers;
 
 
-use App\Config\SiteConstants;
 use App\Http\Middleware\SocializeAuthMiddleware;
 use App\Services\AADGraphService;
 use App\Services\CookieService;
 use App\Services\OrganizationsService;
 use App\Services\TokenCacheService;
+use App\Services\UserService;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
-use Lcobucci\JWT\Token;
 use Microsoft\Graph\Connect\Constants;
 use Socialize;
-use App\Services\UserService;
 
 
 class O365AuthController extends Controller
 {
 
+    private $tokenCacheService;
+
+    public function __construct()
+    {
+        $this->tokenCacheService = new TokenCacheService();
+    }
+    /**
+     * Redirect the user to the OAuth Provider.
+     */
     public function o365Login()
     {
         return Socialize::with('O365')->redirect();
     }
 
     /**
-     * This function is used for auth and redirect after O365 user login succeed.
+     * Handle provider callback.
      */
     public function oauth()
     {
         $user = Socialite::driver('O365')->user();
         $refreshToken = $user->refreshToken;
+        $addToken = $user->token;
         $o365UserId = $user->id;
         $o365Email = $user->email;
 
-        $tokensArray = (new TokenCacheService)->UpdateTokenWhenLogin($user, $refreshToken);
-        $msGraphToken = \GuzzleHttp\json_decode($tokensArray, true)[Constants::RESOURCE_ID]['value'];
+        $ts = $user->accessTokenResponseBody['expires_on'];
+        $date = new \DateTime("@$ts");
+        $aadTokenExpires = $date->format('Y-m-d H:i:s');
+        $jsonArray = [
+            Constants::AADGraph =>[
+                "expiresOn" => $aadTokenExpires,
+                "value"=>$addToken
+            ]
+        ];
+        $this->tokenCacheService->cacheToken($o365UserId,$refreshToken,$jsonArray);
+
+        $msGraphToken = $this->tokenCacheService->GetMSGraphToken($o365UserId);
         $graph = new AADGraphService;
         $tenant = $graph->GetTenantByToken($msGraphToken);
         $tenantId = $graph->GetTenantId($tenant);
@@ -71,7 +89,7 @@ class O365AuthController extends Controller
     }
 
     /**
-     * If an O365 user is linked and login to the site, after logout, go to this page directly for quick login.
+     * Show the special login page for linked O365 user.
      */
     public function o365LoginHint()
     {
@@ -80,11 +98,10 @@ class O365AuthController extends Controller
         $userName = $cookieServices->GetCookiesOfUsername();
         $data = ["email" => $email, "userName" => $userName];
         return view('auth.o365loginhint', $data);
-
     }
 
     /**
-     * This function is for O365 login hint page after a user clicks 'Login with a different account'. It will clean all cookies and then goes to login page.
+     * Redirect current user to normal login page.
      */
     public function differentAccountLogin()
     {
@@ -94,12 +111,7 @@ class O365AuthController extends Controller
     }
 
     /**
-     * If a local user is login, link O365 user with local user.
-     * @param $user
-     * @param $o365Email
-     * @param $o365UserId
-     * @param $orgId
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * If a local user is login, link his/her account to an O365 account.
      */
     private function linkLocalUserToO365IfLogin($user, $o365Email, $o365UserId, $orgId)
     {
@@ -114,4 +126,6 @@ class O365AuthController extends Controller
             return redirect("/schools");
         }
     }
+
+
 }

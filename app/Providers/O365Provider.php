@@ -15,6 +15,7 @@ class O365Provider extends \SocialiteProviders\Azure\Provider
     protected $version = '1.6';
 
     /**
+     * Overwrite the base method to enable login_hint.
      * {@inheritdoc}
      * If there's cookie for email, add a login_hint on O365 login url.
      */

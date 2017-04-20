@@ -22,10 +22,14 @@ class AdminService
         $this->tokenCacheService = new TokenCacheService();
 
     }
-    public function getAuthorizationUrl($state,$redirectUrl)
+
+    /**
+     * Get consent URL.
+     * An administrator should be prompted to consent on behalf of all users in their organization.
+     */
+    public function getConsentUrl($state, $redirectUrl)
     {
         $provider = (new AuthenticationHelper())->GetProvider($redirectUrl);
-
         return $provider->getAuthorizationUrl([
             'response_type' => 'code',
             'resource' => Constants::AADGraph,
@@ -34,15 +38,9 @@ class AdminService
         ]);
     }
 
-    public function getMSGraphToken($redirectUrl, $code)
-    {
-        $provider = (new AuthenticationHelper())->GetProvider($redirectUrl);
-        return $provider->getAccessToken('authorization_code', [
-            'code' => $code,
-            'resource' => Constants::RESOURCE_ID
-        ]);
-    }
-
+    /**
+     * Cancel consent.
+     */
     public function unconsent($tenantId, $token)
     {
         $url = Constants::AADGraph . '/' . $tenantId . '/servicePrincipals/?api-version=1.6&$filter=appId%20eq%20\'' . env(Constants::CLIENT_ID) . '\'';
@@ -53,6 +51,10 @@ class AdminService
         (new OrganizationsService)->SetTenantConsentResult($tenantId, false);
     }
 
+    /**
+     * Enable users of current tenant to access the app.
+     * This action will add AppRoleAssignment of this app for each user in the tenancy.
+     */
     public function enableUsersAccess()
     {
         $user = Auth::user();
@@ -88,6 +90,15 @@ class AdminService
         $_SESSION[SiteConstants::Session_EnabledUserCount] = null;
         header('Location: ' . '/admin?successMsg=' . $message);
         exit();
+    }
+
+    public function getMSGraphToken($redirectUrl, $code)
+    {
+        $provider = (new AuthenticationHelper())->GetProvider($redirectUrl);
+        return $provider->getAccessToken('authorization_code', [
+            'code' => $code,
+            'resource' => Constants::RESOURCE_ID
+        ]);
     }
 
     private function AddAppRoleAssignmentForUsers($authHeader, $nextLink, $tenantId, $servicePrincipalId, $servicePrincipalName)
@@ -171,7 +182,6 @@ class AdminService
         $res = $client->request('POST', $url, $authHeader);
 
     }
-
 
     private function GetSkipToken($nextLink)
     {

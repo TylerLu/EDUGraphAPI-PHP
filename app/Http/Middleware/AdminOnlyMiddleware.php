@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 class AdminOnlyMiddleware
 {
     /**
-     * Only admin can go to admin page and do tasks link consent.
+     * Only allows admin to access the protected routes. It is mainly used for AdminController.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure $next

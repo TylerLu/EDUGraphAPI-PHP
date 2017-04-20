@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Services\MSGraphService;
-use App\Services\TokenCacheService;
 
 class UserPhotoController extends Controller
 {
     /**
-     * Get photo of a user
+     * Get photo of the specified user.
      *
      * @param string $o365UserId The Office 365 user id of the user
      *
@@ -16,7 +15,6 @@ class UserPhotoController extends Controller
      */
     public function userPhoto($o365UserId)
     {
-
         $msGraph = new MSGraphService();
 
         $stream = $msGraph->getUserPhoto($o365UserId);
@@ -32,10 +30,8 @@ class UserPhotoController extends Controller
                 fwrite($out, $contents);
                 fclose($out);
             }, 200, $headers);
-        }
-        if ($stream === null) {
+        }else {
             return response()->file(realpath("./public/images/header-default.jpg"));
         }
-        return response('', 403);
     }
 }

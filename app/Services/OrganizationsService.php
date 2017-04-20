@@ -9,7 +9,6 @@ use App\Model\Organizations;
 
 class OrganizationsService
 {
-
     public function CreateOrganization($tenant, $tenantId)
     {
         $org = Organizations::where('tenantId',$tenantId)->first();
@@ -25,7 +24,7 @@ class OrganizationsService
     }
 
     /**
-     * After consent succeed, set isAdminConsented to true in DB.
+     * Update isAdminConsented column.
      * @param $tenantId
      * @param $isConstented
      */

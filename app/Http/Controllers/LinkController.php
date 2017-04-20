@@ -6,20 +6,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Config\SiteConstants;
 use App\Config\UserType;
 use App\Http\Middleware\SocializeAuthMiddleware;
+use App\Services\AADGraphService;
 use App\Services\OrganizationsService;
+use App\Services\TokenCacheService;
 use App\Services\UserRolesService;
 use App\Services\UserService;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
-use App\User;
-use App\Model\TokenCache;
-use App\Services\TokenCacheService;
-use App\Services\AADGraphService;
 
 
 class LinkController extends Controller
@@ -101,8 +96,10 @@ class LinkController extends Controller
     }
 
     /**
-     * If there's a local user with same email as o365 email on db, link this account to o365 account directly and then go to schools page.
-     * If there's no local user with same email as o365 email on db, create a new user and then link.
+     * Login with local account:
+     * If there's a local account with same email as the o365 account, no username and password are required,
+     * otherwise login with the username and password.
+     * And then link the O365 account to the local account.
      */
     public function loginLocal()
     {
@@ -133,7 +130,6 @@ class LinkController extends Controller
             }
 
         } else {
-            //If there's a local user with same email as o365 email on db, link this account to o365 account directly and then go to schools page.
             $user = $this->userServices->getUserByEmail($o365email);
             if ($user) {
                 $orgId = (new OrganizationsService())->GetOrganizationId($localUser->tenantId);
@@ -152,6 +148,10 @@ class LinkController extends Controller
 
     }
 
+    /**
+     * Show a page to the user that he/she needs to re-login with the O365 account.
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function loginO365Required()
     {
         return view('link.loginO365Required');

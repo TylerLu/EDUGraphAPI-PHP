@@ -92,7 +92,8 @@ class TokenCacheService
 
         $expired = $array[$resource]['expiresOn'];
         $date1 = gmdate($expired);
-        $date2 = gmdate(date("Y-m-d h:i:s"));
+        $date2 = gmdate(date('Y-m-d H:i:s', strtotime('-5 minutes')));
+
         if (!$expired || (strtotime($date1) < strtotime($date2))) {
             return $this->RefreshToken($userId, $tokenCache->refreshToken, $resource);
         }
@@ -107,7 +108,7 @@ class TokenCacheService
      * @param bool $returnExpires
      * @return array|string
      */
-    private function RefreshToken($userId, $refreshToken, $resource, $returnExpires = false)
+    private function RefreshToken($userId, $refreshToken, $resource)
     {
         try {
             $provider = new \League\OAuth2\Client\Provider\GenericProvider([
@@ -122,41 +123,21 @@ class TokenCacheService
             $newToken = $this->getRefreshedToken($provider, $resource, $refreshToken);
             $newRefreshToken = $newToken['refreshToken'];
 
-            $jsonArray =[
-                $resource => [
-                    "expiresOn" => $newToken['expiresOn'],
-                    "value" => $newToken['value']
-                ]
-            ] ;
             $tokenCache = TokenCache::where('UserId', $userId)->first();
-            if ($tokenCache) {
-                $tokens = \GuzzleHttp\json_decode($tokenCache->accessTokens, true);
-                if (array_key_exists($resource, $tokens)) {
-                    $tokens[$resource] = [
-                        "expiresOn" => $newToken['expiresOn'],
-                        "value" => $newToken['value']
-                    ];
-                }
-                else{
-                    $tokens[$resource]=[
-                        "expiresOn" => $newToken['expiresOn'],
-                        "value" => $newToken['value']
-                    ];
-                }
-                $jsonArray = $tokens;
-            }
+            $jsonArray = $tokenCache ? \GuzzleHttp\json_decode($tokenCache->accessTokens, true) : [];
+
+            $jsonArray[$resource]=[
+                "expiresOn" => $newToken['expiresOn'],
+                "value" => $newToken['value']
+            ];
 
             $this->cacheToken($userId, $newRefreshToken, $jsonArray);
 
-            if ($returnExpires)
-                return ["token" => $newToken['value'], "expires" => $newToken['expiresOn']];
             return $newToken['value'];
-
         } catch (Exception $e) {
             header('Location: ' . '/o365loginrequired');
             exit();
         }
-
     }
 
 

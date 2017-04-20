@@ -34,6 +34,10 @@ The sample demonstrates:
 
 The sample is implemented with the PHP language and the [Laravel](https://laravel.com/) framework.
 
+> [Laravel](https://laravel.com/) is a PHP web application framework with expressive, elegant syntax.  It attempts to take the pain out of development by easing common tasks used in the majority of web projects.
+>
+> Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+
 ## Prerequisites
 
 **Deploying and running this sample requires**:
@@ -265,7 +269,12 @@ Debug the **EDUGraphAPI**:
 We utilized the built-in [authentication](https://laravel.com/docs/5.4/authentication) of the Laravel framework to enable user login.
 
 - **Local users authentication**: implemented by the default Eloquent authentication driver. The `App\User` [Eloquent model](https://laravel.com/docs/5.4/eloquent) is included to access users stored in the database.
+
 - **O365 users authentication**: implemented by [Laravel Socialite](https://github.com/laravel/socialite) and `App\Providers\O365Provider` which is based on the [Microsoft Azure](http://socialiteproviders.github.io/providers/microsoft-azure/) service provider.
+
+  > [Laravel Socialite](https://github.com/laravel/socialite) provides an expressive, fluent interface to OAuth authentication with Facebook, Twitter, Google, LinkedIn, GitHub and Bitbucket. It handles almost all of the boilerplate social authentication code you are dreading writing.
+  >
+  > Adapters for other platforms like [Microsoft Azure](http://socialiteproviders.github.io/providers/microsoft-azure/) are listed at the community driven [Socialite Providers](https://socialiteproviders.github.io/) website.
 
 [thephpleague/oauth2-client](https://github.com/thephpleague/oauth2-client) is used to handle tokens.
 

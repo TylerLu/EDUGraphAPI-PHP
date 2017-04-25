@@ -18,7 +18,7 @@
     },
     "sourceCodeRepositoryURL": {
       "type": "string",
-      "defaultValue": "https://github.com/<YOUR REPOSITORY>/EDUGraphAPI-PHP",
+      "defaultValue": "https://github.com/<YOUR REPOSITORY>/O365-EDU-PHP-Samples",
       "metadata": {
         "description": "Source code repository URL"
       }

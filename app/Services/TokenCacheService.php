@@ -10,6 +10,9 @@ use App\Model\TokenCache;
 use Exception;
 use Microsoft\Graph\Connect\Constants;
 
+/**
+ * In this sample, tokens are cached in clear text in database. For real projects, they should be encrypted.
+ */
 class TokenCacheService
 {
 

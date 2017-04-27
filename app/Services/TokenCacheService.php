@@ -11,6 +11,14 @@ use Exception;
 use Microsoft\Graph\Connect\Constants;
 
 /**
+ * This sample uses an open source OAuth 2.0 library that is compatible with the Azure AD v2.0 endpoint.
+ * Microsoft does not provide fixes or direct support for this library.
+ * Refer to the library’s repository to file issues or for other support.
+ * For more information about auth libraries see: https://docs.microsoft.com/azure/active-directory/develop/active-directory-v2-libraries
+ * Library repo: https://github.com/thephpleague/oauth2-client
+ */
+
+/**
  * In this sample, tokens are cached in clear text in database. For real projects, they should be encrypted.
  */
 class TokenCacheService

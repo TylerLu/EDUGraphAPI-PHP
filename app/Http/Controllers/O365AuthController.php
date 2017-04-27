@@ -6,7 +6,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Http\Middleware\SocializeAuthMiddleware;
 use App\Services\AADGraphService;
 use App\Services\CookieService;
@@ -19,6 +18,13 @@ use Laravel\Socialite\Facades\Socialite;
 use Microsoft\Graph\Connect\Constants;
 use Socialize;
 
+/**
+ * This sample uses an open source OpenID Connect library that is compatible with the Azure AD.
+ * Microsoft does not provide fixes or direct support for this library.
+ * Refer to the library’s repository to file issues or for other support.
+ * For more information about auth libraries see: https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-authentication-libraries
+ * Library repo: https://github.com/laravel/socialite
+ */
 
 class O365AuthController extends Controller
 {

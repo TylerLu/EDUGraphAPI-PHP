@@ -137,31 +137,27 @@ class AdminService
         $count = count($users);
         $client = new \GuzzleHttp\Client();
 
-        for ($i = 0; $i < $count; $i++) {
-            $user = $users[$i];
-            $roleAssignment = $user->appRoleAssignments;
-            $roles = count($roleAssignment);
-            $servicePrincipalExists = false;
-            for ($j = 0; $j < $roles; $j++) {
-                if ($roleAssignment[$j]->resourceId == $servicePrincipalId) {
+        foreach ($users as $user) {
+            $roleAssignments = $user->appRoleAssignments;
+
+            foreach ($roleAssignments as $role) {
+                if ($role->resourceId == $servicePrincipalId) {
                     return;
                 }
             }
-            if (!$servicePrincipalExists) {
 
-                if (!isset($roleAssignment['odata.nextLink'])) {
+            if (!isset($roleAssignments['odata.nextLink'])) {
+                $this->doAddRole($authHeader, $user, $servicePrincipalId, $servicePrincipalName, $tenantId);
+            } else {
+                $url = Constants::AADGraph . '/' . $tenantId . '/users/' . $user->objectId . '/appRoleAssignments?api-version=1.6&$filter=resourceId%20eq%20guid\'' . $servicePrincipalId . '\'';
+                $result = $client->request('GET', $url, $authHeader);
+                $response = json_decode($result->getBody());
+                if (!$response->value) {
                     $this->doAddRole($authHeader, $user, $servicePrincipalId, $servicePrincipalName, $tenantId);
-                } else {
-                    $url = Constants::AADGraph . '/' . $tenantId . '/users/' . $user->objectId . '/appRoleAssignments?api-version=1.6&$filter=resourceId%20eq%20guid\'' . $servicePrincipalId . '\'';
-                    $result = $client->request('GET', $url, $authHeader);
-                    $response = json_decode($result->getBody());
-                    if (!$response->value) {
-                        $this->doAddRole($authHeader, $user, $servicePrincipalId, $servicePrincipalName, $tenantId);
-                    }
                 }
             }
         }
-    }
+    }  
 
     private function doAddRole($authHeader, $user, $servicePrincipalId, $servicePrincipalName, $tenantId)
     {

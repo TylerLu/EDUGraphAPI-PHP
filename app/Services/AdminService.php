@@ -101,7 +101,7 @@ class AdminService
         ]);
     }
 
-    private function AddAppRoleAssignmentForUsers($authHeader, $nextLink, $tenantId, $servicePrincipalId, $servicePrincipalName)
+    private function addAppRoleAssignmentForUsers($authHeader, $nextLink, $tenantId, $servicePrincipalId, $servicePrincipalName)
     {
 
         $url = Constants::AADGraph . '/' . $tenantId . '/users?api-version=1.6&$expand=appRoleAssignments';
@@ -132,7 +132,7 @@ class AdminService
 
     }
 
-    private function AddAppRoleAssignment($authHeader, $users, $servicePrincipalId, $servicePrincipalName, $tenantId)
+    private function addAppRoleAssignment($authHeader, $users, $servicePrincipalId, $servicePrincipalName, $tenantId)
     {
         $count = count($users);
         $client = new \GuzzleHttp\Client();
@@ -163,7 +163,7 @@ class AdminService
         }
     }
 
-    private function DoAddRole($authHeader, $user, $servicePrincipalId, $servicePrincipalName, $tenantId)
+    private function doAddRole($authHeader, $user, $servicePrincipalId, $servicePrincipalName, $tenantId)
     {
 
         $client = new \GuzzleHttp\Client();
@@ -183,7 +183,7 @@ class AdminService
 
     }
 
-    private function GetSkipToken($nextLink)
+    private function getSkipToken($nextLink)
     {
         $pattern = '/\$skiptoken=[^&]+/';
         preg_match($pattern, $nextLink, $match);

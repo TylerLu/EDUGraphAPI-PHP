@@ -27,7 +27,7 @@ class AADGraphService
 
     }
 
-    public function GetCurrentUserRoles($userId, $token)
+    public function getCurrentUserRoles($userId, $token)
     {
         $graph = new Graph();
         $graph->setAccessToken($token);
@@ -35,22 +35,22 @@ class AADGraphService
             ->setReturnType(Model\AssignedLicense::class)
             ->execute();
         $roles = array();
-        if ($this->IsUserAdmin($userId))
+        if ($this->isUserAdmin($userId))
             array_push($roles, Roles::Admin);
-        if (self::IsUserStudent($licenses))
+        if (self::isUserStudent($licenses))
             array_push($roles, Roles::Student);
-        if (self::IsUserTeacher($licenses))
+        if (self::isUserTeacher($licenses))
             array_push($roles, Roles::Faculty);
         return $roles;
 
     }
 
-    public function GetTenantByUserId($userId, $token)
+    public function getTenantByUserId($userId, $token)
     {
-        return $this->GetTenantByToken($token);
+        return $this->getTenantByToken($token);
     }
 
-    public function GetTenantByToken($token)
+    public function getTenantByToken($token)
     {
         if ($token) {
             $graph = new Graph();
@@ -63,19 +63,19 @@ class AADGraphService
         return null;
     }
 
-    public function GetTenantId($tenant)
+    public function getTenantId($tenant)
     {
         $array = json_decode(json_encode($tenant[0]));
         return $array->id;
     }
 
-    public function GetTenantIdByUserId($userId, $token)
+    public function getTenantIdByUserId($userId, $token)
     {
-        $tenant = $this->GetTenantByUserId($userId, $token);
-        return $this->GetTenantId($tenant);
+        $tenant = $this->getTenantByUserId($userId, $token);
+        return $this->getTenantId($tenant);
     }
 
-    public static function IsUserStudent($licenses)
+    public static function isUserStudent($licenses)
     {
         while ($license = each($licenses)) {
             if (is_array($license['value']))
@@ -87,7 +87,7 @@ class AADGraphService
         return false;
     }
 
-    public static function IsUserTeacher($licenses)
+    public static function isUserTeacher($licenses)
     {
         while ($license = each($licenses)) {
             if (is_array($license['value']))
@@ -99,18 +99,18 @@ class AADGraphService
         return false;
     }
 
-    private function IsUserAdmin($userId)
+    private function isUserAdmin($userId)
     {
         $tenantId = null;
         if (Auth::user()) {
             $tenantId = Auth::user()->tenantId;
         } else {
-            $token = (new TokenCacheService)->GetAADToken($userId);
-            $tenantId = $this->GetTenantIdByUserId($userId, $token);
+            $token = (new TokenCacheService)->getAADToken($userId);
+            $tenantId = $this->getTenantIdByUserId($userId, $token);
         }
-        $token = (new TokenCacheService)->GetAADToken($userId);
-        $adminRoles = $this->GetDirectoryAdminRole($tenantId, $token);
-        $adminMembers = $this->GetAdminDirectoryMembers($tenantId, $adminRoles['value']->objectId, $token);
+        $token = (new TokenCacheService)->getAADToken($userId);
+        $adminRoles = $this->getDirectoryAdminRole($tenantId, $token);
+        $adminMembers = $this->getAdminDirectoryMembers($tenantId, $adminRoles['value']->objectId, $token);
         $isAdmin = false;
         while ($member = each($adminMembers)) {
             if (stripos($member['value']->url, $userId) != false) {
@@ -120,7 +120,7 @@ class AADGraphService
         return $isAdmin;
     }
 
-    private function GetDirectoryAdminRole($tenantId, $token)
+    private function getDirectoryAdminRole($tenantId, $token)
     {
         $url = Constants::AADGraph . '/' . $tenantId . '/directoryRoles?api-version=1.6';
         $roles = HttpUtils::getHttpResponseJson($token, $url)->value;
@@ -131,7 +131,7 @@ class AADGraphService
         }
     }
 
-    private function GetAdminDirectoryMembers($tenantId, $roleId, $token)
+    private function getAdminDirectoryMembers($tenantId, $roleId, $token)
     {
         $url = Constants::AADGraph . '/' . $tenantId . '/directoryRoles/' . $roleId . '/$links/members?api-version=1.6';
         return HttpUtils::getHttpResponseJson($token, $url)->value;

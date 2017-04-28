@@ -235,7 +235,7 @@ class SchoolsController extends Controller
     private function getEduServices()
     {
         $user=Auth::user();
-        $token = (new TokenCacheService())->GetAADToken($user->o365UserId);
+        $token = (new TokenCacheService())->getAADToken($user->o365UserId);
         return new EducationService($token);
     }
 }

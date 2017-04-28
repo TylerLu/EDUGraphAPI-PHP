@@ -20,7 +20,7 @@ class CookieService
         setcookie($this->emailCookie, $email, $time, '/');
     }
 
-    public function GetCookiesOfUsername()
+    public function getCookiesOfUsername()
     {
         if (!isset($_COOKIE[$this->usernameCookie])) {
             return null;
@@ -28,7 +28,7 @@ class CookieService
         return $_COOKIE[$this->usernameCookie];
     }
 
-    public function GetCookiesOfEmail()
+    public function getCookiesOfEmail()
     {
         if (!isset($_COOKIE[$this->emailCookie])) {
             return null;
@@ -36,7 +36,7 @@ class CookieService
         return $_COOKIE[$this->emailCookie];
     }
 
-    public function ClearCookies()
+    public function clearCookies()
     {
         setcookie($this->usernameCookie, "", time() - 3600);
         setcookie($this->emailCookie, "", time() - 3600);

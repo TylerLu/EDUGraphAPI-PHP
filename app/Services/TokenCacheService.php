@@ -61,7 +61,7 @@ class TokenCacheService
      * @param $userId
      * @return array|string
      */
-    public function GetMSGraphToken($userId)
+    public function getMSGraphToken($userId)
     {
         return $this->getToken($userId, Constants::RESOURCE_ID);
     }
@@ -72,7 +72,7 @@ class TokenCacheService
      * @param $userId
      * @return array|string
      */
-    public function GetAADToken($userId)
+    public function getAADToken($userId)
     {
         return $this->getToken($userId, Constants::AADGraph);
     }
@@ -93,12 +93,12 @@ class TokenCacheService
 
         $tokens = $tokenCache->accessTokens;
         if (!$tokens) {
-            return $this->RefreshToken($userId, $tokenCache->refreshToken, $resource);
+            return $this->refreshToken($userId, $tokenCache->refreshToken, $resource);
         }
 
         $array = json_decode($tokens, true);
         if (!array_key_exists($resource, $array)) {
-            return $this->RefreshToken($userId, $tokenCache->refreshToken, $resource);
+            return $this->refreshToken($userId, $tokenCache->refreshToken, $resource);
         }
 
         $expired = $array[$resource]['expiresOn'];
@@ -106,7 +106,7 @@ class TokenCacheService
         $date2 = gmdate(date('Y-m-d H:i:s', strtotime('-5 minutes')));
 
         if (!$expired || (strtotime($date1) < strtotime($date2))) {
-            return $this->RefreshToken($userId, $tokenCache->refreshToken, $resource);
+            return $this->refreshToken($userId, $tokenCache->refreshToken, $resource);
         }
         return $array[$resource]['value'];
     }
@@ -119,7 +119,7 @@ class TokenCacheService
      * @param bool $returnExpires
      * @return array|string
      */
-    private function RefreshToken($userId, $refreshToken, $resource)
+    private function refreshToken($userId, $refreshToken, $resource)
     {
         try {
             $provider = new \League\OAuth2\Client\Provider\GenericProvider([

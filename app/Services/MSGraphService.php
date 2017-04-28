@@ -142,6 +142,6 @@ class MSGraphService
         if (!$o365UserId) {
             return null;
         }
-        return $this->tokenCacheService->GetMSGraphToken($o365UserId);
+        return $this->tokenCacheService->getMSGraphToken($o365UserId);
     }
 }

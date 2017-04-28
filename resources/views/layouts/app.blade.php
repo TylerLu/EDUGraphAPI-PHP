@@ -65,7 +65,7 @@ use App\Services\UserRolesService;use Illuminate\Http\Request;use Illuminate\Sup
                     $o365userId=Auth::user()->o365UserId;
 
                 if($o365userId)
-                    $role = (new UserRolesService)->GetUserRole($o365userId);
+                    $role = (new UserRolesService)->getUserRole($o365userId);
 
                 $isInASchool=false;
                 $objectId='';

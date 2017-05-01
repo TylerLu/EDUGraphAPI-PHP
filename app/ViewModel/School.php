@@ -8,6 +8,48 @@ namespace App\ViewModel;
 
 class School extends ParsableObject
 {
+    public $schoolId;
+
+    public $objectId;
+
+    public $objectType;
+
+    public $displayName;
+
+    public $principalName;
+
+    public $description;
+
+    public $email;
+
+    public $highestGrade;
+
+    public $lowestGrade;
+
+    public $schoolNumber;
+
+    public $phone;
+
+    public $zip;
+
+    public $state;
+
+    public $city;
+
+    public $address;
+
+    public $anchorId;
+
+    public $stateId;
+
+    public $latitude;
+
+    public $longitude;
+
+    public $isMySchool;
+
+    public $educationObjectType;
+    
     /**
      * Create a new instance.
      *
@@ -56,46 +98,4 @@ class School extends ParsableObject
         }
         return $city . $this->state . " " . $this->zip;
     }
-
-    public $schoolId;
-
-    public $objectId;
-
-    public $objectType;
-
-    public $displayName;
-
-    public $principalName;
-
-    public $description;
-
-    public $email;
-
-    public $highestGrade;
-
-    public $lowestGrade;
-
-    public $schoolNumber;
-
-    public $phone;
-
-    public $zip;
-
-    public $state;
-
-    public $city;
-
-    public $address;
-
-    public $anchorId;
-
-    public $stateId;
-
-    public $latitude;
-
-    public $longitude;
-
-    public $isMySchool;
-
-    public $educationObjectType;
 }

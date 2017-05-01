@@ -105,8 +105,9 @@ class AdminService
     {
 
         $url = Constants::AADGraph . '/' . $tenantId . '/users?api-version=1.6&$expand=appRoleAssignments';
+        // $nextLink should be an opaque URL and skip token should not be parsed out
         if ($nextLink) {
-            $url = $url . "&" . $this->getSkipToken($nextLink);
+            $url = $nextLink;
         }
         $client = new \GuzzleHttp\Client();
         $result = $client->request('GET', $url, $authHeader);
@@ -177,14 +178,5 @@ class AdminService
         $url = Constants::AADGraph . '/' . $tenantId . '/users/' . $user->objectId . '/appRoleAssignments?api-version=1.6';
         $res = $client->request('POST', $url, $authHeader);
 
-    }
-
-    private function getSkipToken($nextLink)
-    {
-        $pattern = '/\$skiptoken=[^&]+/';
-        preg_match($pattern, $nextLink, $match);
-        if (count($match) == 0)
-            return '';
-        return $match[0];
     }
 }

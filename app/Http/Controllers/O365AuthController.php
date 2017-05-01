@@ -112,7 +112,7 @@ class O365AuthController extends Controller
     public function differentAccountLogin()
     {
         $cookieServices = new CookieService();
-        $cookieServices->ClearCookies();
+        $cookieServices->clearCookies();
         return redirect('/login');
     }
 

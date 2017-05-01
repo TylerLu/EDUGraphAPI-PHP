@@ -22,6 +22,9 @@ class SchoolsController extends Controller
     private $educationService;
     private $userServices;
 
+    // What is the significance behind 12?
+    private $pageSize = 12;
+
     public function __construct()
     {
         $this->userServices = new UserService();
@@ -75,9 +78,9 @@ class SchoolsController extends Controller
     {
         $this->educationService = $this->getEduServices();
         $school = $this->educationService->getSchool($objectId);
-        $users = $this->educationService->getMembers($objectId, 12, null);
-        $students = $this->educationService->getStudents($school->schoolId, 12, null);
-        $teachers = $this->educationService->getTeachers($school->schoolId, 12, null);
+        $users = $this->educationService->getMembers($objectId, $pageSize, null);
+        $students = $this->educationService->getStudents($school->schoolId, $pageSize, null);
+        $teachers = $this->educationService->getTeachers($school->schoolId, $pageSize, null);
         $data = ["school" => $school, "users" => $users, "students" => $students, "teachers" => $teachers];
 
         return view('schools.users', $data);
@@ -94,7 +97,7 @@ class SchoolsController extends Controller
     public function usersNext($objectId, $skipToken)
     {
         $this->educationService = $this->getEduServices();
-        $users = $this->educationService->getMembers($objectId, 12, $skipToken);
+        $users = $this->educationService->getMembers($objectId, $pageSize, $skipToken);
         return response()->json($users);
     }
 
@@ -110,7 +113,7 @@ class SchoolsController extends Controller
     {
         $this->educationService = $this->getEduServices();
         $school = $this->educationService->getSchool($objectId);
-        $students = $this->educationService->getStudents($school->schoolId, 12, $skipToken);
+        $students = $this->educationService->getStudents($school->schoolId, $pageSize, $skipToken);
         return response()->json($students);
     }
 
@@ -126,7 +129,7 @@ class SchoolsController extends Controller
     {
         $this->educationService = $this->getEduServices();
         $school = $this->educationService->getSchool($objectId);
-        $teachers = $this->educationService->getTeachers($school->schoolId, 12, $skipToken);
+        $teachers = $this->educationService->getTeachers($school->schoolId, $pageSize, $skipToken);
         return response()->json($teachers);
     }
 
@@ -185,7 +188,7 @@ class SchoolsController extends Controller
         $school = $this->educationService->getSchool($objectId);
         $schoolId = $school->schoolId;
         $myClasses = $this->educationService->getMySectionsOfSchool($schoolId);
-        $allClasses = $this->educationService->getSections($schoolId, 12, null);
+        $allClasses = $this->educationService->getSections($schoolId, $pageSize, null);
         $this->markMyClasses($allClasses, $myClasses);
 
         $data = ["myClasses" => $myClasses, "allClasses" => $allClasses, "school" => $school, "me" => $me];
@@ -202,7 +205,7 @@ class SchoolsController extends Controller
     {
         $this->educationService = $this->getEduServices();
         $myClasses = $this->educationService->getMySectionsOfSchool($schoolId);
-        $allClasses = $this->educationService->getSections($schoolId, 12, $skipToken);
+        $allClasses = $this->educationService->getSections($schoolId, $pageSize, $skipToken);
         $this->markMyClasses($allClasses, $myClasses);
         return response()->json($allClasses);
     }

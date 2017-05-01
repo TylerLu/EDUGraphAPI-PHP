@@ -148,7 +148,7 @@ class AdminController extends Controller
 
     }
 
-    public function mangeLinkedAccounts()
+    public function manageLinkedAccounts()
     {
         $user = Auth::user();
         $o365UserId = $user->o365UserId;

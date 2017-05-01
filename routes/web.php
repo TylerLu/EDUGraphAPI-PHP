@@ -76,7 +76,7 @@ Route::group(['middleware' => ['web', 'auth', 'AdminOnly'], 'namespace' => 'Admi
     Route::get('/admin', 'AdminController@index');
     Route::post('/admin/adminunconsent', 'AdminController@AdminUnconsent');
     Route::post('/admin/enableuseraccess', 'AdminController@EnableUserAccess');
-    Route::get('/admin/linkedaccounts', 'AdminController@MangeLinkedAccounts');
+    Route::get('/admin/linkedaccounts', 'AdminController@manageLinkedAccounts');
     Route::get('/admin/unlinkaccounts/{userId}', 'AdminController@UnlinkAccount');
     Route::post('/admin/dounlink/{userId}', 'AdminController@DoUnlink');
 });

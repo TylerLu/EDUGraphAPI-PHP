@@ -174,7 +174,7 @@
   },
   {
     "controller": "admincontroller",
-    "action": "mangelinkedaccounts",
+    "action": "managelinkedaccounts",
     "links": [
       {
         "title": "Controller",

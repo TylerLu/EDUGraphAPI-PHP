@@ -55,30 +55,30 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/auth/aboutme', 'Auth\AboutMeController@index');
 
     Route::get('/o365loginrequired', 'LinkController@loginO365Required');
-    Route::post('/auth/savefavoritecolor', 'Auth\AboutMeController@SaveFavoriteColor');
+    Route::post('/auth/savefavoritecolor', 'Auth\AboutMeController@saveFavoriteColor');
     Route::get('/o365loginhint', 'O365AuthController@o365LoginHint');
     Route::get('/differentaccount', 'O365AuthController@differentAccountLogin');
     Route::get('/oauth.php', 'O365AuthController@oauth');
     Route::get('/o365login', 'O365AuthController@o365Login');
-    Route::get('/userlogout', 'Auth\LogoutController@Logout');
+    Route::get('/userlogout', 'Auth\LogoutController@logout');
 
 });
 
 Route::group(['namespace' => 'Admin'], function () {
     Route::get('/admin/consent', 'AdminController@consent');
-    Route::post('/admin/adminconsent', 'AdminController@AdminConsent');
-    Route::get('/admin/processcode', 'AdminController@ProcessCode');
+    Route::post('/admin/adminconsent', 'AdminController@adminConsent');
+    Route::get('/admin/processcode', 'AdminController@processCode');
 
 });
 
 //Admin functions.
 Route::group(['middleware' => ['web', 'auth', 'AdminOnly'], 'namespace' => 'Admin'], function () {
     Route::get('/admin', 'AdminController@index');
-    Route::post('/admin/adminunconsent', 'AdminController@AdminUnconsent');
-    Route::post('/admin/enableuseraccess', 'AdminController@EnableUserAccess');
+    Route::post('/admin/adminunconsent', 'AdminController@adminUnconsent');
+    Route::post('/admin/enableuseraccess', 'AdminController@enableUserAccess');
     Route::get('/admin/linkedaccounts', 'AdminController@manageLinkedAccounts');
-    Route::get('/admin/unlinkaccounts/{userId}', 'AdminController@UnlinkAccount');
-    Route::post('/admin/dounlink/{userId}', 'AdminController@DoUnlink');
+    Route::get('/admin/unlinkaccounts/{userId}', 'AdminController@unlinkAccount');
+    Route::post('/admin/dounlink/{userId}', 'AdminController@doUnlink');
 });
 
 

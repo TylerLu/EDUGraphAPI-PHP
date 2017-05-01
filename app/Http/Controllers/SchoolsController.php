@@ -188,7 +188,7 @@ class SchoolsController extends Controller
         $school = $this->educationService->getSchool($objectId);
         $schoolId = $school->schoolId;
         $myClasses = $this->educationService->getMySectionsOfSchool($schoolId);
-        $allClasses = $this->educationService->getSections($schoolId, $pageSize, null);
+        $allClasses = $this->educationService->getSections($schoolId);
         $this->markMyClasses($allClasses, $myClasses);
 
         $data = ["myClasses" => $myClasses, "allClasses" => $allClasses, "school" => $school, "me" => $me];

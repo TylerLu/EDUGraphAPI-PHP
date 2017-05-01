@@ -15,6 +15,8 @@ class School extends ParsableObject
      */
     public function __construct()
     {
+        // Are these IDs associated with an account-specific property? Can we use a variable
+        // instead of a string for this?
         $this->addPropertyMappings(
             [
                 "schoolId" => "extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId",

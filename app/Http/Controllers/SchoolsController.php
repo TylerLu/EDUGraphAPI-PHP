@@ -78,9 +78,9 @@ class SchoolsController extends Controller
     {
         $this->educationService = $this->getEduServices();
         $school = $this->educationService->getSchool($objectId);
-        $users = $this->educationService->getMembers($objectId, $pageSize, null);
-        $students = $this->educationService->getStudents($school->schoolId, $pageSize, null);
-        $teachers = $this->educationService->getTeachers($school->schoolId, $pageSize, null);
+        $users = $this->educationService->getMembers($objectId);
+        $students = $this->educationService->getStudents($school->schoolId);
+        $teachers = $this->educationService->getTeachers($school->schoolId);
         $data = ["school" => $school, "users" => $users, "students" => $students, "teachers" => $teachers];
 
         return view('schools.users', $data);

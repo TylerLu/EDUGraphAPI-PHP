@@ -84,7 +84,7 @@ class AdminService
         $count = '0';
         if (isset($_SESSION[SiteConstants::Session_EnabledUserCount]))
             $count = (int)$_SESSION[SiteConstants::Session_EnabledUserCount];
-        $message = 'There\'re no users in your tanent.';
+        $message = 'There are no users in your tenant.';
         if ($count > 0)
             $message = 'User access was successfully enabled for ' . $count . ' users.';
         $_SESSION[SiteConstants::Session_EnabledUserCount] = null;

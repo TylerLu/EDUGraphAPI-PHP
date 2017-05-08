@@ -10,11 +10,32 @@ use App\Config\EduConstants;
 
 class Section extends ParsableObject
 {
-    /**
-     * Create a new instance.
-     *
-     * @return void
-     */
+    public $objectId;
+    public $objectType;
+    public $educationObjectType;
+    public $displayName;
+    public $email;
+    public $securityEnabled;
+    public $mailNickname;
+    public $period;
+    public $courseNumber;
+    public $courseDescription;
+    public $courseName;
+    public $courseId;
+    public $termEndDate;
+    public $termStartDate;
+    public $termName;
+    public $termId;
+    public $sectionNumber;
+    public $sectionName;
+    public $sectionId;
+    public $schoolId;
+    public $syncSource;
+    public $anchorId;
+    public $educationStatus;
+    public $isMySection;
+    public $combinedCourseNumber;
+    public $members;
     public function __construct()
     {
         $this->addPropertyMappings(
@@ -102,30 +123,5 @@ class Section extends ParsableObject
         return count($match) === 0 ? '' : $match[0];
     }
 
-    public $objectId;
-    public $objectType;
-    public $educationObjectType;
-    public $displayName;
-    public $email;
-    public $securityEnabled;
-    public $mailNickname;
-    public $period;
-    public $courseNumber;
-    public $courseDescription;
-    public $courseName;
-    public $courseId;
-    public $termEndDate;
-    public $termStartDate;
-    public $termName;
-    public $termId;
-    public $sectionNumber;
-    public $sectionName;
-    public $sectionId;
-    public $schoolId;
-    public $syncSource;
-    public $anchorId;
-    public $educationStatus;
-    public $isMySection;
-    public $combinedCourseNumber;
-    public $members;
+
 }

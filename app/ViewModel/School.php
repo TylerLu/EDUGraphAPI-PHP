@@ -8,11 +8,28 @@ namespace App\ViewModel;
 
 class School extends ParsableObject
 {
-    /**
-     * Create a new instance.
-     *
-     * @return void
-     */
+    public $schoolId;
+    public $objectId;
+    public $objectType;
+    public $displayName;
+    public $principalName;
+    public $description;
+    public $email;
+    public $highestGrade;
+    public $lowestGrade;
+    public $schoolNumber;
+    public $phone;
+    public $zip;
+    public $state;
+    public $city;
+    public $address;
+    public $anchorId;
+    public $stateId;
+    public $latitude;
+    public $longitude;
+    public $isMySchool;
+    public $educationObjectType;
+
     public function __construct()
     {
         $this->addPropertyMappings(
@@ -55,45 +72,5 @@ class School extends ParsableObject
         return $city . $this->state . " " . $this->zip;
     }
 
-    public $schoolId;
 
-    public $objectId;
-
-    public $objectType;
-
-    public $displayName;
-
-    public $principalName;
-
-    public $description;
-
-    public $email;
-
-    public $highestGrade;
-
-    public $lowestGrade;
-
-    public $schoolNumber;
-
-    public $phone;
-
-    public $zip;
-
-    public $state;
-
-    public $city;
-
-    public $address;
-
-    public $anchorId;
-
-    public $stateId;
-
-    public $latitude;
-
-    public $longitude;
-
-    public $isMySchool;
-
-    public $educationObjectType;
 }

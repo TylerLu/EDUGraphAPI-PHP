@@ -6,6 +6,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Config\SiteConstants;
 use App\Services\CookieService;
 use App\Services\EducationService;
 use App\Services\MapUtils;
@@ -58,7 +59,7 @@ class SchoolsController extends Controller
 
         $cookieServices = new CookieService();
         $fullName = Auth::user()->firstName . ' '. Auth::user()->lastName ;
-        $cookieServices->SetCookies($fullName, $me->mail);
+        $cookieServices->setCookies($fullName, $me->mail);
 
         $data = ["me" => $me, "schools" => $schools, "bingMapKey" => env(Constants::BINGMAPKEY,'')];
         return view('schools.schools', $data);
@@ -75,9 +76,9 @@ class SchoolsController extends Controller
     {
         $this->educationService = $this->getEduServices();
         $school = $this->educationService->getSchool($objectId);
-        $users = $this->educationService->getMembers($objectId, 12, null);
-        $students = $this->educationService->getStudents($school->schoolId, 12, null);
-        $teachers = $this->educationService->getTeachers($school->schoolId, 12, null);
+        $users = $this->educationService->getMembers($objectId, SiteConstants::DefaultPageSize, null);
+        $students = $this->educationService->getStudents($school->schoolId, SiteConstants::DefaultPageSize, null);
+        $teachers = $this->educationService->getTeachers($school->schoolId, SiteConstants::DefaultPageSize, null);
         $data = ["school" => $school, "users" => $users, "students" => $students, "teachers" => $teachers];
 
         return view('schools.users', $data);
@@ -94,7 +95,7 @@ class SchoolsController extends Controller
     public function usersNext($objectId, $skipToken)
     {
         $this->educationService = $this->getEduServices();
-        $users = $this->educationService->getMembers($objectId, 12, $skipToken);
+        $users = $this->educationService->getMembers($objectId, SiteConstants::DefaultPageSize, $skipToken);
         return response()->json($users);
     }
 
@@ -110,7 +111,7 @@ class SchoolsController extends Controller
     {
         $this->educationService = $this->getEduServices();
         $school = $this->educationService->getSchool($objectId);
-        $students = $this->educationService->getStudents($school->schoolId, 12, $skipToken);
+        $students = $this->educationService->getStudents($school->schoolId, SiteConstants::DefaultPageSize, $skipToken);
         return response()->json($students);
     }
 
@@ -126,7 +127,7 @@ class SchoolsController extends Controller
     {
         $this->educationService = $this->getEduServices();
         $school = $this->educationService->getSchool($objectId);
-        $teachers = $this->educationService->getTeachers($school->schoolId, 12, $skipToken);
+        $teachers = $this->educationService->getTeachers($school->schoolId, SiteConstants::DefaultPageSize, $skipToken);
         return response()->json($teachers);
     }
 
@@ -185,7 +186,7 @@ class SchoolsController extends Controller
         $school = $this->educationService->getSchool($objectId);
         $schoolId = $school->schoolId;
         $myClasses = $this->educationService->getMySectionsOfSchool($schoolId);
-        $allClasses = $this->educationService->getSections($schoolId, 12, null);
+        $allClasses = $this->educationService->getSections($schoolId);
         $this->markMyClasses($allClasses, $myClasses);
 
         $data = ["myClasses" => $myClasses, "allClasses" => $allClasses, "school" => $school, "me" => $me];
@@ -202,7 +203,7 @@ class SchoolsController extends Controller
     {
         $this->educationService = $this->getEduServices();
         $myClasses = $this->educationService->getMySectionsOfSchool($schoolId);
-        $allClasses = $this->educationService->getSections($schoolId, 12, $skipToken);
+        $allClasses = $this->educationService->getSections($schoolId, SiteConstants::DefaultPageSize, $skipToken);
         $this->markMyClasses($allClasses, $myClasses);
         return response()->json($allClasses);
     }
@@ -235,7 +236,7 @@ class SchoolsController extends Controller
     private function getEduServices()
     {
         $user=Auth::user();
-        $token = (new TokenCacheService())->GetAADToken($user->o365UserId);
+        $token = (new TokenCacheService())->getAADToken($user->o365UserId);
         return new EducationService($token);
     }
 }

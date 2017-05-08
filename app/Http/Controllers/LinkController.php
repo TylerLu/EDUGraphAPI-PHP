@@ -48,8 +48,8 @@ class LinkController extends Controller
                     $localUserEmail = $user->email;
                 }
 
-                $roles = (new AADGraphService)->GetCurrentUserRoles($o365userId, (new TokenCacheService)->GetMSGraphToken($o365userId));
-                (new UserRolesService)->CreateOrUpdateUserRoles($roles, $o365userId);
+                $roles = (new AADGraphService)->getCurrentUserRoles($o365userId, (new TokenCacheService)->getMSGraphToken($o365userId));
+                (new UserRolesService)->createOrUpdateUserRoles($roles, $o365userId);
             }
         } else {
             $user = Auth::user();
@@ -132,7 +132,7 @@ class LinkController extends Controller
         } else {
             $user = $this->userServices->getUserByEmail($o365email);
             if ($user) {
-                $orgId = (new OrganizationsService())->GetOrganizationId($localUser->tenantId);
+                $orgId = (new OrganizationsService())->getOrganizationId($localUser->tenantId);
                 $this->userServices->saveUserInfoByEmail($localUser->o365UserId, $o365email, $localUser->firstName,
                     $localUser->lastName, $orgId);
                 Auth::loginUsingId($user->id);

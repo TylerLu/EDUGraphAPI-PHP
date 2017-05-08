@@ -9,7 +9,7 @@ use App\Model\UserRoles;
 
 class UserRolesService
 {
-    public function CreateOrUpdateUserRoles($roles, $userId){
+    public function createOrUpdateUserRoles($roles, $userId){
         UserRoles::where('UserId',  $userId)->delete();
         while ($role = each($roles)) {
             $userRole = new   UserRoles();
@@ -19,14 +19,14 @@ class UserRolesService
         }
     }
 
-    public function IsUserAdmin($userId){
+    public function isUserAdmin($userId){
        $role = UserRoles::where('UserId',  $userId)->first();
        if($role)
            return true;
         return false;
     }
 
-    public function GetUserRole($userId){
+    public function getUserRole($userId){
         $role = UserRoles::where('UserId',  $userId)->first();
         if($role)
             return $role->name;

@@ -65,11 +65,11 @@ class O365AuthController extends Controller
         ];
         $this->tokenCacheService->cacheToken($o365UserId,$refreshToken,$jsonArray);
 
-        $msGraphToken = $this->tokenCacheService->GetMSGraphToken($o365UserId);
+        $msGraphToken = $this->tokenCacheService->getMSGraphToken($o365UserId);
         $graph = new AADGraphService;
-        $tenant = $graph->GetTenantByToken($msGraphToken);
-        $tenantId = $graph->GetTenantId($tenant);
-        $orgId = (new OrganizationsService)->CreateOrganization($tenant, $tenantId);
+        $tenant = $graph->getTenantByToken($msGraphToken);
+        $tenantId = $graph->getTenantId($tenant);
+        $orgId = (new OrganizationsService)->createOrganization($tenant, $tenantId);
         $this->linkLocalUserToO365IfLogin($user, $o365Email, $o365UserId, $orgId);
 
         //If user exists on db, check if this user is linked. If linked, go to schools/index page, otherwise go to link page.
@@ -100,8 +100,8 @@ class O365AuthController extends Controller
     public function o365LoginHint()
     {
         $cookieServices = new CookieService();
-        $email = $cookieServices->GetCookiesOfEmail();
-        $userName = $cookieServices->GetCookiesOfUsername();
+        $email = $cookieServices->getCookiesOfEmail();
+        $userName = $cookieServices->getCookiesOfUsername();
         $data = ["email" => $email, "userName" => $userName];
         return view('auth.o365loginhint', $data);
     }
@@ -112,7 +112,7 @@ class O365AuthController extends Controller
     public function differentAccountLogin()
     {
         $cookieServices = new CookieService();
-        $cookieServices->ClearCookies();
+        $cookieServices->clearCookies();
         return redirect('/login');
     }
 

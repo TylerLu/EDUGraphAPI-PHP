@@ -52,8 +52,8 @@ class  EducationService
         $assignedLicenses = array_map(function ($license) {
             return new Model\AssignedLicense($license);
         }, $json["assignedLicenses"]);
-        $isStudent = $this->IsUserStudent($assignedLicenses);
-        $isTeacher = $this->IsUserTeacher($assignedLicenses);
+        $isStudent = $this->isUserStudent($assignedLicenses);
+        $isTeacher = $this->isUserTeacher($assignedLicenses);
         $user = new SectionUser();
         if ($isStudent) {
             $user = new Student();
@@ -163,7 +163,7 @@ class  EducationService
      *
      * @return array A subset of the sections in the school
      */
-    public function getSections($schoolId, $top, $skipToken)
+    public function getSections($schoolId, $top=SiteConstants::DefaultPageSize, $skipToken=null)
     {
         return $this->getResponse( '/groups?api-version=beta&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20\'Section\'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20\'' . $schoolId . '\'', Section::class, $top, $skipToken);
     }
@@ -213,14 +213,14 @@ class  EducationService
         return $this->getResponse( "/users?api-version=1.5&\$filter=extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId eq '$schoolId' and extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType eq 'Teacher'", SectionUser::class, $top, $skipToken);
     }
 
-    private function IsUserStudent($licenses)
+    private function isUserStudent($licenses)
     {
-        return AADGraphService::IsUserStudent($licenses);
+        return AADGraphService::isUserStudent($licenses);
     }
 
-    private function IsUserTeacher($licenses)
+    private function isUserTeacher($licenses)
     {
-        return AADGraphService::IsUserTeacher($licenses);
+        return AADGraphService::isUserTeacher($licenses);
     }
 
     /**
@@ -306,8 +306,8 @@ class  EducationService
         if (isset(Auth::user()->tenantId)) {
             return Auth::user()->tenantId;
         }
-        $token = (new TokenCacheService)->GetMSGraphToken($this->o365UserId);
-        return $this->aadGraphClient->GetTenantIdByUserId($this->o365UserId,$token);
+        $token = (new TokenCacheService)->getMSGraphToken($this->o365UserId);
+        return $this->aadGraphClient->getTenantIdByUserId($this->o365UserId,$token);
     }
 
     /**

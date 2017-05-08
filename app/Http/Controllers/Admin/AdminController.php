@@ -43,10 +43,10 @@ class AdminController extends Controller
         $IsAdminConsented = false;
         $user = Auth::user();
         $o365UserId = $user->o365UserId;
-        $token = $this->tokenCacheService->GetMSGraphToken($o365UserId);
-        $tenantId = $this->aadGraphService->GetTenantIdByUserId($o365UserId, $token);
+        $token = $this->tokenCacheService->getMSGraphToken($o365UserId);
+        $tenantId = $this->aadGraphService->getTenantIdByUserId($o365UserId, $token);
         if ($tenantId) {
-            $org = $this->organizationsService->GetOrganization($tenantId);
+            $org = $this->organizationsService->getOrganization($tenantId);
             if ($org && $org->isAdminConsented) {
                 $IsAdminConsented = true;
             } else {
@@ -99,7 +99,7 @@ class AdminController extends Controller
     /**
      * Redirect admin to consent page.
      */
-    public function AdminConsent()
+    public function adminConsent()
     {
         $redirectUrl = 'http' . (empty($_SERVER['HTTPS']) ? '' : 's') . '://' . $_SERVER['HTTP_HOST'] . '/admin/processcode';
         $state = uniqid();
@@ -112,7 +112,7 @@ class AdminController extends Controller
     /**
      * Process consent result after consent.
      */
-    public function ProcessCode()
+    public function processCode()
     {
         $code = Input::get('code');
         $state = Input::get('state');
@@ -125,7 +125,7 @@ class AdminController extends Controller
             $idToken = $msGraphToken->getValues()['id_token'];
             $parsedToken = (new Parser())->parse((string)$idToken);
             $tenantId = $parsedToken->getClaim('tid');
-            $this->organizationsService->SetTenantConsentResult($tenantId, true);
+            $this->organizationsService->setTenantConsentResult($tenantId, true);
         }
 
         $redirectUrl = '/admin';
@@ -137,24 +137,24 @@ class AdminController extends Controller
         exit();
     }
 
-    public function AdminUnconsent()
+    public function adminUnconsent()
     {
         $user = Auth::user();
         $o365UserId = $user->o365UserId;
-        $tenantId = $this->aadGraphService->GetTenantIdByUserId($o365UserId, $this->tokenCacheService->GetMSGraphToken($o365UserId));
-        $this->adminService->unconsent($tenantId, $this->tokenCacheService->GetAADToken($o365UserId));
+        $tenantId = $this->aadGraphService->getTenantIdByUserId($o365UserId, $this->tokenCacheService->getMSGraphToken($o365UserId));
+        $this->adminService->unconsent($tenantId, $this->tokenCacheService->getAADToken($o365UserId));
         header('Location: ' . '/admin?consented=false');
         exit();
 
     }
 
-    public function MangeLinkedAccounts()
+    public function manageLinkedAccounts()
     {
         $user = Auth::user();
         $o365UserId = $user->o365UserId;
-        $token = $this->tokenCacheService->GetMSGraphToken($o365UserId);
-        $tenantId = $this->aadGraphService->GetTenantIdByUserId($o365UserId, $token);
-        $org = $this->organizationsService->GetOrganization($tenantId);
+        $token = $this->tokenCacheService->getMSGraphToken($o365UserId);
+        $tenantId = $this->aadGraphService->getTenantIdByUserId($o365UserId, $token);
+        $org = $this->organizationsService->getOrganization($tenantId);
         $users = [];
         if ($org) {
             $users = $this->userServices->getUsers($org->id);
@@ -162,7 +162,7 @@ class AdminController extends Controller
         return view('admin.manageaccounts', compact('users'));
     }
 
-    public function UnlinkAccount($userId)
+    public function unlinkAccount($userId)
     {
         $user = $this->userServices->getUserById($userId);
         if (!$user)
@@ -170,13 +170,13 @@ class AdminController extends Controller
         return view('admin.unlinkaccount', compact('user'));
     }
 
-    public function DoUnlink($userId)
+    public function doUnlink($userId)
     {
         $this->userServices->unlinkUser($userId);
         return redirect('/admin/linkedaccounts');
     }
 
-    public function EnableUserAccess()
+    public function enableUserAccess()
     {
         set_time_limit(1200);
         $this->adminService->enableUsersAccess();

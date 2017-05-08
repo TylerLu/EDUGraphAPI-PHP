@@ -9,7 +9,7 @@ use App\Model\Organizations;
 
 class OrganizationsService
 {
-    public function CreateOrganization($tenant, $tenantId)
+    public function createOrganization($tenant, $tenantId)
     {
         $org = Organizations::where('tenantId',$tenantId)->first();
         if(!$org){
@@ -28,7 +28,7 @@ class OrganizationsService
      * @param $tenantId
      * @param $isConstented
      */
-    public  function  SetTenantConsentResult($tenantId,$isConstented)
+    public  function  setTenantConsentResult($tenantId, $isConstented)
     {
         $org = Organizations::where('tenantId',$tenantId)->first();
         if($org){
@@ -37,13 +37,13 @@ class OrganizationsService
         }
      }
 
-    public function GetOrganization($tenantId)
+    public function getOrganization($tenantId)
     {
         return Organizations::where('tenantId',$tenantId)->first();
     }
 
-    public function GetOrganizationId($tenantId){
-        $org = $this->GetOrganization($tenantId);
+    public function getOrganizationId($tenantId){
+        $org = $this->getOrganization($tenantId);
         if($org){
             return $org->id;
         }

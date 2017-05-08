@@ -159,8 +159,19 @@ Debug the **EDUGraphAPI**:
    - **clientSecret**: use the Key value of the app registration you created earlier.
    - **BingMapKey**: use the key of Bing Map you got earlier. This setting is optional.
    - **SourceCodeRepositoryURL**: use the URL of this repository.
+   - **APP_KEY:** use "php artisan key:generate" command to generate a new key.
 
 2. Run the site.
+
+   If you have PHP installed locally and you would like to use PHP's built-in development server to serve your application, you may use the serve Artisan command. This command will start a development server at [http://localhost:8000.](http://localhost:8000.)
+
+   `php artisan serve`
+
+   If there's error like failed to open stream, use the cache clear command and dump auto load command.
+
+   `php artisan cache:clear`
+
+   `composer dump-autoload` 
 
 ## Deploy the sample to Azure
 
@@ -462,7 +473,7 @@ Note that in the AAD Application settings, permissions for each Graph API are co
 ## Questions and comments
 
 - If you have any trouble running this sample, please [log an issue](https://github.com/OfficeDev/O365-EDU-AspNetMVC-Samples/issues).
-- Questions about GraphAPI development in general should be posted to [Stack Overflow](http://stackoverflow.com/questions/tagged/office-addins). Make sure that your questions or comments are tagged with [ms-graph-api]. 
+- Questions about GraphAPI development in general should be posted to [Stack Overflow](http://stackoverflow.com/questions/tagged/office-addins). Make sure that your questions or comments are tagged with [microsoftgraph]. 
 
 ## Contributing
 

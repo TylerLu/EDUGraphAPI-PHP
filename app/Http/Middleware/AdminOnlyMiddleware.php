@@ -22,7 +22,7 @@ class AdminOnlyMiddleware
     public function handle($request, Closure $next)
     {
         $user = Auth::user();
-        $isAdmin = (new UserRolesService)->IsUserAdmin($user->o365UserId);
+        $isAdmin = (new UserRolesService)->isUserAdmin($user->o365UserId);
         if (!$isAdmin)
             return redirect("/login");
         return $next($request);

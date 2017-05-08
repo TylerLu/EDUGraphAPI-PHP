@@ -23,7 +23,7 @@ class O365Provider extends \SocialiteProviders\Azure\Provider
     {
         $url = parent::getAuthUrl($state);
         //login_hint
-        $mail = (new CookieService)->GetCookiesOfEmail();
+        $mail = (new CookieService)->getCookiesOfEmail();
         if ($mail) {
             if (strpos($url, '?') > 0) {
                 $url = $url . '&' . 'login_hint=' . $mail;

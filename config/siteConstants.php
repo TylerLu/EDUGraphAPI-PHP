@@ -17,6 +17,7 @@ class SiteConstants
     const EmailCookie                   ='O365CookieEmail';
     const SocializeUser                 ='SocializeUser';
     const DefaultPageSize               =12;
+    const ShowLoginPrompt               ='ShowLoginPrompt';
 }
  class Roles
 {

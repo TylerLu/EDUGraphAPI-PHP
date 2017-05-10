@@ -9,7 +9,7 @@ School data is kept in sync in O365 Education tenants by [Microsoft School Data 
 - [Sample Goals](#sample-goals)
 - [Prerequisites](#prerequisites)
 - [Register the application in Azure Active Directory](#register-the-application-in-azure-active-directory)
-- [Debug locally](#debug-locally)
+- [Run the sample locally](#run-the-sample-locally)
 - [Deploy the sample to Azure](#deploy-the-sample-to-azure)
 - [Understand the code](#understand-the-code)
 - [Questions and comments](#questions-and-comments)
@@ -53,7 +53,6 @@ The sample is implemented with the PHP language and the [Laravel](https://larave
   - [PHP 7.0](http://php.net/downloads.php)
   - [Composer](https://getcomposer.org/download/)
   - [Git](https://git-scm.com/download/win)
-  - PHP IDE like [PhpStorm](https://www.jetbrains.com/phpstorm/specials/phpstorm/phpstorm.html)
   - Familiarity with PHP and [Laravel](https://laravel.com/).
 
 **Optional configuration**:
@@ -128,50 +127,55 @@ Create a key to enable Bing Maps API features in the app:
 
    Close the Settings window.
 
-## Debug locally
+## Run the sample locally
 
 The following software and components are required:
 
-- PHP >= 7.0.0
-- OpenSSL PHP Extension
-- PDO PHP Extension
-- Mbstring PHP Extension
-- Tokenizer PHP Extension
-- XML PHP Extension
+- PHP >= 7.0.0 with the following extensions enabled
+
+  ```ini
+  extension=php_curl.dll
+  extension=php_mbstring.dll
+  extension=php_openssl.dll
+  extension=php_pdo_sqlite.dll
+  ```
+
 - [Git](https://git-scm.com/download/win)
 
-[PhpStorm](https://www.jetbrains.com/phpstorm/specials/phpstorm/phpstorm.html) is recommended to debug the sample locally.
+Follow the steps below to run this sample:
 
-1. Download the zip or clone source code from GitHub to local machine. 
+1. Download the source code to a local folder.
 
-2. Open directory of source code with PhpStorm.
-
-3. Run "Composer update" command with terminal. 
-
-
-Debug the **EDUGraphAPI**:
-
-1. Configure **environment variables**. Create a local .env file and input like below:
+2. Create the .env file in the local folder and configure the values:
 
    ![env](/Images/env.jpg)
 
-   - **clientId**: use the Client Id of the app registration you created earlier.
-   - **clientSecret**: use the Key value of the app registration you created earlier.
-   - **BingMapKey**: use the key of Bing Map you got earlier. This setting is optional.
-   - **SourceCodeRepositoryURL**: use the URL of this repository.
    - **APP_KEY:** use "php artisan key:generate" command to generate a new key.
+   - **CLIENT_ID**: use the Client Id of the app registration you created earlier.
+   - **CLIENT_SECRET**: use the Key value of the app registration you created earlier.
+   - **BINGMAPKEY**: use the key of Bing Map you got earlier. This setting is optional.
+   - **SOURCECODEREPOSITORYRL**: use the URL of this repository.
 
-2. Run the site.
+3. Open terminal or command and navigate to the local folder.
 
-   If you have PHP installed locally and you would like to use PHP's built-in development server to serve your application, you may use the serve Artisan command. This command will start a development server at [http://localhost:8000.](http://localhost:8000.)
+4.  Execute the command below to get the latest versions of the dependencies:
 
-   `php artisan serve`
+   ```
+   composer update
+   ```
 
-   If there's error like failed to open stream, use the cache clear command and dump auto load command.
+5. Start a development server at [http://localhost:8000.](http://localhost:8000.)
 
-   `php artisan cache:clear`
+   ```
+   php artisan serve
+   ```
 
-   `composer dump-autoload` 
+   >Note: If there's error like failed to open stream, use the cache clear command and dump auto load command.
+   >
+   >```
+   >php artisan cache:clear
+   >composer dump-autoload
+   >```
 
 ## Deploy the sample to Azure
 

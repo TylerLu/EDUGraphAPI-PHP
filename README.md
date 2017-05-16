@@ -151,17 +151,9 @@ Follow the steps below to run this sample on a windows server:
    - **BINGMAPKEY**: use the key of Bing Map you got earlier. This setting is optional.
    - **SOURCECODEREPOSITORYRL**: use the URL of this repository.
 
-6. Edit **httpd-vhosts.conf** under **C:\xampp\apache\conf\extra**. Add below conten
+6. Edit **httpd-vhosts.conf** under **C:\xampp\apache\conf\extra**. Add below content in green square and make the path in read square match to the path in step 3.
 
-   <VirtualHost *:80>
-    ServerName localhost
-    DocumentRoot C:/O365-EDU-PHP-Samples
-    <Directory  "C:/O365-EDU-PHP-Samples/">
-     Options +Indexes +Includes +FollowSymLinks +MultiViews
-     AllowOverride All
-     Require local
-    </Directory>
-   </VirtualHost>
+   ![httpdvhost](/Images/httpdvhost.png)
 
 7. Restart xmapp server and visit http://localhost. 
 

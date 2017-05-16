@@ -142,11 +142,19 @@ The following software and components are required:
 
 - [Git](https://git-scm.com/download/win)
 
-Follow the steps below to run this sample:
+Follow the steps below to run this sample on a windows server:
 
-1. Download the source code to a local folder.
+1. Download [XAMPP](https://www.apachefriends.org/download.html) and install it to a local folder, for example **c:\xmapp**. Notice: the minimal PHP version is 7.0. Add **C:\xampp\php** to environment variables.
 
-2. Create the .env file in the local folder and configure the values:
+2. Download and install [Composer](https://getcomposer.org/).
+
+3. Download the source code from Github and extra to a local folder like **C:\O365-EDU-PHP-Samples**.
+
+4. Open command window on the folder **C:\O365-EDU-PHP-Samples** and run **composer update**.
+
+   ![composerupdate](/Images/composerupdate.jpg)
+
+5. Create the .env file in the local folder and configure the values:
 
    ![env](/Images/env.jpg)
 
@@ -156,26 +164,20 @@ Follow the steps below to run this sample:
    - **BINGMAPKEY**: use the key of Bing Map you got earlier. This setting is optional.
    - **SOURCECODEREPOSITORYRL**: use the URL of this repository.
 
-3. Open terminal or command and navigate to the local folder.
+6. Edit **httpd-vhosts.conf** under **C:\xampp\apache\conf\extra**. Add below conten
 
-4.  Execute the command below to get the latest versions of the dependencies:
+   <VirtualHost *:80>
+    ServerName localhost
+    DocumentRoot C:/O365-EDU-PHP-Samples
+    <Directory  "C:/O365-EDU-PHP-Samples/">
+     Options +Indexes +Includes +FollowSymLinks +MultiViews
+     AllowOverride All
+     Require local
+    </Directory>
+   </VirtualHost>
 
-   ```
-   composer update
-   ```
+7. Restart xmapp server and visit http://localhost. 
 
-5. Start a development server at [http://localhost:8000.](http://localhost:8000.)
-
-   ```
-   php artisan serve
-   ```
-
-   >Note: If there's error like failed to open stream, use the cache clear command and dump auto load command.
-   >
-   >```
-   >php artisan cache:clear
-   >composer dump-autoload
-   >```
 
 ## Deploy the sample to Azure
 

@@ -129,19 +129,6 @@ Create a key to enable Bing Maps API features in the app:
 
 ## Run the sample locally
 
-The following software and components are required:
-
-- PHP >= 7.0.0 with the following extensions enabled
-
-  ```ini
-  extension=php_curl.dll
-  extension=php_mbstring.dll
-  extension=php_openssl.dll
-  extension=php_pdo_sqlite.dll
-  ```
-
-- [Git](https://git-scm.com/download/win)
-
 Follow the steps below to run this sample on a windows server:
 
 1. Download [XAMPP](https://www.apachefriends.org/download.html) and install it to a local folder, for example **c:\xmapp**. Notice: the minimal PHP version is 7.0. Add **C:\xampp\php** to environment variables.

@@ -22,11 +22,12 @@ use App\Services\UserRolesService;use Illuminate\Http\Request;use Illuminate\Sup
     <title>@yield('title') - {{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('/public/css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('/public/css/bootstrap.css') }}" rel="stylesheet">
-    <link href="{{ asset('/public/css/site.css') }}" rel="stylesheet">
-    <!-- Scripts -->
-    <script src="{{ asset('/public/js/app.js') }}"></script>
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/site.css') }}" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
     <script>
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
@@ -161,8 +162,11 @@ use App\Services\UserRolesService;use Illuminate\Http\Request;use Illuminate\Sup
                 @yield('content')
             </div>
     </div>
-    <?php include(base_path('resources/views/demohelper.php'));?>
+
     <!-- Scripts -->
-    <script src="{{ asset('/public/js/site.js') }}"></script>
+    <script src="{{ asset('js/site.js') }}"></script>
+
+    <?php include(base_path('resources/views/demohelper.php'));?>
+
 </body>
 </html>

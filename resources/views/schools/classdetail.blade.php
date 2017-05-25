@@ -204,7 +204,7 @@
         </div>
     </div>
     <input type="hidden" name="hidSectionid" id="hidSectionid" value="{{$section->objectId}}"/>
-    <script src="{{ asset('/public/js/jquery.tablesorter.min.js') }}"></script>
-    <script src="{{ asset('/public/js/moment.min.js') }}"></script>
-    <script src="{{ asset('/public/js/classdetail.js') }}"></script>
+    <script src="{{ asset('js/jquery.tablesorter.min.js') }}"></script>
+    <script src="{{ asset('js/moment.min.js') }}"></script>
+    <script src="{{ asset('js/classdetail.js') }}"></script>
 @endsection

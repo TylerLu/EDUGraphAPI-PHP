@@ -65,5 +65,5 @@
         </div>
         <input id="school-objectid" type="hidden" value="{{$school->objectId}}"/>
     </div>
-    <script src="{{ asset('/public/js/users.js') }}"></script>
+    <script src="{{ asset('js/users.js') }}"></script>
 @endsection

@@ -91,6 +91,6 @@
         <div id="myMap"></div>
         <input type="hidden" name="bingMapKey" id="bingMapKey" value="{{$bingMapKey}}"/>
         <script type='text/javascript' src='//www.bing.com/api/maps/mapcontrol' async defer></script>
-        <script src="{{ asset('/public/js/schools.js') }}"></script>
+        <script src="{{ asset('js/schools.js') }}"></script>
     </div>
 @endsection

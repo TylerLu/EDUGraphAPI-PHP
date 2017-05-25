@@ -161,7 +161,7 @@ use App\Services\UserRolesService;use Illuminate\Http\Request;use Illuminate\Sup
                 @yield('content')
             </div>
     </div>
-    <?php include 'resources/views/demohelper.php';?>
+    <?php include(base_path('resources/views/demohelper.php'));?>
     <!-- Scripts -->
     <script src="{{ asset('/public/js/site.js') }}"></script>
 </body>

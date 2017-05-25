@@ -24,7 +24,7 @@ class  EducationService
     private $o365UserId;
     private $aadGraphClient;
     private $token;
-    private $pageSize = 12;
+    const PAGE_SIZE = 12;
 
     /**
      * Create a new instance.
@@ -164,7 +164,7 @@ class  EducationService
      *
      * @return array A subset of the sections in the school
      */
-    public function getSections($schoolId, $top = $pageSize, $skipToken = null)
+    public function getSections($schoolId, $top = PAGE_SIZE, $skipToken = null)
     {
         return $this->getResponse( '/groups?api-version=beta&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20\'Section\'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20\'' . $schoolId . '\'', Section::class, $top, $skipToken);
     }
@@ -179,7 +179,7 @@ class  EducationService
      *
      * @return array A subset of the members within the school
      */
-    public function getMembers($objectId, $top = $pageSize, $skipToken = null)
+    public function getMembers($objectId, $top = PAGE_SIZE, $skipToken = null)
     {
         return $this->getResponse( "/administrativeUnits/" . $objectId . "/members?api-version=beta", SectionUser::class, $top, $skipToken);
     }
@@ -194,7 +194,7 @@ class  EducationService
      *
      * @return array A subset of the students within the school
      */
-    public function getStudents($schoolId, $top = $pageSize, $skipToken = null)
+    public function getStudents($schoolId, $top = PAGE_SIZE, $skipToken = null)
     {
         return $this->getResponse( "/users?api-version=1.5&\$filter=extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId eq '$schoolId' and extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType eq 'Student'", SectionUser::class, $top, $skipToken);
     }
@@ -209,7 +209,7 @@ class  EducationService
      *
      * @return array A subset of the teachers within the school
      */
-    public function getTeachers($schoolId, $top = $pageSize, $skipToken = null)
+    public function getTeachers($schoolId, $top = PAGE_SIZE, $skipToken = null)
     {
         return $this->getResponse( "/users?api-version=1.5&\$filter=extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId eq '$schoolId' and extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType eq 'Teacher'", SectionUser::class, $top, $skipToken);
     }
@@ -235,7 +235,7 @@ class  EducationService
      *
      * @return mixed Response of AAD Graph API
      */
-    private function getResponse( $endpoint, $returnType, $top = $pageSize, $skipToken = null, $requestType='get')
+    private function getResponse( $endpoint, $returnType, $top = PAGE_SIZE, $skipToken = null, $requestType='get')
     {
         $token = $this->getToken();
         if ($token) {

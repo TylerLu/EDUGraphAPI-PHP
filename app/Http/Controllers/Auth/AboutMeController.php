@@ -34,7 +34,7 @@ class AboutMeController extends Controller
         }
 
         if ($o365UserId) {
-            $token = (new TokenCacheService())->GetAADToken($o365UserId);
+            $token = (new TokenCacheService())->getAADToken($o365UserId);
             $classes = (new EducationService($token))->getMySections(false);
         }
         $arrData = array(
@@ -49,7 +49,7 @@ class AboutMeController extends Controller
 
     }
 
-    public function SaveFavoriteColor()
+    public function saveFavoriteColor()
     {
         if (!Auth::user())
             return redirect('/login');
@@ -80,7 +80,7 @@ class AboutMeController extends Controller
 
 
         if ($o365userId)
-            $role = (new UserRolesService)->GetUserRole($o365userId);
+            $role = (new UserRolesService)->getUserRole($o365userId);
         return $role;
     }
 

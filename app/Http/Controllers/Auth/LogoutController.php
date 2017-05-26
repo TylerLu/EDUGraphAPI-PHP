@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Session;
 class LogoutController extends Controller
 {
 
-    public function Logout()
+    public function logout()
     {
         Session::flush();
         $_SESSION=array();

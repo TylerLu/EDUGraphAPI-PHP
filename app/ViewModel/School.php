@@ -9,52 +9,28 @@ namespace App\ViewModel;
 class School extends ParsableObject
 {
     public $schoolId;
-
     public $objectId;
-
     public $objectType;
-
     public $displayName;
-
     public $principalName;
-
     public $description;
-
     public $email;
-
     public $highestGrade;
-
     public $lowestGrade;
-
     public $schoolNumber;
-
     public $phone;
-
     public $zip;
-
     public $state;
-
     public $city;
-
     public $address;
-
     public $anchorId;
-
     public $stateId;
-
     public $latitude;
-
     public $longitude;
-
     public $isMySchool;
-
     public $educationObjectType;
-    
-    /**
-     * Create a new instance.
-     *
-     * @return void
-     */
+
+
     public function __construct()
     {
         // Are these IDs associated with an account-specific property? Can we use a variable

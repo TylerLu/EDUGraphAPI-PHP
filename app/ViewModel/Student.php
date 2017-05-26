@@ -8,11 +8,8 @@ namespace App\ViewModel;
 
 class Student extends SectionUser
 {
-    /**
-     * Create a new instance.
-     *
-     * @return void
-     */
+    public $studentId;
+
     public function __construct()
     {
         parent::__construct();
@@ -29,5 +26,5 @@ class Student extends SectionUser
         return $this->studentId;
     }
 
-    public $studentId;
+
 }

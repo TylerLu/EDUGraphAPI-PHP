@@ -13,7 +13,7 @@ class AuthenticationHelper
     /**
      * Create a new O365 OAuth2 provider.
      */
-    public  function GetProvider($redirectUri)
+    public  function getProvider($redirectUri)
     {
         $provider = new \League\OAuth2\Client\Provider\GenericProvider([
             'clientId' => env(Constants::CLIENT_ID),

@@ -9,7 +9,7 @@ School data is kept in sync in O365 Education tenants by [Microsoft School Data 
 - [Sample Goals](#sample-goals)
 - [Prerequisites](#prerequisites)
 - [Register the application in Azure Active Directory](#register-the-application-in-azure-active-directory)
-- [Debug locally](#debug-locally)
+- [Run the sample locally](#run-the-sample-locally)
 - [Deploy the sample to Azure](#deploy-the-sample-to-azure)
 - [Understand the code](#understand-the-code)
 - [Questions and comments](#questions-and-comments)
@@ -53,7 +53,6 @@ The sample is implemented with the PHP language and the [Laravel](https://larave
   - [PHP 7.0](http://php.net/downloads.php)
   - [Composer](https://getcomposer.org/download/)
   - [Git](https://git-scm.com/download/win)
-  - PHP IDE like [PhpStorm](https://www.jetbrains.com/phpstorm/specials/phpstorm/phpstorm.html)
   - Familiarity with PHP and [Laravel](https://laravel.com/).
 
 **Optional configuration**:
@@ -128,39 +127,36 @@ Create a key to enable Bing Maps API features in the app:
 
    Close the Settings window.
 
-## Debug locally
+## Run the sample locally
 
-The following software and components are required:
+Follow the steps below to run this sample on a windows server:
 
-- PHP >= 7.0.0
-- OpenSSL PHP Extension
-- PDO PHP Extension
-- Mbstring PHP Extension
-- Tokenizer PHP Extension
-- XML PHP Extension
-- [Git](https://git-scm.com/download/win)
+1. Download [XAMPP](https://www.apachefriends.org/download.html) and install it to a local folder, for example **c:\xmapp**. Notice: the minimal PHP version is 7.0. Add **C:\xampp\php** to environment variables.
 
-[PhpStorm](https://www.jetbrains.com/phpstorm/specials/phpstorm/phpstorm.html) is recommended to debug the sample locally.
+2. Download and install [Composer](https://getcomposer.org/).
 
-1. Download the zip or clone source code from GitHub to local machine. 
+3. Download the source code from Github and extra to a local folder like **C:\O365-EDU-PHP-Samples**.
 
-2. Open directory of source code with PhpStorm.
+4. Open command window on the folder **C:\O365-EDU-PHP-Samples** and run **composer update**.
 
-3. Run "Composer update" command with terminal. 
+   ![composerupdate](/Images/composerupdate.jpg)
 
-
-Debug the **EDUGraphAPI**:
-
-1. Configure **environment variables**. Create a local .env file and input like below:
+5. Create the .env file in the local folder and configure the values:
 
    ![env](/Images/env.jpg)
 
-   - **clientId**: use the Client Id of the app registration you created earlier.
-   - **clientSecret**: use the Key value of the app registration you created earlier.
-   - **BingMapKey**: use the key of Bing Map you got earlier. This setting is optional.
-   - **SourceCodeRepositoryURL**: use the URL of this repository.
+   - **APP_KEY:** use "php artisan key:generate" command to generate a new key.
+   - **CLIENT_ID**: use the Client Id of the app registration you created earlier.
+   - **CLIENT_SECRET**: use the Key value of the app registration you created earlier.
+   - **BINGMAPKEY**: use the key of Bing Map you got earlier. This setting is optional.
+   - **SOURCECODEREPOSITORYRL**: use the URL of this repository.
 
-2. Run the site.
+6. Edit **httpd-vhosts.conf** under **C:\xampp\apache\conf\extra**. Add below content in green square and make the path in read square match to the path in step 3.
+
+   ![httpdvhost](/Images/httpdvhost.png)
+
+7. Restart xmapp server and visit http://localhost. 
+
 
 ## Deploy the sample to Azure
 

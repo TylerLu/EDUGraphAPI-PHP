@@ -164,7 +164,7 @@ class  EducationService
      *
      * @return array A subset of the sections in the school
      */
-    public function getSections($schoolId, $top = PAGE_SIZE, $skipToken = null)
+    public function getSections($schoolId, $top=SiteConstants::DefaultPageSize, $skipToken=null)
     {
         return $this->getResponse( '/groups?api-version=beta&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20\'Section\'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20\'' . $schoolId . '\'', Section::class, $top, $skipToken);
     }

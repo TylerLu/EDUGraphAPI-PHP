@@ -22,7 +22,7 @@ Route::get('/', function () {
         return redirect('/schools');
     }
     $cookieServices = new CookieService();
-    $userName = $cookieServices->GetCookiesOfUsername();
+    $userName = $cookieServices->getCookiesOfUsername();
     if ($userName) {
         return redirect('/o365loginhint');
     }

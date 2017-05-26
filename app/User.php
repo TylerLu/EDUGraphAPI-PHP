@@ -13,6 +13,8 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use Notifiable;
+    public $userType=UserType::Local;
+    public $tenantId;
     /**
      * The attributes that are mass assignable.
      *
@@ -37,7 +39,6 @@ class User extends Authenticatable
         return strlen($this->o365UserId) > 0 and strlen($this->o365Email) > 0;
     }
 
-    public $userType=UserType::Local;
-    public $tenantId;
+
 
 }

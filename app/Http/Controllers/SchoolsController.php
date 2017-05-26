@@ -6,6 +6,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Config\SiteConstants;
 use App\Services\CookieService;
 use App\Services\EducationService;
 use App\Services\MapUtils;
@@ -61,7 +62,7 @@ class SchoolsController extends Controller
 
         $cookieServices = new CookieService();
         $fullName = Auth::user()->firstName . ' '. Auth::user()->lastName ;
-        $cookieServices->SetCookies($fullName, $me->mail);
+        $cookieServices->setCookies($fullName, $me->mail);
 
         $data = ["me" => $me, "schools" => $schools, "bingMapKey" => env(Constants::BINGMAPKEY,'')];
         return view('schools.schools', $data);
@@ -78,9 +79,11 @@ class SchoolsController extends Controller
     {
         $this->educationService = $this->getEduServices();
         $school = $this->educationService->getSchool($objectId);
-        $users = $this->educationService->getMembers($objectId);
-        $students = $this->educationService->getStudents($school->schoolId);
-        $teachers = $this->educationService->getTeachers($school->schoolId);
+
+        $users = $this->educationService->getMembers($objectId, SiteConstants::DefaultPageSize, null);
+        $students = $this->educationService->getStudents($school->schoolId, SiteConstants::DefaultPageSize, null);
+        $teachers = $this->educationService->getTeachers($school->schoolId, SiteConstants::DefaultPageSize, null);
+
         $data = ["school" => $school, "users" => $users, "students" => $students, "teachers" => $teachers];
 
         return view('schools.users', $data);
@@ -97,7 +100,9 @@ class SchoolsController extends Controller
     public function usersNext($objectId, $skipToken)
     {
         $this->educationService = $this->getEduServices();
-        $users = $this->educationService->getMembers($objectId, $pageSize, $skipToken);
+
+        $users = $this->educationService->getMembers($objectId, SiteConstants::DefaultPageSize, $skipToken);
+
         return response()->json($users);
     }
 
@@ -114,6 +119,7 @@ class SchoolsController extends Controller
         $this->educationService = $this->getEduServices();
         $school = $this->educationService->getSchool($objectId);
         $students = $this->educationService->getStudents($school->schoolId, $pageSize, $skipToken);
+        $students = $this->educationService->getStudents($school->schoolId, SiteConstants::DefaultPageSize, $skipToken);
         return response()->json($students);
     }
 
@@ -130,6 +136,7 @@ class SchoolsController extends Controller
         $this->educationService = $this->getEduServices();
         $school = $this->educationService->getSchool($objectId);
         $teachers = $this->educationService->getTeachers($school->schoolId, $pageSize, $skipToken);
+        $teachers = $this->educationService->getTeachers($school->schoolId, SiteConstants::DefaultPageSize, $skipToken);
         return response()->json($teachers);
     }
 
@@ -205,7 +212,7 @@ class SchoolsController extends Controller
     {
         $this->educationService = $this->getEduServices();
         $myClasses = $this->educationService->getMySectionsOfSchool($schoolId);
-        $allClasses = $this->educationService->getSections($schoolId, $pageSize, $skipToken);
+        $allClasses = $this->educationService->getSections($schoolId, SiteConstants::DefaultPageSize, $skipToken);
         $this->markMyClasses($allClasses, $myClasses);
         return response()->json($allClasses);
     }

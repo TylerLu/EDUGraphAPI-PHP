@@ -8,11 +8,16 @@ namespace App\ViewModel;
 
 class SectionUser extends ParsableObject
 {
-    /**
-     * Create a new instance.
-     *
-     * @return void
-     */
+    public $mail;
+    public $educationObjectType;
+    public $displayName;
+    public $educationGrade;
+    public $schoolId;
+    public $o365UserId;
+    public $position;
+    public $favoriteColor;
+    public $userRole;
+
     public function __construct()
     {
         $this->addPropertyMappings(
@@ -26,21 +31,5 @@ class SectionUser extends ParsableObject
             ]);
     }
 
-    public $mail;
 
-    public $educationObjectType;
-
-    public $displayName;
-
-    public $educationGrade;
-
-    public $schoolId;
-
-    public $o365UserId;
-
-    public $position;
-
-    public $favoriteColor;
-
-    public $userRole;
 }

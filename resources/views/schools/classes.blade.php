@@ -167,6 +167,6 @@
             </div>
         </div>
     </div>
-    <script src="{{ asset('/public/js/moment.min.js') }}"></script>
-    <script src="{{ asset('/public/js/sections.js') }}"></script>
+    <script src="{{ asset('js/moment.min.js') }}"></script>
+    <script src="{{ asset('js/sections.js') }}"></script>
 @endsection

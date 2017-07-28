@@ -48,7 +48,7 @@ function clearBom($contents){
 }
 function getJsonArray()
 {
-    $json_string = file_get_contents('public/demo-pages.json');
+    $json_string = file_get_contents(base_path('public/demo-pages.json'));
     $json_string =trim( preg_replace("#(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)|([\s\t]//.*)|(^//.*)#", '', $json_string));
     $json_string = clearBom($json_string);
 // 把JSON字符串转成PHP数组

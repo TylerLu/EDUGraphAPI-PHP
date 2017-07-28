@@ -8,7 +8,7 @@
 @extends('layouts.app')
 @section('title', 'Sign in')
 @section('content')
-    <link href="{{asset('/public/css/login.css')}}" rel="stylesheet">
+    <link href="{{asset('css/login.css')}}" rel="stylesheet">
 
     <div class="loginbody logino365">
         <h3>Sign in</h3>

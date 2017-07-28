@@ -28,7 +28,7 @@ class OrganizationsService
      * @param $tenantId
      * @param $isConstented
      */
-    public  function  setTenantConsentResult($tenantId, $isConstented)
+    public  function  setTenantConsentResult($tenantId,$isConstented)
     {
         $org = Organizations::where('tenantId',$tenantId)->first();
         if($org){

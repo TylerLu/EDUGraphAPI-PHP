@@ -79,6 +79,7 @@ Route::group(['middleware' => ['web', 'auth', 'AdminOnly'], 'namespace' => 'Admi
     Route::get('/admin/linkedaccounts', 'AdminController@manageLinkedAccounts');
     Route::get('/admin/unlinkaccounts/{userId}', 'AdminController@unlinkAccount');
     Route::post('/admin/dounlink/{userId}', 'AdminController@doUnlink');
+    Route::post('/admin/clearAdalCache', 'AdminController@clearAdalCache');
 });
 
 

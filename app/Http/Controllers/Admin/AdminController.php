@@ -181,4 +181,12 @@ class AdminController extends Controller
         set_time_limit(1200);
         $this->adminService->enableUsersAccess();
     }
+
+    public function clearAdalCache()
+    {
+        $this->tokenCacheService->clearUserTokenCache();
+        $message = 'Login cache cleared successfully!';
+        header('Location: ' . '/admin?successMsg=' . $message);
+        exit();
+    }
 }

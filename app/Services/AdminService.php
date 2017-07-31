@@ -97,7 +97,7 @@ class AdminService
         $provider = (new AuthenticationHelper())->getProvider($redirectUrl);
         return $provider->getAccessToken('authorization_code', [
             'code' => $code,
-            'resource' => Constants::RESOURCE_ID
+            'resource' => Constants::MSGraph
         ]);
     }
 

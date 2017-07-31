@@ -9,8 +9,7 @@ namespace App\ViewModel;
 class School extends ParsableObject
 {
     public $schoolId;
-    public $objectId;
-    public $objectType;
+    public $id;
     public $displayName;
     public $principalName;
     public $description;
@@ -25,8 +24,6 @@ class School extends ParsableObject
     public $address;
     public $anchorId;
     public $stateId;
-    public $latitude;
-    public $longitude;
     public $isMySchool;
     public $educationObjectType;
 
@@ -35,8 +32,7 @@ class School extends ParsableObject
         $this->addPropertyMappings(
             [
                 "schoolId" => "extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId",
-                "objectId" => "objectId",
-                "objectType" => "objectType",
+                "id" =>"id",
                 "displayName" => "displayName",
                 "principalName" => "extension_fe2174665583431c953114ff7268b7b3_Education_SchoolPrincipalName",
                 "description" => "description",

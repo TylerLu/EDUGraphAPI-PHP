@@ -67,6 +67,19 @@
             <p>Note: The App will take a while to effect.</p>
         </div>
         <hr />
+       <div>
+
+           <p>In some cases, your supplier may make changes that require them to ask you to reset a login cache. Click the button below to reset the cache.</p>
+
+           <p class="form-group">
+           <form method="post" action="{{url('/admin/clearAdalCache')}}">
+               {{csrf_field()}}
+               <input type="submit" value="Clear Login Cache" class="btn btn-default" />
+           </form>
+           </p>
+
+       </div>
+       <hr />
        <p><a class="btn btn-default" href="/">Return to home</a></p>
     @endif
 @endsection

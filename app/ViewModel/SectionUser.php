@@ -18,6 +18,7 @@ class SectionUser extends ParsableObject
     public $favoriteColor;
     public $userRole;
 
+
     public function __construct()
     {
         $this->addPropertyMappings(
@@ -27,7 +28,7 @@ class SectionUser extends ParsableObject
                 "displayName" => "displayName",
                 "educationGrade" => "extension_fe2174665583431c953114ff7268b7b3_Education_Grade",
                 "schoolId" => "extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId",
-                "o365UserId" => "objectId"
+                "o365UserId" => "id"
             ]);
     }
 

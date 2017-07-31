@@ -9,7 +9,6 @@ namespace App\Http\Controllers;
 use App\Config\SiteConstants;
 use App\Services\CookieService;
 use App\Services\EducationService;
-use App\Services\MapUtils;
 use App\Services\MSGraphService;
 use App\Services\TokenCacheService;
 use App\Services\UserService;
@@ -41,11 +40,7 @@ class SchoolsController extends Controller
         $schools = $this->educationService->getSchools();
         foreach ($schools as $school) {
             $school->isMySchool = $school->schoolId === $me->schoolId;
-            $location = MapUtils::getLatitudeAndLongitude($school->state, $school->city, $school->address);
-            if ($location) {
-                $school->latitude = $location[0];
-                $school->longitude = $location[1];
-            }
+
         }
 
         // sort schools: firstly sort by whether it's my school, secondly sort by the display name
@@ -61,7 +56,7 @@ class SchoolsController extends Controller
         $fullName = Auth::user()->firstName . ' '. Auth::user()->lastName ;
         $cookieServices->setCookies($fullName, $me->mail);
 
-        $data = ["me" => $me, "schools" => $schools, "bingMapKey" => env(Constants::BINGMAPKEY,'')];
+        $data = ["me" => $me, "schools" => $schools];
         return view('schools.schools', $data);
     }
 
@@ -236,7 +231,7 @@ class SchoolsController extends Controller
     private function getEduServices()
     {
         $user=Auth::user();
-        $token = (new TokenCacheService())->getAADToken($user->o365UserId);
+        $token = (new TokenCacheService())->getMSGraphToken($user->o365UserId);
         return new EducationService($token);
     }
 }

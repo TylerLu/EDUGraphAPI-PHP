@@ -50,13 +50,6 @@
       "metadata": {
         "description": ""
       }
-    },
-    "bingMapKey": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": ""
-      }
     }
   },
   "variables": {
@@ -119,7 +112,6 @@
             "CLIENT_ID": "[parameters('clientId')]",
             "CLIENT_SECRET": "[parameters('clientSecret')]",
             "SOURCECODERESPOSITORYURL": "[parameters('SourceCodeRepositoryUrl')]",
-            "BINGMAPKEY": "[parameters('bingMapKey')]",
 			"PHP_INI_SCAN_DIR":"d:\\home\\site\\wwwroot"
           }
         },

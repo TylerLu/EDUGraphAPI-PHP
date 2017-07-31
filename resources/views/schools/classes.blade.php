@@ -71,7 +71,7 @@
                                 <div class="tile-container">
                                     @if($class->isMySection)
                                         <a class="mysectionlink"
-                                           href="{{url('/class/'.$school->objectId.'/'.$class->objectId)}}">
+                                           href="{{url('/class/'.$school->id.'/'.$class->id)}}">
                                             @endif
                                             <div class="tile">
                                                 <h5>{{$class->displayName}}</h5>
@@ -131,7 +131,7 @@
                             @foreach($myClasses as $myClass)
                                 <div class="tile-container">
                                     <a class="mysectionlink"
-                                       href="{{url('/class/'.$school->objectId.'/'.$myClass->objectId)}}">
+                                       href="{{url('/class/'.$school->id.'/'.$myClass->id)}}">
                                         <div class="tile">
                                             <h5>{{$myClass->displayName}}</h5>
                                             <h2>{{$myClass->combinedCourseNumber}}</h2>

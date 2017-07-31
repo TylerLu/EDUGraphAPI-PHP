@@ -63,7 +63,7 @@
                 @endcomponent
             </div>
         </div>
-        <input id="school-objectid" type="hidden" value="{{$school->objectId}}"/>
+        <input id="school-objectid" type="hidden" value="{{$school->id}}"/>
     </div>
     <script src="{{ asset('/public/js/users.js') }}"></script>
 @endsection

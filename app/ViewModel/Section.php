@@ -10,8 +10,7 @@ use App\Config\EduConstants;
 
 class Section extends ParsableObject
 {
-    public $objectId;
-    public $objectType;
+    public $id;
     public $educationObjectType;
     public $displayName;
     public $email;
@@ -40,8 +39,7 @@ class Section extends ParsableObject
     {
         $this->addPropertyMappings(
             [
-                "objectId" => "objectId",
-                "objectType" => "objectType",
+                "id" => "id",
                 "educationObjectType" => "extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType",
                 "displayName" => "displayName",
                 "email" => "mail",

@@ -13,7 +13,7 @@
             <div class="container">
                 <div class="col-md-6 secondnav">
                     <a href="/schools"> All Schools</a>
-                    > <a href="/classes/{{$school->objectId}}">{{$school->displayName}}</a>
+                    > <a href="/classes/{{$school->id}}">{{$school->displayName}}</a>
                     > {{$section->courseName}}
                 </div>
             </div>
@@ -203,7 +203,7 @@
             </div>
         </div>
     </div>
-    <input type="hidden" name="hidSectionid" id="hidSectionid" value="{{$section->objectId}}"/>
+    <input type="hidden" name="hidSectionid" id="hidSectionid" value="{{$section->id}}"/>
     <script src="{{ asset('/public/js/jquery.tablesorter.min.js') }}"></script>
     <script src="{{ asset('/public/js/moment.min.js') }}"></script>
     <script src="{{ asset('/public/js/classdetail.js') }}"></script>

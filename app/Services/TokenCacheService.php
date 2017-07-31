@@ -63,7 +63,7 @@ class TokenCacheService
      */
     public function getMSGraphToken($userId)
     {
-        return $this->getToken($userId, Constants::RESOURCE_ID);
+        return $this->getToken($userId, Constants::MSGraph);
     }
 
     /**
@@ -75,6 +75,11 @@ class TokenCacheService
     public function getAADToken($userId)
     {
         return $this->getToken($userId, Constants::AADGraph);
+    }
+
+    public function clearUserTokenCache()
+    {
+        TokenCache::truncate();
     }
 
     /**

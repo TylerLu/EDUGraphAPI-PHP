@@ -34,7 +34,7 @@ class AboutMeController extends Controller
         }
 
         if ($o365UserId) {
-            $token = (new TokenCacheService())->getAADToken($o365UserId);
+            $token = (new TokenCacheService())->getMSGraphToken($o365UserId);
             $classes = (new EducationService($token))->getMySections(false);
         }
         $arrData = array(

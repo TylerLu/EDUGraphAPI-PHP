@@ -20,7 +20,7 @@ class ArrayResult extends ParsableObject
         $this->value = [];
         $this->addPropertyMappings(
             [
-                "nextLink" => "odata.nextLink",
+                "nextLink" => "@odata.nextLink",
                 "value" => "value"
             ]);
         $this->addArrayElementTypes(["value" => $elementClass]);

@@ -64,10 +64,6 @@
       {
         "title": "SchoolsViewModel",
         "url": "/blob/master/app/ViewModel/School.php"
-      },
-      {
-        "title": "MapUtils",
-        "url": "/blob/master/app/Services/MapUtils.php"
       }
     ]
   },

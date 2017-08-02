@@ -120,6 +120,17 @@ class UserService
         $user->save();
     }
 
+    public function unlinkAllUsers($orgId)
+    {
+        $users = User::where('OrganizationId', $orgId)->get();
+        foreach ($users as $user) {
+            $user->o365Email = null;
+            $user->o365UserId = null;
+            $user->save();
+        }
+    }
+
+
     public function getUserByEmail($email)
     {
         return User::where('email', $email)->first();

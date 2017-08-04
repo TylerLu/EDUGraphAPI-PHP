@@ -331,14 +331,14 @@ In this sample, the `App\Services\EducationService` class encapsulates the Offic
 ~~~typescript
 public function getSchools()
 {
-    return $this->getAllPages("get", "/administrativeUnits?api-version=beta", School::class);
+   return $this->getAllPages( "administrativeUnits", School::class);
 }
 ~~~
 
 ~~~typescript
 public function getSchool($objectId)
 {
-    return $this->getResponse("get", "/administrativeUnits/" . $objectId . "?api-version=beta", School::class, null, null);
+    return $this->getResponse( "administrativeUnits/" . $objectId , School::class, null, null);
 }
 ~~~
 
@@ -347,14 +347,15 @@ public function getSchool($objectId)
 ~~~typescript
 public function getSections($schoolId, $top, $skipToken)
 {
-    return $this->getResponse("get", '/groups?api-version=beta&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20\'Section\'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20\'' . $schoolId . '\'', Section::class, $top, $skipToken);
+           return $this->getResponse( 'groups?$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20\'Section\'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20\'' . $schoolId . '\'', Section::class, $top, $skipToken);
+
 }
 ~~~
 
 ```typescript
 public function getSectionWithMembers($objectId)
 {
-    return $this->getResponse("get", '/groups/' . $objectId . '?api-version=beta&$expand=members', Section::class, null, null);
+    return $this->getResponse( 'groups/' . $objectId . '?$expand=members', Section::class, null, null);
 }
 ```
 **Get users**
@@ -362,7 +363,7 @@ public function getSectionWithMembers($objectId)
 ```typescript
 public function getMembers($objectId, $top, $skipToken)
 {
-    return $this->getResponse("get", "/administrativeUnits/" . $objectId . "/members?api-version=beta", SectionUser::class, $top, $skipToken);
+    return $this->getResponse( "administrativeUnits/" . $objectId . "/members", SectionUser::class, $top, $skipToken);
 }
 ```
 Below are some screenshots of the sample app that show the education data.
@@ -421,7 +422,7 @@ Below is a piece of code shows how to get "me" from the Microsoft Graph API.
 ```typescript
 public function getMe()
 {
-    $json = $this->getResponse("get", "/me?api-version=1.5", null, null, null);
+    $json = $this->getResponse( "me", null, null, null);
     $assignedLicenses = array_map(function ($license) {
         return new Model\AssignedLicense($license);
     }, $json["assignedLicenses"]);

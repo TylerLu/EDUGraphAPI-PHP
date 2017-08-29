@@ -3,290 +3,717 @@
   * See LICENSE in the project root for license information.
 */
 [
-  {
-    "controller": "O365AuthController",
-    "action": "o365LoginHint",
-    "links": [
-      {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/O365AuthController.php"
-      },
-      {
-        "title": "View",
-        "url": "/blob/master/resources/views/auth/o365loginhint.blade.php"
-      }
-    ]
-  },
+
   {
     "controller": "LoginController",
     "action": "showLoginForm",
-    "links": [
+    "functions": [
       {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/Auth/LoginController.php"
-      },
-      {
-        "title": "View",
-        "url": "/blob/master/resources/views/auth/login.blade.php"
+        "title": "Login for local user or O365 user",
+        "tab": "",
+        "files": [
+          {
+            "url": "/blob/master/app/Http/Controllers/Auth/LoginController.php",
+            "methods": [
+              {
+                "title": "redirectTo",
+                "description": "After login succeed, check user status. If linked, redirect user to schools page, otherwise to link page."
+              }
+            ]
+          }
+
+
+        ]
       }
+
     ]
-  },
-  {
-    "controller": "RegisterController",
-    "action": "showRegistrationForm",
-    "links": [
-      {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/Auth/RegisterController.php"
-      },
-      {
-        "title": "View",
-        "url": "/blob/master/resources/views/auth/register.blade.php"
-      }
-    ]
+
   },
   {
     "controller": "SchoolsController",
     "action": "index",
-    "links": [
+    "functions": [
       {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/SchoolsController.php"
-      },
-      {
-        "title": "View",
-        "url": "/blob/master/resources/views/schools/schools.blade.php"
-      },
-      {
-        "title": "EducationServiceClient",
-        "url": "/blob/master/app/Services/EducationService.php"
-      },
-      {
-        "title": "SchoolsViewModel",
-        "url": "/blob/master/app/ViewModel/School.php"
+        "title": "Get schools information",
+        "tab": "",
+        "files": [
+          {
+            "url": "/blob/master/app/Http/Controllers/SchoolsController.php",
+            "methods": [
+              {
+                "title": "index",
+                "description": "Index action."
+              },
+              {
+                "title": "getEduServices",
+                "description": "Initialize education services."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/EducationService.php",
+            "methods": [
+              {
+                "title": "getMe",
+                "description": "Get the current logged in user."
+              },
+              {
+                "title": "getSchools",
+                "description": "Get all schools that exist in the Azure Active Directory tenant."
+              }
+            ]
+          }
+
+
+        ]
       }
+
     ]
   },
   {
     "controller": "SchoolsController",
     "action": "classes",
-    "links": [
+    "functions": [
       {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/SchoolsController.php"
+        "title": "Get classes information",
+        "tab": "",
+        "files": [
+          {
+            "url": "/blob/master/app/Http/Controllers/SchoolsController.php",
+            "methods": [
+              {
+                "title": "classes",
+                "description": "Show classes of the specified school."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/EducationService.php",
+            "methods": [
+              {
+                "title": "getMe",
+                "description": "Get the current logged in user."
+              },
+              {
+                "title": "getSchool",
+                "description": "Get a school by the id."
+              }
+            ]
+          }
+        ]
       },
       {
-        "title": "View",
-        "url": "/blob/master/resources/views/schools/classes.blade.php"
+        "title": "Get my classes information",
+        "tab": "filtermyclasses",
+        "files": [
+          {
+            "url": "/blob/master/app/Services/EducationService.php",
+            "methods": [
+              {
+                "title": "getMySectionsOfSchool",
+                "description": "Get all the classes the current logged in user belongs to in a school."
+              }
+            ]
+          }
+        ]
       },
       {
-        "title": "EducationServiceClient",
-        "url": "/blob/master/app/Services/EducationService.php"
-      },
-      {
-        "title": "SectionsViewModel",
-        "url": "/blob/master/app/ViewModel/Section.php"
-      },
-      {
-        "title": "SchoolsViewModel",
-        "url": "/blob/master/app/ViewModel/School.php"
+        "title": "Get all classes information",
+        "tab": "filterclasses",
+        "files": [
+          {
+            "url": "/blob/master/app/Services/EducationService.php",
+            "methods": [
+              {
+                "title": "getSections",
+                "description": "Get classes in a school."
+              }
+            ]
+          }
+        ]
       }
+
     ]
+
   },
   {
     "controller": "SchoolsController",
     "action": "users",
-    "links": [
+    "functions": [
       {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/SchoolsController.php"
+        "title": "Get all students and teachers information",
+        "tab": "",
+        "files": [
+          {
+            "url": "/blob/master/app/Http/Controllers/SchoolsController.php",
+            "methods": [
+              {
+                "title": "users",
+                "description": "Show teachers and students of the specified school."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/EducationService.php",
+            "methods": [
+              {
+                "title": "getSchool",
+                "description": "Get a school by the id."
+              }
+            ]
+          }
+
+
+        ]
       },
       {
-        "title": "View",
-        "url": "/blob/master/resources/views/schools/users.blade.php"
+        "title": "Get all students and teachers information",
+        "tab": "filterall",
+        "files": [
+          {
+            "url": "/blob/master/app/Services/EducationService.php",
+            "methods": [
+              {
+                "title": "getMembers",
+                "description": "Get members within a school."
+              }
+            ]
+          }
+
+
+        ]
       },
       {
-        "title": "SchoolsService",
-        "url": "/blob/master/app/Services/EducationService.php"
+        "title": "Get all students information",
+        "tab": "filterstudnet",
+        "files": [
+          {
+            "url": "/blob/master/app/Services/EducationService.php",
+            "methods": [
+              {
+                "title": "getStudents",
+                "description": "Get students within a school."
+              }
+            ]
+          }
+
+
+        ]
       },
       {
-        "title": "SchoolUsersViewModel",
-        "url": "/blob/master/app/ViewModel/SectionUser.php"
-      },
-      {
-        "title": "StudentViewModel",
-        "url": "/blob/master/app/ViewModel/Student.php"
-      },
-      {
-        "title": "TeacherViewModel",
-        "url": "/blob/master/app/ViewModel/Teacher.php"
-      },
-      {
-        "title": "SchoolsViewModel",
-        "url": "/blob/master/app/ViewModel/School.php"
+        "title": "Get all teachers information",
+        "tab": "filterteacher",
+        "files": [
+          {
+            "url": "/blob/master/app/Services/EducationService.php",
+            "methods": [
+              {
+                "title": "getTeachers",
+                "description": "Get teachers within a school."
+              }
+            ]
+          }
+
+
+        ]
       }
+
+
     ]
+
+
+
   },
   {
     "controller": "SchoolsController",
     "action": "classDetail",
-    "links": [
+    "functions": [
       {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/SchoolsController.php"
+        "title": "Get school and class information",
+        "tab": "",
+        "files": [
+          {
+            "url": "/blob/master/app/Http/Controllers/SchoolsController.php",
+            "methods": [
+              {
+                "title": "classDetail",
+                "description": "Show details of the specified class."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/EducationService.php",
+            "methods": [
+              {
+                "title": "getMe",
+                "description": "Get the current logged in user."
+              },
+              {
+                "title": "getSchools",
+                "description": "Get all schools that exist in the Azure Active Directory tenant"
+              },
+              {
+                "title": "getSectionWithMembers",
+                "description": "Get class information."
+              }
+            ]
+          }
+
+        ]
       },
       {
-        "title": "View",
-        "url": "/blob/master/resources/views/schools/classdetail.blade.php"
+        "title": "Get students in this class",
+        "tab": "#students",
+        "files": [
+
+          {
+            "url": "/blob/master/app/Services/EducationService.php",
+            "methods": [
+              {
+                "title": "getSectionWithMembers",
+                "description": "Get a class with its members."
+              }
+            ]
+          }
+
+        ]
       },
       {
-        "title": "SchoolsService",
-        "url": "/blob/master/app/Services/EducationService.php"
+        "title": "Get all conversations of current class",
+        "tab": "#conversations",
+        "files": [
+
+          {
+            "url": "/blob/master/app/Services/MSGraphService.php",
+            "methods": [
+              {
+                "title": "getGroupConversations",
+                "description": "Get all conversations of a group."
+              }
+            ]
+          }
+
+        ]
       },
       {
-        "title": "SchoolsViewModel",
-        "url": "/blob/master/app/ViewModel/School.php"
+        "title": "Get documents from OneDrive of current class",
+        "tab": "#documents",
+        "files": [
+
+          {
+            "url": "/blob/master/app/Services/MSGraphService.php",
+            "methods": [
+              {
+                "title": "getGroupDriveItems",
+                "description": "Get all drive items of a group."
+              }
+            ]
+          }
+
+        ]
+      },
+      {
+        "title": "Dispaly, edit and save students charts",
+        "tab": "#seatingchart",
+        "files": [
+
+          {
+            "url": "/blob/master/app/Services/UserService.php",
+            "methods": [
+              {
+                "title": "getSeatPositionInClass",
+                "description": "Get the seat position of a user in a class."
+              },
+              {
+                "title": "getFavoriteColor",
+                "description": "Get the favorite color of a user."
+              },
+              {
+                "title": "saveSeatingArrangements",
+                "description": "Save the seat arrangements."
+              }
+            ]
+          }
+
+        ]
       }
+
     ]
+
   },
 
   {
     "controller": "admincontroller",
     "action": "index",
-    "links": [
+    "functions": [
       {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/Admin/AdminController.php"
-      },
-      {
-        "title": "View",
-        "url": "/blob/master/resources/views/admin/index.blade.php"
-      },
-      {
-        "title": "Service",
-        "url": "/blob/master/app/Services/OrganizationsService.php"
+        "title": "Get admin's tenant and organization information",
+        "tab": "",
+        "files": [
+          {
+            "url": "/blob/master/app/Http/Controllers/Admin/AdminController.php",
+            "methods": [
+              {
+                "title": "Index",
+                "description": "Admin index page action."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/AADGraphService.php",
+            "methods": [
+              {
+                "title": "getTenantIdByUserId",
+                "description": "Get current user's tenant id from AAD."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/TokenCacheService.php",
+            "methods": [
+              {
+                "title": "getMSGraphToken",
+                "description": "Get current user's MS Graph token from database."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/OrganizationsService.php",
+            "methods": [
+              {
+                "title": "getOrganization",
+                "description": "Get current user's organization from database."
+              }
+            ]
+          }
+
+
+        ]
       }
+
     ]
   },
   {
     "controller": "admincontroller",
     "action": "managelinkedaccounts",
-    "links": [
+    "functions": [
       {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/Admin/AdminController.php"
-      },
-      {
-        "title": "View",
-        "url": "/blob/master/resources/views/admin/manageaccounts.blade.php"
+        "title": "Login for local user or O365 user",
+        "tab": "",
+        "files": [
+          {
+            "url": "/blob/master/app/Http/Controllers/Admin/AdminController.php",
+            "methods": [
+              {
+                "title": "manageLinkedAccounts",
+                "description": "Mange accounts page action."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/TokenCacheService.php",
+            "methods": [
+              {
+                "title": "getMSGraphToken",
+                "description": "Get current user's MS Graph token from database."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/AADGraphService.php",
+            "methods": [
+              {
+                "title": "getCurrentUserRoles",
+                "description": "Get current user roles from AAD."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/UserService.php",
+            "methods": [
+              {
+                "title": "getUsers",
+                "description": "Return all users of current organization."
+              }
+            ]
+          }
+        ]
       }
+
     ]
+
   },
   {
     "controller": "admincontroller",
     "action": "unlinkaccount",
-    "links": [
+
+    "functions": [
       {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/Admin/AdminController.php"
-      },
-      {
-        "title": "View",
-        "url": "/blob/master/resources/views/admin/unlinkaccount.blade.php"
+        "title": "Login for local user or O365 user",
+        "tab": "",
+        "files": [
+          {
+            "url": "/blob/master/app/Http/Controllers/Admin/AdminController.php",
+            "methods": [
+              {
+                "title": "unlinkAccount",
+                "description": "Unlink accounts page action."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/UserService.php",
+            "methods": [
+              {
+                "title": "getUserById",
+                "description": "Get a user by id from database."
+              },
+              {
+                "title": "unlinkUser",
+                "description": "Unlink a user on database."
+              }
+            ]
+          }
+
+
+        ]
       }
+
     ]
   },
   {
     "controller": "admincontroller",
     "action": "consent",
-    "links": [
+    "functions": [
       {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/Admin/AdminController.php"
-      },
-      {
-        "title": "View",
-        "url": "/blob/master/resources/views/admin/consent.blade.php"
+        "title": "Consent the app",
+        "tab": "",
+        "files": [
+          {
+            "url": "/blob/master/app/Http/Controllers/Admin/AdminController.php",
+            "methods": [
+              {
+                "title": "adminConsent",
+                "description": "Consent action."
+              },
+              {
+                "title": "processCode",
+                "description": "Consent user action after login succeed."
+              }
+
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/TokenCacheService.php",
+            "methods": [
+              {
+                "title": "getMSGraphToken",
+                "description": "Get current user's MS Graph token from database."
+              }
+            ]
+          } ,
+          {
+            "url": "/blob/master/app/Services/OrganizationsService.php",
+            "methods": [
+              {
+                "title": "setTenantConsentResult",
+                "description": "Update isAdminConsented column."
+              }
+            ]
+          }
+
+        ]
       }
+
     ]
   },
 
   {
     "controller": "LinkController",
     "action": "index",
-    "links": [
+    "functions": [
       {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/LinkController.php"
-      },
-      {
-        "title": "View",
-        "url": "/blob/master/resources/views/link/index.blade.php"
-      },
-      {
-        "title": "AADGraphClient",
-        "url": "/blob/master/app/Services/AADGraphService.php"
+        "title": "Get user information and check link status",
+        "tab": "",
+        "files": [
+          {
+            "url": "/blob/master/app/Http/Controllers/LinkController.php",
+            "methods": [
+              {
+                "title": "index",
+                "description": "Index action."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/UserService.php",
+            "methods": [
+              {
+                "title": "getSeatPositionInClass",
+                "description": "Get the seat position of a user in a class."
+              },
+              {
+                "title": "getUserByEmail",
+                "description": "Get current user information by email."
+              },
+              {
+                "title": "createOrUpdateUserRoles",
+                "description": "Create or update user roles on database."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/AADGraphService.php",
+            "methods": [
+              {
+                "title": "getCurrentUserRoles",
+                "description": "Get current user roles from AAD."
+              }
+            ]
+          }
+
+        ]
       }
+
     ]
+
   },
   {
     "controller": "LinkController",
     "action": "loginLocal",
-    "links": [
+    "functions": [
       {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/LinkController.php"
-      },
-      {
-        "title": "View",
-        "url": "/blob/master/resources/views/link/loginlocal.blade.php"
+        "title": "Local user login and link",
+        "tab": "",
+        "files": [
+          {
+            "url": "/blob/master/app/Http/Controllers/LinkController.php",
+            "methods": [
+              {
+                "title": "loginLocal",
+                "description": "Login action."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/UserService.php",
+            "methods": [
+              {
+                "title": "saveCurrentLoginUserInfo",
+                "description": "Update current login user information."
+              }
+            ]
+          }
+        ]
       }
+
     ]
+
   },
   {
     "controller": "LinkController",
     "action": "createLocalAccount",
-    "links": [
+    "functions": [
       {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/LinkController.php"
-      },
-      {
-        "title": "View",
-        "url": "/blob/master/resources/views/link/createlocalaccount.blade.php"
+        "title": "Create local account",
+        "tab": "",
+        "files": [
+          {
+            "url": "/blob/master/app/Http/Controllers/LinkController.php",
+            "methods": [
+              {
+                "title": "createLocalAccount",
+                "description": "Create a new local account and link with O365 account."
+              }
+            ]
+          }
+        ]
       }
+
     ]
   },
   {
     "controller": "LinkController",
     "action": "logino365required",
-    "links": [
+    "functions": [
       {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/LinkController.php"
-      },
-      {
-        "title": "View",
-        "url": "/blob/master/resources/views/link/loginO365Required.blade.php"
+        "title": "O365 user relogin if token is clear or expired",
+        "tab": "",
+        "files": [
+          {
+            "url": "/blob/master/app/Http/Controllers/Auth/LoginController.php",
+            "methods": [
+              {
+                "title": "loginO365Required",
+                "description": "Show a page to the user that he/she needs to re-login with the O365 account."
+              }
+            ]
+          }
+
+
+        ]
       }
+
     ]
+
+
+
   },
   {
     "controller": "AboutMeController",
     "action": "index",
-    "links": [
+    "functions": [
       {
-        "title": "Controller",
-        "url": "/blob/master/app/Http/Controllers/Auth/AboutMeController.php"
-      },
-      {
-        "title": "View",
-        "url": "/blob/master/resources/views/auth/aboutme.blade.php"
-      },
-      {
-        "title": "Services",
-        "url": "/blob/master/app/Services/EducationService.php"
+        "title": "Get current user information",
+        "tab": "",
+        "files": [
+          {
+            "url": "/blob/master/app/Http/Controllers/Auth/AboutMeController.php",
+            "methods": [
+              {
+                "title": "index",
+                "description": "About me page action."
+              },
+              {
+                "title": "GetDisplayName",
+                "description": "Format user display name."
+              },
+              {
+                "title": "GetFavoriteColor",
+                "description": "Get current user's favorite color from database."
+              },
+
+              {
+                "title": "saveFavoriteColor",
+                "description": "Save edit user favorite color."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/UserRolesService.php",
+            "methods": [
+              {
+                "title": "getUserRole",
+                "description": "Get user role from database."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/EducationService.php",
+            "methods": [
+              {
+                "title": "getMySections",
+                "description": "Get all the classes the current logged in user belongs to.."
+              }
+            ]
+          }
+
+        ]
       }
+
     ]
+
+
+
   }
 ]

@@ -7,7 +7,7 @@
 use Illuminate\Support\Facades\Route;
 use Microsoft\Graph\Connect\Constants;
 
-$links = getCurrentPageLinks();
+$functions = getCurrentPageLinks();
 
 function getCurrentPageLinks()
 {
@@ -20,7 +20,10 @@ function getCurrentPageLinks()
         $array = getJsonArray();
         foreach ($array as $item){
             if(strtolower($item->controller)===$controller && strtolower($item->action)===$action){
-               return $item->links;
+                if(isset($item->functions))
+                    return $item->functions;
+                else
+                    return [];
             }
         }
     }
@@ -51,7 +54,6 @@ function getJsonArray()
     $json_string = file_get_contents('public/demo-pages.json');
     $json_string =trim( preg_replace("#(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)|([\s\t]//.*)|(^//.*)#", '', $json_string));
     $json_string = clearBom($json_string);
-// 把JSON字符串转成PHP数组
     return json_decode($json_string,false);
 }
 ?>
@@ -61,22 +63,52 @@ function getJsonArray()
     <div class="header-right-shadow-mask"></div>
     <div class="body">
         <p class="desc">Code sample links for this page:</p>
-
-        <ul>
-    <?php
-    foreach ($links as $link)
-    {
+<?php
+if($functions) {
     ?>
+    <ul class="functions">
+        <?php
+        foreach ($functions as $function) {
+            ?>
             <li>
-                <p class="title"><?php echo $link->title; ?></p>
-                <p><a href="<?php echo env(Constants::SOURCECODERESPOSITORYURL) . $link->url; ?>" target="_blank"><?php echo env(Constants::SOURCECODERESPOSITORYURL).$link->url; ?></a></p>
+                <p class="title"><?php echo $function->title; ?></p>
+                <p class="tab"><?php echo $function->tab; ?></p>
+                <ul class="files">
+                    <?php
+                    $files = $function->files;
+                    foreach ($files as $file) {
+                        $GitHubURL = env(Constants::SOURCECODERESPOSITORYURL);
+                        $url = substr($GitHubURL,0, strlen($GitHubURL)-1) . $file->url;
+                        ?>
+                        <li>
+                            <p class="title"><a href="<?php echo $url ?>" target="_blank"><?php echo $url ?></a></p>
+                            <ul class="methods">
+                                <?php
+                                $methods = $file->methods;
+                                foreach ($methods as $method) {
+                                    ?>
+                                    <li>
+                                        <p class="title"><?php echo $method->title; ?></p>
+                                        <p class="desc"><?php echo $method->description; ?></p>
+                                    </li>
+                                    <?php
+                                }
+                                ?>
+                            </ul>
+                        </li>
+                        <?php
+                    }
+                    ?>
+                </ul>
+
             </li>
-<?php
-    }
-?>
-        </ul>
-<?php
-if(count($links)==0){
+            <?php
+        }
+        ?>
+    </ul>
+    <?php
+}
+if(count($functions)==0){
 ?>
         <p class="empty-result">Links not available.</p>
 <?php }?>

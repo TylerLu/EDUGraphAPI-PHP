@@ -456,7 +456,7 @@ max-width: 140px;
 .demo-helper-control .body {
     display: block;
     min-height: 95px;
-    padding: 7px 7px 0px 7px;
+    padding: 7px 7px 12px 7px;
     margin-left: 65px;
     font-size: 12px;
     background-color: white;
@@ -470,19 +470,35 @@ max-width: 140px;
 .demo-helper-control.collapsed .body {
     display: none;
 }
-
+.demo-helper-control p.tab{display:none;}
 .demo-helper-control .body .desc {
     font-family: 'Helvetica Neue LT Std Roman';
 }
 
 .demo-helper-control .body ul {
-    list-style-image: url(/public/Images/black-square.png);
-    padding:2px 2px 2px 24px;
-    margin-bottom: 0px
+    margin-bottom: 0px;
+    list-style-type:none;padding-left: 21px;
+
 }
 .demo-helper-control .body ul li {
     margin: 4px 0 6px 0;
+   list-style-type:none;    
 }
+.demo-helper-control .collapse{display: block;}
+.demo-helper-control ul.files{margin-left: 18px;}
+.demo-helper-control .body > ul > li  ul p.title{margin-top:6px;}
+.demo-helper-control .body > ul > li  >p.link{margin:0 0 0 21px;}
+.demo-helper-control .body > ul > li.collapse p.title{background-image:url('/public/images/collapse-arrow.png');}
+.demo-helper-control .body > ul > li  >p.title{
+    cursor:pointer;
+    background-image:url('/public/images/expand-arrow.png');
+    background-repeat:no-repeat;
+    background-position: left 5px;
+    padding-left: 21px;  
+}
+.demo-helper-control .body > ul > li.collapse p, 
+.demo-helper-control .body > ul > li.collapse ul{display:none;}
+.demo-helper-control .body > ul > li.collapse p.title{display:block;}
 .demo-helper-control .body ul li a{
     font-family: 'Helvetica Neue LT Std Roman';
     color: #3366ff;

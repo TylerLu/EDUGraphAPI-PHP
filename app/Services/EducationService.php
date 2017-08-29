@@ -80,7 +80,7 @@ class  EducationService
     }
 
     /**
-     * Get a school by the object id.
+     * Get a school by the id.
      * Reference URL: https://msdn.microsoft.com/office/office365/api/school-rest-operations#get-a-school
      *
      * @param string $objectId the object id of the school administrative unit in Azure Active Directory

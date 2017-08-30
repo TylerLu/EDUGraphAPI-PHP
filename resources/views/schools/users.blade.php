@@ -42,7 +42,7 @@
                 </div>
                 <div class="col-md-6 filterlink-container">
                     <span>FILTER:</span> <a id="filterteacher" class="filterlink" data-type="teachers">Teachers</a> | <a
-                            id="filterstudnet" class="filterlink" data-type="students">Students</a> | <a id="filterall"
+                            id="filterstudent" class="filterlink" data-type="students">Students</a> | <a id="filterall"
                                                                                                          class="filterlink selected"
                                                                                                          data-type="users">All</a>
                 </div>

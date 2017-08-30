@@ -185,7 +185,7 @@
       },
       {
         "title": "Get all students information",
-        "tab": "filterstudnet",
+        "tab": "filterstudent",
         "files": [
           {
             "url": "/blob/master/app/Services/EducationService.php",

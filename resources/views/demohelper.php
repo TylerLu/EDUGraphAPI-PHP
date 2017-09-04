@@ -76,9 +76,10 @@ if($functions) {
                 <ul class="files">
                     <?php
                     $files = $function->files;
+                    $GitHubURL = env(Constants::SOURCECODERESPOSITORYURL);
+                    $GitHubURL = rtrim($GitHubURL, '/');
                     foreach ($files as $file) {
-                        $GitHubURL = env(Constants::SOURCECODERESPOSITORYURL);
-                        $url = substr($GitHubURL,0, strlen($GitHubURL)-1) . $file->url;
+                        $url = $GitHubURL . $file->url;
                         ?>
                         <li>
                             <p class="title"><a href="<?php echo $url ?>" target="_blank"><?php echo $url ?></a></p>

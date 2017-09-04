@@ -703,7 +703,7 @@
             "methods": [
               {
                 "title": "getMySections",
-                "description": "Get all the classes the current logged in user belongs to.."
+                "description": "Get all the classes the current logged in user belongs to."
               }
             ]
           }

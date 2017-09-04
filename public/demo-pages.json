@@ -356,6 +356,10 @@
               {
                 "title": "Index",
                 "description": "Admin index page action."
+              },
+              {
+                "title": "enableUserAccess",
+                "description": "Enable users access action."
               }
             ]
           },
@@ -383,6 +387,15 @@
               {
                 "title": "getOrganization",
                 "description": "Get current user's organization from database."
+              }
+            ]
+          },
+          {
+            "url": "/blob/master/app/Services/AdminService.php",
+            "methods": [
+              {
+                "title": "enableUsersAccess",
+                "description": "Enable users of current tenant to access the app. This action will add AppRoleAssignment of this app for each user in the tenancy."
               }
             ]
           }

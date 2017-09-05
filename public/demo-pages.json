@@ -360,6 +360,18 @@
               {
                 "title": "enableUserAccess",
                 "description": "Enable users access action."
+              },
+              {
+                "title": "consent",
+                "description": "Admin consent action."
+              },
+              {
+                "title": "processCode",
+                "description": "Process consent result after consent."
+              },
+              {
+                "title": "adminUnconsent",
+                "description": "Admin unconsent action."
               }
             ]
           },

@@ -372,6 +372,10 @@
               {
                 "title": "adminUnconsent",
                 "description": "Admin unconsent action."
+              },
+              {
+                "title": "clearAdalCache",
+                "description": "Clear login cache action."
               }
             ]
           },

@@ -41,7 +41,11 @@
                     <div>Teacher</div>
                 </div>
                 <div class="col-md-6 filterlink-container">
-                    <span>FILTER:</span> <a id="filterteacher" class="filterlink" data-type="teachers">Teachers</a> | <a
+                    <span>FILTER:</span>
+                    @if($me->educationObjectType === "Teacher" )
+                        <a id="studentsinmyclasses" class="filterlink" data-type="studentsinmyclasses"> Students in my classes</a><span> | </span>
+                    @endif
+                    <a id="filterteacher" class="filterlink" data-type="teachers">Teachers</a> | <a
                             id="filterstudent" class="filterlink" data-type="students">Students</a> | <a id="filterall"
                                                                                                          class="filterlink selected"
                                                                                                          data-type="users">All</a>
@@ -50,6 +54,12 @@
             <br style="clear:both;"/>
         </div>
         <div class="users-container tiles-root-container">
+            @if($me->educationObjectType === "Teacher" )
+                <div id="studentsinmyclasses" class="tiles-secondary-container">
+                    @component("schools.components.userlist", ["users" => $studentsInMyClass])
+                    @endcomponent
+                </div>
+            @endif
             <div id="users" class="tiles-secondary-container">
                 @component("schools.components.userlist", ["users" => $users])
                 @endcomponent

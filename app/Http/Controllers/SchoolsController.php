@@ -12,6 +12,8 @@ use App\Services\EducationService;
 use App\Services\MSGraphService;
 use App\Services\TokenCacheService;
 use App\Services\UserService;
+use App\ViewModel\ArrayResult;
+use App\ViewModel\SectionUser;
 use App\ViewModel\Student;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -69,12 +71,28 @@ class SchoolsController extends Controller
      */
     public function users($objectId)
     {
+
         $this->educationService = $this->getEduServices();
+        $me = $this->educationService->getMe();
         $school = $this->educationService->getSchool($objectId);
         $users = $this->educationService->getMembers($objectId, SiteConstants::DefaultPageSize, null);
         $students = $this->educationService->getStudents($school->schoolId, SiteConstants::DefaultPageSize, null);
         $teachers = $this->educationService->getTeachers($school->schoolId, SiteConstants::DefaultPageSize, null);
-        $data = ["school" => $school, "users" => $users, "students" => $students, "teachers" => $teachers];
+
+        $studentsInMyClassArrayResult = new ArrayResult(SectionUser::class);
+        $studentsInMyClass = array();
+        if($me->educationObjectType === "Teacher" ){
+            $myClasses = $this->educationService->getMySectionsOfSchool($school->schoolId);
+            foreach ($myClasses as $class){
+                foreach ($class->getStudents() as $student) {
+                    if(!isset($studentsInMyClass[$student->o365UserId])){
+                        $studentsInMyClass[$student->o365UserId]=$student;
+                    }
+                }
+            }
+        }
+        $studentsInMyClassArrayResult->value = $studentsInMyClass;
+        $data = ["school" => $school, "users" => $users, "students" => $students, "teachers" => $teachers,"me" => $me, "studentsInMyClass" =>$studentsInMyClassArrayResult];
 
         return view('schools.users', $data);
     }

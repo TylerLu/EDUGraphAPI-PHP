@@ -17,7 +17,7 @@
             "methods": [
               {
                 "title": "redirectTo",
-                "description": "After login succeed, check user status. If linked, redirect user to schools page, otherwise to link page."
+                "description": "After successful login, check user status. If linked, redirect user to schools page, otherwise to link page."
               }
             ]
           }
@@ -111,7 +111,7 @@
             "methods": [
               {
                 "title": "getMySectionsOfSchool",
-                "description": "Get all the classes the current logged in user belongs to in a school."
+                "description": "Get all the classes for the logged in user in a school."
               }
             ]
           }
@@ -159,6 +159,23 @@
               {
                 "title": "getSchool",
                 "description": "Get a school by the id."
+              }
+            ]
+          }
+
+
+        ]
+      },
+      {
+        "title": "Get all students in my classes",
+        "tab": "studentsinmyclasses",
+        "files": [
+          {
+            "url": "/blob/master/app/Services/EducationService.php",
+            "methods": [
+              {
+                "title": "getMySectionsOfSchool",
+                "description": "Get all classes and students in my school."
               }
             ]
           }
@@ -540,7 +557,7 @@
                 "description": "Get current user's MS Graph token from database."
               }
             ]
-          } ,
+          },
           {
             "url": "/blob/master/app/Services/OrganizationsService.php",
             "methods": [

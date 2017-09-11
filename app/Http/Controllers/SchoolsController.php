@@ -165,7 +165,19 @@ class SchoolsController extends Controller
             $student->favoriteColor = $this->userServices->getFavoriteColor($student->o365UserId);
         }
 
-
+        $teachersInCurrentSchool = $this->educationService->getTeachers($school->schoolId,null,null);
+        if(isset($teachersInCurrentSchool) && isset($teachersInCurrentSchool->value))
+            $teachersInCurrentSchool = $teachersInCurrentSchool->value;
+        $teachers = $section->getTeachers();
+        $filteredTeachers=[];
+        foreach ($teachersInCurrentSchool as $teacher){
+            $filteredTeachers[$teacher->o365UserId] = $teacher;
+        }
+        foreach ($teachers as $item) {
+              if(isset($filteredTeachers[$item->o365UserId])) {
+                  unset($filteredTeachers[$item->o365UserId]);
+              }
+        }
         $msGraph = new MSGraphService();
         $conversations = $msGraph->getGroupConversations($classId);
         $seeMoreConversationsUrl = sprintf(Constants::O365GroupConversationsUrlFormat, $section->email);
@@ -181,10 +193,21 @@ class SchoolsController extends Controller
                 "seeMoreFilesUrl" => $seeMoreFilesUrl,
                 "isStudent" => $me instanceof Student,
                 "o365UserId" => $curUser->o365UserId,
-                "myFavoriteColor" => $curUser->favorite_color
+                "myFavoriteColor" => $curUser->favorite_color,
+                "filteredTeachers" => $filteredTeachers
             ];
 
         return view('schools.classdetail', $data);
+    }
+
+    public function addCoTeacher($classId,$teacherId)
+    {
+        $this->educationService = $this->getEduServices();
+        $this->educationService->addGroupMember($classId,$teacherId);
+        $a = $this->educationService->addGroupOwner($classId,$teacherId);
+        $url  = $_SERVER['HTTP_REFERER'];
+        header('Location: '.$url, true,302);
+        exit();
     }
 
     /**
@@ -252,4 +275,6 @@ class SchoolsController extends Controller
         $token = (new TokenCacheService())->getMSGraphToken($user->o365UserId);
         return new EducationService($token);
     }
+
+
 }

@@ -255,6 +255,10 @@
               {
                 "title": "classDetail",
                 "description": "Show details of the specified class."
+              },
+              {
+                "title": "addCoTeacher",
+                "description": "Add a co-teacher to a class."
               }
             ]
           },
@@ -272,6 +276,14 @@
               {
                 "title": "getSectionWithMembers",
                 "description": "Get class information."
+              },
+              {
+                "title": "addGroupMember",
+                "description": "Add a user to the member of a group."
+              },
+              {
+                "title": "addGroupOwner",
+                "description": "Add a user to the owner of a group."
               }
             ]
           }

@@ -38,15 +38,41 @@
                 </div>
                 <div class="col-md-6">
                     <span>Teacher:</span>
-                    <div style="display:inline-block">
+
                         @foreach ($section->getTeachers() as $teacher)
-                            {{$teacher->displayName}}
+                            <span class="coteacher-name"> {{$teacher->displayName}}</span>
                             @if(!$loop->last)
-                                <br/>
+                                ,
                             @endif
                         @endforeach
-                    </div>
+                            @if (!$isStudent)
+                                <a id="addateacher" href="javascript:void(0)">Add a teacher</a>
+                            @endif
                 </div>
+                    @if (!$isStudent)
+                        <div class="schoolteachers">
+                            <div class="close"><img src="/Images/close.png"></div>
+                            <div class="title">Select a teacher</div>
+                            <div class="list">
+                                @if(!isset($filteredTeachers) || empty($filteredTeachers))
+                                    <div > There is no data available at this time.</div>
+                                    @else
+                                    <ul>
+                                        @foreach ($filteredTeachers as $teacher)
+                                            <li>
+                                                <a href="/addCoTeacher/{{$section->id}}/{{$teacher->o365UserId}}">
+                                                <img src="../../public/images/header-default.jpg"
+                                                     realheader="/userPhoto/{{$teacher->o365UserId}}"/> {{$teacher->displayName}}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+
+                            </div>
+                        </div>
+                    @endif
+
             </div>
             <div style="clear:both;"></div>
         </div>

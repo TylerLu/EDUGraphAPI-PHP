@@ -28,6 +28,19 @@ class HttpUtils
         return self::getResponse('post',$token,$url);
     }
 
+    public static function  postHttpResponseWithData($token, $url,$data)
+    {
+        $client = new Client();
+        $authHeader = [];
+        if ($token) {
+
+            $authHeader = HttpUtils::getAuthHeader($token);
+            $authHeader['json'] =$data;
+            return $client->request("POST",$url,$authHeader);
+        }
+        return null;
+    }
+
     public static function getHttpResponseJson($token, $url)
     {
         $result = self::getHttpResponse($token,$url)->getBody();

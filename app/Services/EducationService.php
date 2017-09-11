@@ -135,7 +135,7 @@ class  EducationService
         return $this->getResponse( 'groups/' . $objectId . '?$expand=members', Section::class, null, null);
     }
 
-    /**
+     /**
      * Get all the sections the current logged in user belongs to in a school
      *
      * @param string $schoolId The object id of the school
@@ -213,6 +213,32 @@ class  EducationService
         return $this->getResponse( "users?\$filter=extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId eq '$schoolId' and extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType eq 'Teacher'", SectionUser::class, $top, $skipToken);
     }
 
+    /**
+     * Add a member to a class.
+     * Reference URL: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/api/group_post_members
+     * @param $classId
+     * @param $teacherId
+     */
+    public function addGroupMember($classId,$teacherId)
+    {
+        $data['@odata.id'] ='https://graph.microsoft.com/v1.0/directoryObjects/'.$teacherId ;
+        return $this->getPostResponse( "groups/".$classId."/members/\$ref", $data);
+
+    }
+
+    /**
+     * Add a member to the owner a class.
+     * Reference URL: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/api/group_post_owners
+     * @param $classId
+     * @param $teacherId
+     */
+    public function addGroupOwner($classId,$teacherId)
+    {
+        $data['@odata.id'] ='https://graph.microsoft.com/v1.0/users/'.$teacherId ;
+        return $this->getPostResponse( "groups/".$classId."/owners/\$ref", $data);
+    }
+
+
     private function isUserStudent($licenses)
     {
         return AADGraphService::isUserStudent($licenses);
@@ -221,6 +247,17 @@ class  EducationService
     private function isUserTeacher($licenses)
     {
         return AADGraphService::isUserTeacher($licenses);
+    }
+
+    private function getPostResponse($endpoint,$data)
+    {
+        $token = $this->getToken();
+        if ($token) {
+            $url = Constants::MSGraph . '/' . Constants::MSGraph_VERSION . '/' . $endpoint;
+            $result = HttpUtils::postHttpResponseWithData( $token, $url,$data);
+            return $result;
+        }
+        return null;
     }
 
     /**

@@ -204,7 +204,6 @@ textarea {
 .sections .tophero .usericon div{float:left;}
 .sections .tophero .usericon .icon{width:12px; height:12px; margin:5px 6px 0 0; background:-prefix-linear-zgradient(top, #434345, #BBBBBB); background:linear-gradient(to bottom, #434345, #BBBBBB);}
 .sections .tophero .usericon .icon.my-class{margin-left:12px; background:-prefix-linear-zgradient(top, #4E9F42, #B8E2B2); background:linear-gradient(to bottom, #4E9F42, #B8E2B2);}
-
 .section-tiles{padding:0 17.14px; background-color:white}
 .section-tiles .tile-container{margin-right:14px;float: left;margin-bottom: 5px;margin-top: 12px;position:relative;}
 .section-tiles .tile{display:inline-block;width:175px;height:175px;box-sizing:border-box;border:1px solid #C2C2C2;border-radius:5px;-moz-border-radius:5px;background: -prefix-linear-zgradient(top, #434345, #BBBBBB); background: linear-gradient(to bottom, #434345, #BBBBBB); color:#fff;}
@@ -231,8 +230,55 @@ textarea {
 /*section detail*/
 .b-title{font-size:24px;color:#666565;}
 .class-details .b-title{font-family:'Helvetica Neue LT Std Th'}
+.coursedetail {position: relative;}
+.coursedetail .schoolteachers{
+    display: none;
+    position: absolute;
+    background: #fff;
+    color: #000;
+    min-width: 360px;
+    min-height: 230px;
+    max-height: 500px;
+    padding: 8px 20px 30px 20px;
+    z-index: 10;
+    border: solid #C2C2C2 1px;
+    box-shadow: 1px 2px 1px 2px #c2c2c2;
+    left: 33%;
+    top: -30px;
+}
+.coursedetail .schoolteachers .title{
+    font-size: 18px;
+}
+.coursedetail .schoolteachers .list{
+    margin-top: 12px;
+    max-height: 330px;
+    overflow: auto;
+}
+
+.coursedetail .schoolteachers ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.coursedetail .schoolteachers li{
+    display: block;
+    padding: 10px 8px;
+}
+
+.schoolteachers li:nth-child(2n+1) {
+    background-color: #f8f8f8;
+}
+.schoolteachers .close img{    border-radius: 30px;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border: 1px solid #e4e4e4;
+    max-width: 22px;
+    height: auto;}
+#addateacher{
+    display:block;
+}
 .coursedetail .col-md-6{padding:12px 0 6px 0;}
-.coursedetail .col-md-6 span:not(#termdate):not(#termdate-separator){font-family:'Helvetica Neue LT Std Bold'}
+.coursedetail .col-md-6 span:not(#termdate):not(#termdate-separator):not(.coteacher-name){font-family:'Helvetica Neue LT Std Bold'}
 .coursedetail .col-md-6:last-child{padding:12px 0 6px 0;}
 .coursedetail .col-md-6:last-child > b{color:#F7F7F7;}
 .coursedetail .col-md-6:last-child > b:first-child{color:#333;}
@@ -309,7 +355,7 @@ textarea {
 #seatingchart .greenicon{width:14px;height:14px;background:#237e17;float:left;margin:3px 6px 0 0;}
 .assignseat{margin:12px 0;}
 #lstproducts{padding-left:0;}
-#lstproducts img, .deskicon img, #studentsTable img, .userinfo img, .aboutme img{
+#lstproducts img, .deskicon img, #studentsTable img, .userinfo img, .aboutme img, .schoolteachers img{
 border-radius: 30px;
 -webkit-border-radius: 30px;
 -moz-border-radius: 30px;

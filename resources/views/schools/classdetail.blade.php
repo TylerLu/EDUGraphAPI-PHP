@@ -40,10 +40,11 @@
                     <span>Teacher:</span>
 
                         @foreach ($section->getTeachers() as $teacher)
-                            <span class="coteacher-name"> {{$teacher->displayName}}</span>
-                            @if(!$loop->last)
-                                ,
-                            @endif
+
+                        <span class="coteacher-name">
+                            {{!$loop->last? $teacher->displayName . ', ':$teacher->displayName}}
+                         </span>
+
                         @endforeach
                             @if (!$isStudent)
                                 <a id="addateacher" href="javascript:void(0)">Add a teacher</a>

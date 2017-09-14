@@ -336,7 +336,7 @@ The starter project is a simple application with only SQL authentication configu
 
    This class overwrite the base method to enable login_hint when login on O365.  
 
-   To see how this file works in the Demo app, refer to the file located [here](../app/Providers/EventServiceProvider.php) in the Demo app.
+   To see how this file works in the Demo app, refer to the file located [here](../app/Providers/O365Provider.php) in the Demo app.
 
 10. Add a new file named **O365ExtendSocialite.php** inside **app\Providers** folder, remove all generated code and paste the following.  
 
@@ -403,7 +403,7 @@ The starter project is a simple application with only SQL authentication configu
 
      Register a new services named **O365**. This services will be used on O365 login controller.
 
-    To see how this file works in the Demo app, refer to the file located [here](../app/Providers/O365ExtendSocialite.php) in the Demo app.
+    To see how this file works in the Demo app, refer to the file located [here](../config/services.php) in the Demo app.
 
 12. Run the project locally. Click the **Sign in with Office 365** button and then login to O365.
 

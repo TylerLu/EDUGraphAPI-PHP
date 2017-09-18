@@ -404,7 +404,7 @@ The starter project is a simple application with only SQL authentication configu
 
     ```
 
-     Register a new services named **O365**. This services will be used on O365 login controller.
+     Register a new service named **O365**. This service will be used on O365 login controller.
 
     To see how this file works in the Demo app, refer to the file located [here](../config/services.php) in the Demo app.
 

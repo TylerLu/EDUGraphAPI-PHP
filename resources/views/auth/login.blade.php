@@ -84,7 +84,6 @@
             <h4 class="margin-btm-20">Use your school account</h4>
             <div id="socialLoginList">
                 <p>
-
                    <a href="{{url('/o365login ')}}"  >
                     <button type="button" class="btn btn-default btn-ms-login" id="OpenIdConnect" name="provider" value="OpenIdConnect" title="Log in using your Microsoft Work or school account"></button>
                    </a>

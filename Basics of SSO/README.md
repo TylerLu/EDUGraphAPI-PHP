@@ -424,4 +424,4 @@ The starter project is a simple application with only SQL authentication configu
 
 
 
-Copyright (c) 2017 Microsoft. All rights reserved.**
+Copyright (c) 2017 Microsoft. All rights reserved.

@@ -23,17 +23,19 @@ The starter project is a simple application with only SQL authentication configu
 
    ![proj01](Images/proj01.png)
 
-3. Run the application locally.
+3. Make sure there's a file named .env on root folder of the project. If there's no such file, download it from [Laravel GitHub](https://github.com/laravel/laravel/blob/master/.env.example) and then rename it to .env. Run **php artisan key:generate** on **Terminal**. 
 
-4. Click the Register link to register as a user.
+4. Run the application locally.
+
+5. Click the Register link to register as a user.
 
    ![proj02](Images/proj03.png)
 
-5. Complete the form to add a user.
+6. Complete the form to add a user.
 
    ![proj02](Images/proj02.png)
 
-6. Once registered, you should see a blank page.
+7. Once registered, you should see a blank page.
 
 ![proj02](Images/proj04.png)
 
@@ -290,6 +292,7 @@ The starter project is a simple application with only SQL authentication configu
    <?php
 
    namespace App\Providers;
+   ```
 
 
    use App\Config\SiteConstants;

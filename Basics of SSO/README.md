@@ -292,7 +292,7 @@ The starter project is a simple application with only SQL authentication configu
    <?php
 
    namespace App\Providers;
-   ```
+  
 
 
    use App\Config\SiteConstants;

@@ -367,7 +367,24 @@ The starter project is a simple application with only SQL authentication configu
 
    To see how this file works in the Demo app, refer to the file located [here](../app/Providers/O365ExtendSocialite.php) in the Demo app.
 
-11. Edit **config\services.php**, remove all code and paste the following. 
+11. Edit **app\Providers\EventServiceProvider.php**. Replace **$listen** array with the following.
+
+    ```php
+        protected $listen = [
+            'App\Events\SomeEvent' => [
+                'App\Listeners\EventListener',
+            ],
+            \SocialiteProviders\Manager\SocialiteWasCalled::class => [
+                'App\Providers\O365ExtendSocialite@handle',
+            ],
+        ];
+    ```
+
+     This adds a new event listener of O365 extend socialite. 
+
+     To see how this file works in the Demo app, refer to the file located [here](../app/Providers/EventServiceProvider.php) in the Demo app.
+
+12. Edit **config\services.php**, remove all code and paste the following. 
 
     ```php
     <?php
@@ -408,11 +425,11 @@ The starter project is a simple application with only SQL authentication configu
 
     To see how this file works in the Demo app, refer to the file located [here](../config/services.php) in the Demo app.
 
-12. Run the project locally. Click the **Sign in with Office 365** button and then login to O365.
+13. Run the project locally. Click the **Sign in with Office 365** button and then login to O365.
 
     ![proj04](Images/proj07.png)
 
-13. After login with O365 user it will redirect to a basic page.
+14. After login with O365 user it will redirect to a basic page.
 
     ![proj04](Images/proj08.png)
 

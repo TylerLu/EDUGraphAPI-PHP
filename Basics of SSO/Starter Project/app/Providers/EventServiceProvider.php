@@ -15,10 +15,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         'App\Events\SomeEvent' => [
             'App\Listeners\EventListener',
-        ],
-        \SocialiteProviders\Manager\SocialiteWasCalled::class => [
-            'App\Providers\O365ExtendSocialite@handle',
-        ],
+        ]
     ];
 
     /**

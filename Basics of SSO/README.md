@@ -53,7 +53,7 @@ The starter project is a simple application with only SQL authentication configu
 
 4. Input a **Name**, and select **Web app / API** as **Application Type**.
 
-   Input **Sign-on URL**: https://localhost:44377/
+   Input **Sign-on URL**: https://localhost:44377/. The URL and port can be any that works well locally, here take https://localhost:44377/ for example.
 
    ![](Images/aad-create-app-02.png)
 
@@ -75,9 +75,9 @@ The starter project is a simple application with only SQL authentication configu
 
      Copy aside **Application ID**, then Click **Save**.
 
-     Click **Reply URLs**, add the following URL into it.
+     Click **Reply URLs**, add the following URL into it. Notice: the host and port of the reply URL must match your local environment. If it's not https://localhost:44377 modify it.
 
-     [https://localhost:44377/](https://localhost:44377/)
+     [https://localhost:44377/oauth.php](https://localhost:44377/oauth.php)
 
    * Click **Required permissions**. Add the following permissions:
 
@@ -441,4 +441,4 @@ The starter project is a simple application with only SQL authentication configu
 
 
 
-Copyright (c) 2017 Microsoft. All rights reserved.
+**Copyright (c) 2017 Microsoft. All rights reserved.**

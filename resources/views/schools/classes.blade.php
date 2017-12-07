@@ -43,7 +43,7 @@
             <div>
                 <div class="col-md-4 usericon">
                     <div class="icon"></div>
-                    @if($me->educationObjectType === "Student" )
+                    @if($me->userRole === "Student" )
                         <div>Not Enrolled</div>
                     @else
                         <div>Not Teaching</div>
@@ -75,34 +75,26 @@
                                             @endif
                                             <div class="tile">
                                                 <h5>{{$class->displayName}}</h5>
-                                                <h2>{{$class->combinedCourseNumber}}</h2>
+                                                <h2>{{$class->classCode}}</h2>
                                             </div>
                                             @if($class->isMySection)
                                         </a>
                                     @endif
                                     <div class="detail">
-                                        <h5>Course Id:</h5>
-                                        <h6>{{$class->courseId}}</h6>
-                                        <h5>Description:</h5>
-                                        <h6>{{$class->courseDescription}}</h6>
+                                        <h5>Class Number:</h5>
+                                        <h6>{{$class->classCode}}</h6>
                                         <h5>Teachers:</h5>
-                                        @if($teachers = $class->getTeachers())
-                                            @foreach($teachers as $user)
-                                                @if($user->educationObjectType==='Teacher')
-                                                    <h6>{{$user->displayName}}</h6>
-                                                @endif
-                                            @endforeach
-                                        @endif
+                                        @foreach($class->getTeachers() as $user)
+                                            <h6>{{$user->displayName}}</h6>
+                                        @endforeach
                                         <h5>Term Name:</h5>
-                                        <h6>{{$class->termName}}</h6>
+                                        <h6>{{$class->displayName}}</h6>
                                         <h5>Start/Finish Date:</h5>
                                         <h6>
-                                            <span id="termdate">{{$class->termStartDate ? (new DateTime($class->termStartDate))->format("c") : ""}}</span>
+                                            <span id="termdate">{{$class->term["startDate"] ? (new DateTime($class->term["startDate"]))->format("c") : ""}}</span>
                                             <span> - </span>
-                                            <span id="termdate">{{$class->termEndDate ? (new DateTime($class->termEndDate))->format("c") : ""}}</span>
+                                            <span id="termdate">{{$class->term["endDate"] ? (new DateTime($class->term["endDate"]))->format("c") : ""}}</span>
                                         </h6>
-                                        <h5>Period:</h5>
-                                        <h6>{{$class->period}}</h6>
                                     </div>
                                 </div>
                             @endforeach
@@ -110,7 +102,7 @@
                         @if($allClasses->skipToken)
                             <div class="seemore " id="see-more">
                                 <input id="skiptoken" type="hidden" value="{{$allClasses->skipToken}}"/>
-                                <input id="schoolid" type="hidden" value="{{$school->schoolId}}"/>
+                                <input id="schoolid" type="hidden" value="{{$school->id}}"/>
                                 <span>See More</span>
                             </div>
                         @endif
@@ -134,30 +126,26 @@
                                        href="{{url('/class/'.$school->id.'/'.$myClass->id)}}">
                                         <div class="tile">
                                             <h5>{{$myClass->displayName}}</h5>
-                                            <h2>{{$myClass->combinedCourseNumber}}</h2>
+                                            <h2>{{$myClass->classCode}}</h2>
                                         </div>
                                     </a>
                                     <div class="detail">
-                                        <h5>Course Id:</h5>
-                                        <h6>{{$myClass->courseId}}</h6>
-                                        <h5>Description:</h5>
-                                        <h6>{{$myClass->courseDescription}}</h6>
+                                        <h5>Class Number:</h5>
+                                        <h6>{{$myClass->classCode}}</h6>
                                         <h5>Teachers:</h5>
+
                                         @foreach($myClass->getTeachers() as $user)
-                                            @if($user->educationObjectType==='Teacher')
                                                 <h6>{{$user->displayName}}</h6>
-                                            @endif
                                         @endforeach
                                         <h5>Term Name:</h5>
-                                        <h6>{{$myClass->termName}}</h6>
+                                        <h6>{{$myClass->displayName}}</h6>
                                         <h5>Start/Finish Date:</h5>
                                         <h6>
-                                                <span id="termdate">{{$myClass->termStartDate ? (new DateTime($myClass->termStartDate))->format("c") : ""}}</span>
+                                                <span id="termdate">{{$myClass->term["startDate"] ? (new DateTime($myClass->term["startDate"]))->format("c") : ""}}</span>
                                             <span> - </span>
-                                            <span id="termdate">{{$myClass->termEndDate ? (new DateTime($myClass->termEndDate))->format("c") : ""}}</span>
+                                            <span id="termdate">{{$myClass->term["endDate"] ? (new DateTime($myClass->term["endDate"]))->format("c") : ""}}</span>
                                         </h6>
-                                        <h5>Period:</h5>
-                                        <h6>{{$myClass->period}}</h6>
+
                                     </div>
                                 </div>
                             @endforeach

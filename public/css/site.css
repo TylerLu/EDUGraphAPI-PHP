@@ -183,12 +183,11 @@ textarea {
 }
 .table-green .td-green a.btnlink{background-color:white !important; background-image:none;color:black;text-transform:uppercase;}
 .table-student .tr-content td img{max-width:40px;height:auto;margin-right:6px;}
-.table-student .tr-content td:nth-child(1){width:25%;}
 .schools .table-schools tr td:nth-child(1){width:20%;}
 .schools .table-schools tr td:nth-child(2){width:15%;}
 .schools .table-schools tr td:nth-child(3){width:16%;}
 .schools .table-schools tr td:nth-child(4){width:23%;}
-.schools .table-schools tr td:nth-child(5){width:26%;}
+.schools .table-schools tr td:nth-child(5){width:26%;text-align: center;}
 .schools .table-schools .table-green-header th {font-family: 'Helvetica Neue LT Std Bold';}
 
 .ignore{display:none;}
@@ -415,43 +414,6 @@ max-width: 140px;
     color: white;
     border: 1px solid white;
 }
-
-
-
-/*Teachers & Students page*/
-.teacher-student .tophero{border-bottom:5px solid #127605;}
-.teacher-student .usericon{margin-top:10px;}
-.teacher-student .usericon div{float:left;}
-.teacher-student .usericon .stuicon{width:12px; height:12px; margin:5px 6px 0 0; background-color:#444444;}
-.teacher-student .usericon .teacicon{width:12px; height:12px; margin:5px 6px 0 12px; background-color:#4DA143;}
-.teacher-student .tiles-root-container{background-color:white; padding:12px 17.14px;}
-.teacher-student .tiles-secondary-container .content{padding-left:7px;}
-.teacher-student .tiles-root-container .element{margin:12px 13px 12px 0; float:left; width:175px; height:175px; border-radius:12px; background-color:gray;}
-.teacher-student .tiles-root-container .element .userimg{height:100px;text-align:center;position:relative;}
-.teacher-student .tiles-root-container .element .username{height:70px;color:white; text-align:center;padding-top:12px;}
-.teacher-student .tiles-root-container .element img{
-    border-radius: 60px;
-    -webkit-border-radius: 60px;
-    -moz-border-radius: 60px;
-    border: 1px solid #e4e4e4;
-    max-height: 100%;
-    max-width: 100%;
-    width: auto;
-    height: auto;
-    position: absolute;
-    top: 12px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-}
-.teacher-student .tiles-root-container .student-bg{background-color:#444444}
-.teacher-student .tiles-root-container .teacher-bg{background-color:#4DA143;}
-.teacher-student .tiles-root-container .tiles-secondary-container{display:none}
-.teacher-student .studentsinmyclasses-container #studentsinmyclasses.tiles-secondary-container,
-.teacher-student .users-container #users.tiles-secondary-container,
-.teacher-student .students-container #students.tiles-secondary-container,
-.teacher-student .teachers-container #teachers.tiles-secondary-container{display:block}
 
 /* Demo Helper Control */
 .demo-helper-control {

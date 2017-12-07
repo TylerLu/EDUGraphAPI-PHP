@@ -76,7 +76,7 @@ class  EducationService
      */
     public function getSchools()
     {
-        return $this->getAllPages( "administrativeUnits", School::class);
+        return $this->getAllPages( "education/schools", School::class);
     }
 
     /**
@@ -89,7 +89,7 @@ class  EducationService
      */
     public function getSchool($objectId)
     {
-        return $this->getResponse( "administrativeUnits/" . $objectId , School::class, null, null);
+        return $this->getResponse( "education/schools/" . $objectId , School::class, null, null);
     }
 
     /**
@@ -101,22 +101,15 @@ class  EducationService
      */
     public function getMySections($loadMembers)
     {
-        $memberOfs = $this->getAllPages( "me/memberOf", Section::class);
-        $sections = [];
-        if (empty($memberOfs)) {
-            return $sections;
-        }
-        foreach ($memberOfs as $memberOf) {
-            if ( $memberOf->educationObjectType === 'Section') {
-                array_push($sections, $memberOf);
-            }
-        }
-        if (!$loadMembers) {
-            return $sections;
+        $memberOfs = $this->getAllPages( "education/me/classes", Section::class);
+
+        if (empty($memberOfs) || !$loadMembers) {
+            return [];
         }
 
+
         $sectionsWithMembers = [];
-        foreach ($sections as $section) {
+        foreach ($memberOfs as $section) {
             $sectionWithMembers = $this->getSectionWithMembers($section->id);
             array_push($sectionsWithMembers, $sectionWithMembers);
         }
@@ -132,7 +125,7 @@ class  EducationService
      */
     public function getSectionWithMembers($objectId)
     {
-        return $this->getResponse( 'groups/' . $objectId . '?$expand=members', Section::class, null, null);
+        return $this->getResponse( 'education/classes/' . $objectId . '?$expand=members', Section::class, null, null);
     }
 
      /**
@@ -145,13 +138,10 @@ class  EducationService
     public function getMySectionsOfSchool($schoolId)
     {
         $sections = $this->getMySections(true);
-        $sectionsOfSchool = array_filter($sections, function ($section) use ($schoolId) {
-            return ($section->schoolId === $schoolId);
-        });
-        usort($sectionsOfSchool, function ($a, $b) {
+        usort($sections, function ($a, $b) {
             return strcmp($a->combinedCourseNumber, $b->combinedCourseNumber);
         });
-        return $sectionsOfSchool;
+        return $sections;
     }
 
     /**
@@ -165,7 +155,7 @@ class  EducationService
      */
     public function getSections($schoolId, $top=SiteConstants::DefaultPageSize, $skipToken=null)
     {
-        return $this->getResponse( 'groups?$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20\'Section\'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20\'' . $schoolId . '\'', Section::class, $top, $skipToken);
+        return $this->getResponse( 'education/schools/' . $schoolId . '/classes', Section::class, $top, $skipToken);
     }
 
     /**

@@ -8,7 +8,7 @@ namespace App\ViewModel;
 
 class School extends ParsableObject
 {
-    public $schoolId;
+
     public $id;
     public $displayName;
     public $principalName;
@@ -20,35 +20,31 @@ class School extends ParsableObject
     public $phone;
     public $zip;
     public $state;
+    public $street;
     public $city;
     public $address;
-    public $anchorId;
+    public $countryOrRegion;
     public $stateId;
     public $isMySchool;
     public $educationObjectType;
+    public $physicalAddress;
+
 
     public function __construct()
     {
         $this->addPropertyMappings(
             [
-                "schoolId" => "extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId",
                 "id" =>"id",
                 "displayName" => "displayName",
-                "principalName" => "extension_fe2174665583431c953114ff7268b7b3_Education_SchoolPrincipalName",
+                "principalName" => "principalName",
                 "description" => "description",
-                "email" => "extension_fe2174665583431c953114ff7268b7b3_Education_SchoolPrincipalEmail",
-                "highestGrade" => "extension_fe2174665583431c953114ff7268b7b3_Education_HighestGrade",
-                "lowestGrade" => "extension_fe2174665583431c953114ff7268b7b3_Education_LowestGrade",
-                "schoolNumber" => "extension_fe2174665583431c953114ff7268b7b3_Education_SchoolNumber",
-                "phone" => "extension_fe2174665583431c953114ff7268b7b3_Education_Phone",
-                "zip" => "extension_fe2174665583431c953114ff7268b7b3_Education_Zip",
-                "state" => "extension_fe2174665583431c953114ff7268b7b3_Education_State",
-                "city" => "extension_fe2174665583431c953114ff7268b7b3_Education_City",
-                "address" => "extension_fe2174665583431c953114ff7268b7b3_Education_Address",
-                "anchorId" => "extension_fe2174665583431c953114ff7268b7b3_Education_AnchorId",
-                "stateId" => "extension_fe2174665583431c953114ff7268b7b3_Education_StateId",
-                "educationObjectType" => "extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType"
+                "email" => "principalEmail",
+                "highestGrade" => "highestGrade",
+                "lowestGrade" => "lowestGrade",
+                "schoolNumber" => "schoolNumber",
+                "physicalAddress"=>"address"
             ]);
+
     }
 
     /**
@@ -58,6 +54,12 @@ class School extends ParsableObject
      */
     function getCompoundAddress()
     {
+        $this->city = $this->physicalAddress["city"];
+        $this->street = $this->physicalAddress["street"];
+        $this->zip = $this->physicalAddress["postalCode"];
+        $this->countryOrRegion = $this->physicalAddress["countryOrRegion"];
+        $this->state = $this->physicalAddress["state"];
+
         if (strlen($this->city) === 0 && strlen($this->state) === 0 && strlen($this->zip) === 0) {
             return "";
         }
@@ -66,6 +68,7 @@ class School extends ParsableObject
             $city = $this->city . ", ";
         }
         return $city . $this->state . " " . $this->zip;
+
     }
 
 

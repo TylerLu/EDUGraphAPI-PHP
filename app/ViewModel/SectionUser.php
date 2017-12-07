@@ -8,27 +8,32 @@ namespace App\ViewModel;
 
 class SectionUser extends ParsableObject
 {
-    public $mail;
-    public $educationObjectType;
+    public $id;
+    public $accountEnabled;
     public $displayName;
-    public $educationGrade;
-    public $schoolId;
-    public $o365UserId;
-    public $position;
-    public $favoriteColor;
-    public $userRole;
+    public $givenName;
+    public $surname;
+    public $userPrincipalName;
+    public $userType;
+    public $primaryRole;
 
+    public $schoolId;
+    public $mail;
 
     public function __construct()
     {
         $this->addPropertyMappings(
             [
                 "mail" => "mail",
-                "educationObjectType" => "extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType",
+                "id" => "id",
+                "accountEnabled" => "accountEnabled",
                 "displayName" => "displayName",
-                "educationGrade" => "extension_fe2174665583431c953114ff7268b7b3_Education_Grade",
+                "givenName" => "givenName",
+                "surname" => "surname",
+                "userPrincipalName" => "userPrincipalName",
+                "userType"=>"userType",
+                "primaryRole"=>"primaryRole",
                 "schoolId" => "extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId",
-                "o365UserId" => "id"
             ]);
     }
 

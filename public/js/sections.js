@@ -60,34 +60,30 @@ $(document).ready(function () {
                     var newTile = $('<div class="tile-container"></div>');
                     var tileContainer = newTile;
                     if (isMine) {
-                        tileContainer = $('<a class="mysectionlink" href="/Schools/' + schoolId + '/Classes/' + s.objectId + '"></a>').appendTo(newTile);
+                        tileContainer = $('<a class="mysectionlink" href="/Schools/' + schoolId + '/Classes/' + s.id + '"></a>').appendTo(newTile);
                     }
-                    var tile = $('<div class="tile"><h5>' + s.displayName + '</h5><h2>' + s.combinedCourseNumber + '</h2></div>');
+                    var tile = $('<div class="tile"><h5>' + s.displayName + '</h5><h2>' + s.classCode + '</h2></div>');
                     tile.appendTo(tileContainer);
                     var tileDetail = $('<div class="detail" style="display: none;">' +
-                                            '<h5>Course Id:</h5>' +
-                                            '<h6>' + s.courseId + '</h6>' +
-                                            '<h5>Description:</h5>' +
-                                            '<h6>' + s.courseDescription + '</h6>' +
+                                            '<h5>Class Number:</h5>' +
+                                            '<h6>' + s.classCode + '</h6>' +
                                             '<h5>Teachers:</h5>' +
                                             ((s.members instanceof Array) ?
                                             s.members.reduce(function (accu, cur) {
-                                                if (cur.educationObjectType == 'Teacher') {
+                                                if (cur.primaryRole == 'teacher') {
                                                     accu += '<h6>' + cur.displayName + '</h6>';
                                                 }
                                                 return accu;
                                             }, '') : '') +
 
                                             '<h5>Term Name:</h5>' +
-                                            '<h6>' + s.termName + '</h6>' +
+                                            '<h6>' + s.displayName + '</h6>' +
                                             '<h5>Start/Finish Date:</h5>' +
-                                            ((s.termStartDate || s.termEndDate) ?
-                                            ('<h6><span id="termdate">' + s.termStartDate + '</span>' +
+                                            ((s.term["startDate"] || s.term["endDate"]) ?
+                                            ('<h6><span id="termdate">' + s.term["startDate"] + '</span>' +
                                             '<span> - </span>' +
-                                            '<span id="termdate">' + s.termEndDate + '</span>' +
+                                            '<span id="termdate">' + s.term["endDate"] + '</span>' +
                                             '</h6>') : '') +
-                                            '<h5>Period:</h5>' +
-                                            '<h6>' + s.period + '</h6>' +
                                         '</div>');
                     tileDetail.appendTo(newTile);
                     newTiles = newTiles.add(newTile);

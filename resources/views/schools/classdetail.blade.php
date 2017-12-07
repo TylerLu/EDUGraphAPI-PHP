@@ -14,21 +14,16 @@
                 <div class="col-md-6 secondnav">
                     <a href="/schools"> All Schools</a>
                     > <a href="/classes/{{$school->id}}">{{$school->displayName}}</a>
-                    > {{$section->courseName}}
+                    > {{$section->displayName}}
                 </div>
             </div>
             <div class="container">
                 <div class="a-heading ">Class Details</div>
-                <div class="b-title">{{$section->courseNumber . " | " . $section->displayName}}</div>
+                <div class="b-title">{{$section->classCode . " | " . $section->displayName}}</div>
             </div>
             <div class="container coursedetail">
                 <div class="col-md-6">
-                    <span>Course Name:</span> {{$section->courseName}}
-                    <br/>
-                    <span>Description:</span> {{$section->courseDescription}}
-                    <br/>
-                    <span>Period:</span> {{$section->period}}
-                    <br/>
+
                     <span>Term Name:</span> {{$section->termName}}
                     <br/>
                     <span>Start/Finish Date:</span>
@@ -61,9 +56,9 @@
                                     <ul>
                                         @foreach ($filteredTeachers as $teacher)
                                             <li>
-                                                <a href="/addCoTeacher/{{$section->id}}/{{$teacher->o365UserId}}">
+                                                <a href="/addCoTeacher/{{$section->id}}/{{$teacher->id}}">
                                                 <img src="../../public/images/header-default.jpg"
-                                                     realheader="/userPhoto/{{$teacher->o365UserId}}"/> {{$teacher->displayName}}
+                                                     realheader="/userPhoto/{{$teacher->id}}"/> {{$teacher->displayName}}
                                                 </a>
                                             </li>
                                         @endforeach
@@ -93,16 +88,16 @@
                             <thead>
                             <tr class="table-green-header">
                                 <th class="tdleft">student name</th>
-                                <th>grade</th>
+
                             </tr>
                             </thead>
                             <tbody>
                             @foreach ($section->getStudents() as $student)
                                 <tr class="tr-content">
                                     <td><img src="../../public/images/header-default.jpg"
-                                             realheader="/userPhoto/{{$student->o365UserId}}"/> {{$student->displayName}}
+                                             realheader="/userPhoto/{{$student->id}}"/> {{$student->displayName}}
                                     </td>
-                                    <td>{{$student->educationGrade}}</td>
+
                                 </tr>
                             @endforeach
                             </tbody>
@@ -184,8 +179,8 @@
                         @endif
                         <ul id="lstproducts">
                             @foreach ($section->getStudents() as $student)
-                                <li id="{{$student->o365UserId}}"><img src="../../public/images/header-default.jpg"
-                                                                       realheader="/userPhoto/{{$student->o365UserId}}"/>
+                                <li id="{{$student->id}}"><img src="../../public/images/header-default.jpg"
+                                                                       realheader="/userPhoto/{{$student->id}}"/>
                                     <span class="disname"> {{$student->displayName}} </span> <span
                                             class="seated {{$student->position === 0 ? 'hideitem' : ''}}">seated ✓</span>
                                 </li>
@@ -195,11 +190,11 @@
                             @foreach ($section->getStudents() as $student)
                                 <div class="deskcontainer {{$student->position === 0 ? 'unsaved': 'white'}} {{empty($student->favoriteColor) ? '': 'green'}}"
                                      style="{{empty($student->favoriteColor) ? '': 'background-color:' . $student->favoriteColor}}"
-                                     position="{{$student->position}}" userid="{{$student->o365UserId}}">
+                                     position="{{$student->position}}" userid="{{$student->id}}">
                                     <div class="deskclose"><img src="../../public/Images/close.png"></div>
                                     <div class="deskicon">
                                         <img src="/images/header-default.jpg"
-                                             realheader="/userPhoto/{{$student->o365UserId}}"/>
+                                             realheader="/userPhoto/{{$student->id}}"/>
                                     </div>
                                     <div class="stuname">{{$student->displayName}}</div>
                                 </div>

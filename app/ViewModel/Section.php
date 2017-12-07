@@ -11,20 +11,26 @@ use App\Config\EduConstants;
 class Section extends ParsableObject
 {
     public $id;
-    public $educationObjectType;
-    public $displayName;
-    public $email;
-    public $securityEnabled;
-    public $mailNickname;
-    public $period;
-    public $courseNumber;
     public $courseDescription;
-    public $courseName;
-    public $courseId;
+    public $displayName;
+    public $mailNickname;
+    public $educationObjectType;
+    public $externalName;
+    public $classCode;
+    public $externalId;
+    public $externalSource;
+    public $term;
     public $termEndDate;
     public $termStartDate;
     public $termName;
     public $termId;
+
+    public $email;
+    public $securityEnabled;
+    public $period;
+    public $courseNumber;
+    public $courseName;
+    public $courseId;
     public $sectionNumber;
     public $sectionName;
     public $sectionId;
@@ -40,30 +46,22 @@ class Section extends ParsableObject
         $this->addPropertyMappings(
             [
                 "id" => "id",
-                "educationObjectType" => "extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType",
+                "courseDescription" => "description",
                 "displayName" => "displayName",
-                "email" => "mail",
-                "securityEnabled" => "securityEnabled",
-                "mailNickname" => "mailNickname",
-                "period" => "extension_fe2174665583431c953114ff7268b7b3_Education_Period",
-                "courseNumber" => "extension_fe2174665583431c953114ff7268b7b3_Education_CourseNumber",
-                "courseDescription" => "extension_fe2174665583431c953114ff7268b7b3_Education_CourseDescription",
-                "courseName" => "extension_fe2174665583431c953114ff7268b7b3_Education_CourseName",
-                "courseId" => "extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_CourseId",
-                "termEndDate" => "extension_fe2174665583431c953114ff7268b7b3_Education_TermEndDate",
-                "termStartDate" => "extension_fe2174665583431c953114ff7268b7b3_Education_TermStartDate",
-                "termName" => "extension_fe2174665583431c953114ff7268b7b3_Education_TermName",
-                "termId" => "extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_TermId",
-                "sectionNumber" => "extension_fe2174665583431c953114ff7268b7b3_Education_SectionNumber",
-                "sectionName" => "extension_fe2174665583431c953114ff7268b7b3_Education_SectionName",
-                "sectionId" => "extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SectionId",
-                "schoolId" => "extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId",
-                "syncSource" => "extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource",
-                "anchorId" => "extension_fe2174665583431c953114ff7268b7b3_Education_AnchorId",
-                "educationStatus" => "extension_fe2174665583431c953114ff7268b7b3_Education_Status",
-                "members" => "members"
+                "educationObjectType" => "extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType",
+                "mailNickname"=>"mailNickname",
+                "externalName"=>"externalName",
+                "classCode"=>"classCode",
+                "externalId"=>"externalId",
+                "externalSource"=>"externalSource",
+                "term"=>"term",
+                "members"=>"members"
             ]);
         $this->addArrayElementTypes(["members" => SectionUser::class]);
+        $this->termEndDate = $this->term["endDate"];
+        $this->termStartDate = $this->term["startDate"];
+        $this->termName = $this->term["displayName"];
+        $this->termId = $this->term["externalId"];
     }
 
     /**
@@ -86,7 +84,7 @@ class Section extends ParsableObject
      */
     public function getStudents()
     {
-        return collect($this->members)->where("educationObjectType", "=", EduConstants::StudentObjectType)->all();
+        return collect($this->members)->where("primaryRole", "=", strtolower( EduConstants::StudentObjectType))->all();
     }
 
     /**
@@ -96,7 +94,7 @@ class Section extends ParsableObject
      */
     public function getTeachers()
     {
-        return collect($this->members)->where("educationObjectType", "=", EduConstants::TeacherObjectType)->all();
+        return collect($this->members)->where("primaryRole", "=", strtolower(EduConstants::TeacherObjectType))->all();
     }
 
     /**

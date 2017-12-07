@@ -90,7 +90,6 @@ use App\Services\UserRolesService;use Illuminate\Http\Request;use Illuminate\Sup
                     if($isInASchool && $objectId){
                     ?>
                         <li><a href="{{ url('/classes/'.$objectId) }}">Classes</a></li>
-                        <li><a href="{{ url('/users/'.$objectId) }}">Teachers & Students</a></li>
                     <?php
                       }
                         if($role && $role==Roles::Admin){

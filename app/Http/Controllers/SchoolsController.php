@@ -41,7 +41,7 @@ class SchoolsController extends Controller
         $me = $this->educationService->getMe();
         $schools = $this->educationService->getSchools();
         foreach ($schools as $school) {
-            $school->isMySchool = $school->schoolId === $me->schoolId;
+            $school->isMySchool = $school->schoolNumber === $me->schoolId;
 
         }
 
@@ -62,87 +62,7 @@ class SchoolsController extends Controller
         return view('schools.schools', $data);
     }
 
-    /**
-     * Show teachers and students of the specified school.
-     *
-     * @param string $objectId The object id of the school
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function users($objectId)
-    {
 
-        $this->educationService = $this->getEduServices();
-        $me = $this->educationService->getMe();
-        $school = $this->educationService->getSchool($objectId);
-        $users = $this->educationService->getMembers($objectId, SiteConstants::DefaultPageSize, null);
-        $students = $this->educationService->getStudents($school->schoolId, SiteConstants::DefaultPageSize, null);
-        $teachers = $this->educationService->getTeachers($school->schoolId, SiteConstants::DefaultPageSize, null);
-
-        $studentsInMyClassArrayResult = new ArrayResult(SectionUser::class);
-        $studentsInMyClass = array();
-        if($me->educationObjectType === "Teacher" ){
-            $myClasses = $this->educationService->getMySectionsOfSchool($school->schoolId);
-            foreach ($myClasses as $class){
-                foreach ($class->getStudents() as $student) {
-                    if(!isset($studentsInMyClass[$student->o365UserId])){
-                        $studentsInMyClass[$student->o365UserId]=$student;
-                    }
-                }
-            }
-        }
-        $studentsInMyClassArrayResult->value = $studentsInMyClass;
-        $data = ["school" => $school, "users" => $users, "students" => $students, "teachers" => $teachers,"me" => $me, "studentsInMyClass" =>$studentsInMyClassArrayResult];
-
-        return view('schools.users', $data);
-    }
-
-    /**
-     * Get users of the specified school.
-     *
-     * @param string $objectId The object id of the school
-     * @param string $skipToken The token used to retrieve the next subset of the requested collection
-     *
-     * @return \Illuminate\Http\JsonResponse The next page of users
-     */
-    public function usersNext($objectId, $skipToken)
-    {
-        $this->educationService = $this->getEduServices();
-        $users = $this->educationService->getMembers($objectId, SiteConstants::DefaultPageSize, $skipToken);
-        return response()->json($users);
-    }
-
-    /**
-     * Get students of the specified school.
-     *
-     * @param string $objectId The object id of the school
-     * @param string $skipToken The token used to retrieve the next subset of the requested collection
-     *
-     * @return \Illuminate\Http\JsonResponse The next page of students
-     */
-    public function studentsNext($objectId, $skipToken)
-    {
-        $this->educationService = $this->getEduServices();
-        $school = $this->educationService->getSchool($objectId);
-        $students = $this->educationService->getStudents($school->schoolId, SiteConstants::DefaultPageSize, $skipToken);
-        return response()->json($students);
-    }
-
-    /**
-     * Get teachers of the specified school.
-     *
-     * @param string $objectId The object id of the school
-     * @param string $skipToken The token used to retrieve the next subset of the requested collection
-     *
-     * @return \Illuminate\Http\JsonResponse The next page of teachers
-     */
-    public function teachersNext($objectId, $skipToken)
-    {
-        $this->educationService = $this->getEduServices();
-        $school = $this->educationService->getSchool($objectId);
-        $teachers = $this->educationService->getTeachers($school->schoolId, SiteConstants::DefaultPageSize, $skipToken);
-        return response()->json($teachers);
-    }
 
     /**
      * Show details of the specified class.
@@ -161,21 +81,21 @@ class SchoolsController extends Controller
         $section = $this->educationService->getSectionWithMembers($classId);
 
         foreach ($section->getStudents() as $student) {
-            $student->position = $this->userServices->getSeatPositionInClass($student->o365UserId, $classId);
-            $student->favoriteColor = $this->userServices->getFavoriteColor($student->o365UserId);
+            $student->position = $this->userServices->getSeatPositionInClass($student->id, $classId);
+            $student->favoriteColor = $this->userServices->getFavoriteColor($student->id);
         }
 
-        $teachersInCurrentSchool = $this->educationService->getTeachers($school->schoolId,null,null);
+        $teachersInCurrentSchool = $this->educationService->getTeachers($school->id,null,null);
         if(isset($teachersInCurrentSchool) && isset($teachersInCurrentSchool->value))
             $teachersInCurrentSchool = $teachersInCurrentSchool->value;
         $teachers = $section->getTeachers();
         $filteredTeachers=[];
         foreach ($teachersInCurrentSchool as $teacher){
-            $filteredTeachers[$teacher->o365UserId] = $teacher;
+            $filteredTeachers[$teacher->id] = $teacher;
         }
         foreach ($teachers as $item) {
-              if(isset($filteredTeachers[$item->o365UserId])) {
-                  unset($filteredTeachers[$item->o365UserId]);
+              if(isset($filteredTeachers[$item->id])) {
+                  unset($filteredTeachers[$item->id]);
               }
         }
         $msGraph = new MSGraphService();
@@ -192,7 +112,7 @@ class SchoolsController extends Controller
                 "driveItems" => $driveItems,
                 "seeMoreFilesUrl" => $seeMoreFilesUrl,
                 "isStudent" => $me instanceof Student,
-                "o365UserId" => $curUser->o365UserId,
+                "o365UserId" => $curUser->id,
                 "myFavoriteColor" => $curUser->favorite_color,
                 "filteredTeachers" => $filteredTeachers
             ];
@@ -220,9 +140,9 @@ class SchoolsController extends Controller
         $this->educationService = $this->getEduServices();
         $me = $this->educationService->getMe();
         $school = $this->educationService->getSchool($objectId);
-        $schoolId = $school->schoolId;
-        $myClasses = $this->educationService->getMySectionsOfSchool($schoolId);
-        $allClasses = $this->educationService->getSections($schoolId);
+
+        $myClasses = $this->educationService->getMySectionsOfSchool($school->schoolNumber);
+        $allClasses = $this->educationService->getSections($school->id);
         $this->markMyClasses($allClasses, $myClasses);
 
         $data = ["myClasses" => $myClasses, "allClasses" => $allClasses, "school" => $school, "me" => $me];
@@ -260,7 +180,7 @@ class SchoolsController extends Controller
         foreach ($allClasses->value as $class1) {
             $class1->isMySection = false;
             foreach ($myClasses as $class2) {
-                if ($class1->email === $class2->email) {
+                if ($class1->id === $class2->id) {
                     $class1->isMySection = true;
                     $class1->members = $class2->members;
                     break;

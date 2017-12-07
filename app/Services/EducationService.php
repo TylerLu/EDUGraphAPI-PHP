@@ -104,7 +104,7 @@ class  EducationService
         $memberOfs = $this->getAllPages( "education/me/classes", Section::class);
 
         if (empty($memberOfs) || !$loadMembers) {
-            return [];
+            return $memberOfs;
         }
 
 
@@ -158,20 +158,6 @@ class  EducationService
         return $this->getResponse( 'education/schools/' . $schoolId . '/classes', Section::class, $top, $skipToken);
     }
 
-    /**
-     * Get members within a school
-     * Reference URL: https://msdn.microsoft.com/en-us/office/office365/api/school-rest-operations#get-school-members
-     *
-     * @param string $objectId the object id of the school administrative unit in Azure Active Directory
-     * @param int $top The number of items to return in a result set
-     * @param string $skipToken The token used to retrieve the next subset of the requested collection
-     *
-     * @return array A subset of the members within the school
-     */
-    public function getMembers($objectId, $top, $skipToken)
-    {
-        return $this->getResponse( "administrativeUnits/" . $objectId . "/members", SectionUser::class, $top, $skipToken);
-    }
 
     /**
      * Get students within a school
@@ -211,7 +197,7 @@ class  EducationService
      */
     public function addGroupMember($classId,$teacherId)
     {
-        $data['@odata.id'] ='https://graph.microsoft.com/v1.0/directoryObjects/'.$teacherId ;
+        $data['@odata.id'] =Constants::MSGraph. '/v1.0/directoryObjects/'.$teacherId ;
         return $this->getPostResponse( "groups/".$classId."/members/\$ref", $data);
 
     }
@@ -224,7 +210,7 @@ class  EducationService
      */
     public function addGroupOwner($classId,$teacherId)
     {
-        $data['@odata.id'] ='https://graph.microsoft.com/v1.0/users/'.$teacherId ;
+        $data['@odata.id'] =Constants::MSGraph . '/v1.0/users/'.$teacherId ;
         return $this->getPostResponse( "groups/".$classId."/owners/\$ref", $data);
     }
 

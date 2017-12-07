@@ -5,14 +5,15 @@
  */
 
 namespace App\Http\Controllers\Auth;
-
-use App\Config\SiteConstants;
+use App\Config\EduConstants;
+use App\Config\Roles;
 use App\Http\Controllers\Controller;
 use App\Services\EducationService;
 use App\Services\TokenCacheService;
 use App\Services\UserRolesService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+
 
 class AboutMeController extends Controller
 {
@@ -81,6 +82,8 @@ class AboutMeController extends Controller
 
         if ($o365userId)
             $role = (new UserRolesService)->getUserRole($o365userId);
+        if($role===Roles::Faculty)
+            $role= EduConstants::TeacherObjectType;
         return $role;
     }
 

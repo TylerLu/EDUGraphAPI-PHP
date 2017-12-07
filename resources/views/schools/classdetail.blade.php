@@ -24,12 +24,12 @@
             <div class="container coursedetail">
                 <div class="col-md-6">
 
-                    <span>Term Name:</span> {{$section->termName}}
+                    <span>Term Name:</span> {{$section->displayName}}
                     <br/>
                     <span>Start/Finish Date:</span>
-                    <span id="termdate">{{$section->termStartDate ? (new DateTime($section->termStartDate))->format("c") : ""}}</span>
+                    <span id="termdate">{{$section->term["startDate"] ? (new DateTime($section->term["startDate"]))->format("c") : ""}}</span>
                     <span id="termdate-separator"> - </span>
-                    <span id="termdate">{{$section->termEndDate ? (new DateTime($section->termEndDate))->format("c") : ""}}</span>
+                    <span id="termdate">{{$section->term["endDate"] ? (new DateTime($section->term["endDate"]))->format("c") : ""}}</span>
                 </div>
                 <div class="col-md-6">
                     <span>Teacher:</span>

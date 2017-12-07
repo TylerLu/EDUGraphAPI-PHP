@@ -85,7 +85,7 @@ class SchoolsController extends Controller
             $student->favoriteColor = $this->userServices->getFavoriteColor($student->id);
         }
 
-        $teachersInCurrentSchool = $this->educationService->getTeachers($school->id,null,null);
+        $teachersInCurrentSchool = $this->educationService->getTeachers($school->schoolNumber,null,null);
         if(isset($teachersInCurrentSchool) && isset($teachersInCurrentSchool->value))
             $teachersInCurrentSchool = $teachersInCurrentSchool->value;
         $teachers = $section->getTeachers();

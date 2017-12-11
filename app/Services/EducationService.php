@@ -9,6 +9,9 @@ namespace App\Services;
 use App\Config\Roles;
 use App\Config\SiteConstants;
 use App\ViewModel\ArrayResult;
+use App\ViewModel\Assignment;
+use App\ViewModel\EducationAssignmentResource;
+use App\ViewModel\ResourcesFolder;
 use App\ViewModel\School;
 use App\ViewModel\Section;
 use App\ViewModel\SectionUser;
@@ -91,6 +94,7 @@ class  EducationService
     {
         return $this->getResponse( "education/schools/" . $objectId , School::class, null, null);
     }
+
 
     /**
      * Get all the sections the current logged in user belongs to.
@@ -189,6 +193,33 @@ class  EducationService
         return $this->getResponse( "users?\$filter=extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId eq '$schoolId' and extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType eq 'Teacher'", SectionUser::class, $top, $skipToken);
     }
 
+    public function getAssignments($classId)
+    {
+        return $this->getAllPages( 'education/classes/' . $classId . '/assignments', Assignment::class);
+    }
+
+    public function getAssignmentResources($classId,$assignmentId)
+    {
+        return $this->getAllPages( 'education/classes/' . $classId . '/assignments/'.$assignmentId .'/resources', EducationAssignmentResource::class);
+
+    }
+
+    public function getAssignment($sectionId, $assignmentId)
+    {
+        return $this->getResponse('education/classes/'.$sectionId.'/assignments/'.$assignmentId,Assignment::class,null,null);
+    }
+
+    public function publishAssignmentAsync($sectionId, $assignmentId)
+    {
+        $url = "education/classes/".$sectionId."/assignments/".$assignmentId."/publish";
+        return $this->getPostResponseWithReturnObject($url,null,Assignment::class);
+    }
+
+    public function getAssignmentResourceFolderURL($sectionId, $assignmentId)
+    {
+        $url = "education/classes/".$sectionId."/assignments/".$assignmentId."/GetResourcesFolderUrl";
+        return $this->getResponse($url,ResourcesFolder::class,null,null);
+    }
     /**
      * Add a member to a class.
      * Reference URL: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/api/group_post_members
@@ -234,6 +265,19 @@ class  EducationService
             return $result;
         }
         return null;
+    }
+
+    private function getPostResponseWithReturnObject($endpoint,$data,$returnType)
+    {
+        $result = $this->getPostResponse($endpoint,$data);
+        $json = json_decode($result->getBody(), true);
+        if ($returnType) {
+            $isArray = (array_key_exists('value', $json) && is_array($json['value']));
+            $retObj = $isArray ? new ArrayResult($returnType) : new $returnType();
+            $retObj->parse($json);
+            return $retObj;
+        }
+        return $json;
     }
 
     /**

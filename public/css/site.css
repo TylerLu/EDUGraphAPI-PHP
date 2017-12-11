@@ -286,7 +286,7 @@ textarea {
 .students .b-title{padding-left:6px;}
 
 .students{margin-top:20px;}
-.students > ul > li{width:22%;margin-right:20px;text-align: center;}
+.students > ul > li{width:18%;margin-right:10px;text-align: center;}
 .students > ul > li:first-child{margin-left:20px;}
 .students > ul > li>a{font-family:'Helvetica Neue LT Std Th'; color:#ABABAB; height:56px; font-size:18px; text-transform:uppercase; background-color:#fff; border-radius:0 0 0 0; padding-top:15px;}
 .students > ul > li.active > a,.students > ul > li.active > a:hover,.students > ul > li.active > a:focus {font-family:'Helvetica Neue LT Std Bold'; background-color:#127605; color:white;}
@@ -318,6 +318,59 @@ textarea {
 .students #studoc.table-green tbody tr.tr-content.selected td.border-holder, .students #stuconv.table-green tbody tr.tr-content.selected td.border-holder{background-color:#127605}
 .students #documents .see-more, .students #conversations .see-more{float:right; margin-right:16px; padding:2px 10px; background:-prefix-linear-zgradient(top, #137A05, #28BB14); background:linear-gradient(to bottom, #137A05, #28BB14);}
 .students #documents .see-more a, .students #conversations .see-more a{color:#ffffff; font-size:12px; font-family:'Helvetica Neue LT Std Bold'; text-decoration:none}
+.students #assignments >div {width: 100%;float: left;}
+.students #assignmentslist th.header{width:23%;}
+.students .addassignment a{    color: white;
+    background-color: #127605;
+    height: 40px;
+    width: 120px;
+    float: right;
+    margin: 12px;
+    line-height: 40px;
+    font-weight: normal;
+    text-align: center;}
+#new-assignment-form label{width:100px !important;}
+#new-assignment-form  fieldset > *{margin:6px 0 6px 0;}
+#assignment-submissions-form button{float:left;}
+#assignment-submissions-form tbody td{text-align:left;}
+#assignment-submissions-form .files, #assignments .resource-list li, #assignments .handin-list li {padding-left:20px;background-color:#f5f5f5;}
+#assignments .resource-list li, #assignments .handin-list li {padding-left:15px;}
+.modal-dialog {
+    margin: 200px auto !important;
+}
+.uploadcontainer{    display: flex;
+    margin-top: 12px !important;}
+.uploadcontainer #uploaders{padding-left:5px;}
+/*assignment detail*/
+.assignment-detail-modal .row {
+    padding: 0px 15px;
+    text-align: right;
+}
+.assignment-detail-modal .row > .resources-title, .assignment-detail-modal .row > button, .assignment-detail-modal .row > .handin-title{
+    display: inline-block;
+}
+.assignment-detail-modal .row > button{
+    right: 0px;
+}
+.assignment-detail-modal .row > .resources-title,
+.assignment-detail-modal .row > .handin-title{
+    text-align: left;
+    padding-left: 0;
+}
+.assignment-detail-modal ul{
+    list-style: none;
+    margin: 10px -15px 10px -15px;
+    padding: 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+.assignment-detail-modal ul>li
+{
+    border-top: 1px solid #e5e5e5;
+    padding: 5px 15px;
+}
+.assignment-detail-modal .modal-footer{
+    border-top:none;
+}
 
 /*User info popup window*/
 .navbar-right a{color:white;text-decoration:none;}

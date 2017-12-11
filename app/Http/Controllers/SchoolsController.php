@@ -15,6 +15,7 @@ use App\Services\UserService;
 use App\ViewModel\ArrayResult;
 use App\ViewModel\SectionUser;
 use App\ViewModel\Student;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Microsoft\Graph\Connect\Constants;
@@ -98,11 +99,13 @@ class SchoolsController extends Controller
                   unset($filteredTeachers[$item->id]);
               }
         }
+        $assignments = $this->educationService->getAssignments($classId);
         $msGraph = new MSGraphService();
         $conversations = $msGraph->getGroupConversations($classId);
         $seeMoreConversationsUrl = sprintf(Constants::O365GroupConversationsUrlFormat, $section->email);
         $driveItems = $msGraph->getGroupDriveItems($classId);
         $seeMoreFilesUrl = $msGraph->getGroupDriveRoot($classId)->getWebUrl();
+
         $data =
             [
                 "school" => $school,
@@ -114,10 +117,41 @@ class SchoolsController extends Controller
                 "isStudent" => $me instanceof Student,
                 "o365UserId" => $curUser->id,
                 "myFavoriteColor" => $curUser->favorite_color,
-                "filteredTeachers" => $filteredTeachers
+                "filteredTeachers" => $filteredTeachers,
+                "assignments" =>$assignments
             ];
 
         return view('schools.classdetail', $data);
+    }
+
+    public function getAssignmentResources($classId, $assignmentId)
+    {
+        $this->educationService = $this->getEduServices();
+        $assignments = $this->educationService->getAssignmentResources($classId,$assignmentId);
+        return response()->json($assignments);
+    }
+
+    public function updateAssignment(request $request)
+    {
+        //$ids= $this->getIdsFromResourceFolder("https://graph.microsoft.com/v1.0/drives/b!SL9Uk3LQjEuffPg9XD6ipm0C2Yly5gFNnYUl0wD2wXRFlWlrWvV6SJ_IGS25d5Cu/items/01PSIOWBW4UYWIBFS235DKQ6M7SUWVI5NK");
+       $formDate= Input::all();
+        $input = $request->all();
+        $files = $request->newResource;
+        $this->educationService = $this->getEduServices();
+        $assignment =  $this->educationService->getAssignment($formDate['classId'],$formDate['assignmentId']);
+        if($assignment->status==='draft' && $formDate['assignmentStatus']==='assigned'){
+            $assignment = $this->educationService->publishAssignmentAsync($formDate['classId'], $formDate['assignmentId']);
+        }
+        $resourceFolder =  $this->educationService->getAssignmentResourceFolderURL($formDate['classId'], $formDate['assignmentId']);
+        $msGraph = new MSGraphService();
+        foreach ($files as $file)
+        {
+            if($file!=null)
+            {
+
+            }
+        }
+       $b=0;
     }
 
     public function addCoTeacher($classId,$teacherId)
@@ -173,6 +207,19 @@ class SchoolsController extends Controller
     {
         $succeeded = $this->userServices->saveSeatingArrangements(Input::all());
         return response()->json([], $succeeded ? 200 : 500);
+    }
+
+    private function uploadFileToOneDrive()
+    {
+        
+    }
+
+    private function getIdsFromResourceFolder($resourceFolder)
+    {
+        //https://graph.microsoft.com/v1.0/drives/b!SL9Uk3LQjEuffPg9XD6ipm0C2Yly5gFNnYUl0wD2wXRFlWlrWvV6SJ_IGS25d5Cu/items/01PSIOWBW4UYWIBFS235DKQ6M7SUWVI5NK
+        $array = explode('/',$resourceFolder);
+        $arrayLength = count($array);
+        return array($array[$arrayLength-3],$array[$arrayLength-1]);
     }
 
     private function markMyClasses($allClasses, $myClasses)

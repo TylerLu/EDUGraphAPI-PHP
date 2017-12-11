@@ -44,6 +44,8 @@ Route::group(['middleware' => ['web', 'auth', 'LinkRequired']], function () {
     Route::get('/classes/next/{schoolId}/{skipToken}', 'SchoolsController@classesNext');
     Route::post('/saveSeatingArrangements', 'SchoolsController@saveSeatingArrangements');
     Route::get('/addCoTeacher/{classId}/{teacherId}', 'SchoolsController@addCoTeacher');
+    Route::get('/getAssignmentResources/{classId}/{assignmentId}','SchoolsController@getAssignmentResources');
+    Route::post('/updateAssignment',"SchoolsController@updateAssignment");
 });
 
 

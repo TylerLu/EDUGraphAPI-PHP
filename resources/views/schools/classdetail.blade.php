@@ -75,6 +75,7 @@
         <div class="students">
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#students"><span>Students</span></a></li>
+                <li><a data-toggle="tab" href="#assignments" id="assignmentslink"><span>Assignments</span></a></li>
                 <li><a data-toggle="tab" href="#documents" id="classdoclink"><span>Class Documents</span></a></li>
                 <li><a data-toggle="tab" href="#conversations"><span>Conversations</span></a></li>
                 <li><a data-toggle="tab" href="#seatingchart"><span>SEATING CHART</span></a></li>
@@ -104,6 +105,125 @@
                         </table>
                     @endif
                 </div>
+
+                <div id="assignments" class="tab-pane fade">
+                    @if (!$isStudent)
+                        <div class="addassignment"><a href="javascript:void(0)"> + New</a></div>
+                    @endif
+                        <div id="assignmentslist">
+                            @if (is_null($assignments) || empty($assignments))
+                                <div class="nodata"> There is no data available for this page at this time.</div>
+                            @else
+                                <table class="table  table-green table-student ">
+                                    <thead>
+                                    <tr class="table-green-header">
+                                        <th class="header">Name</th>
+                                        <th class="header">Due Date</th>
+                                        <th class="header">Status</th>
+                                        <th class="header">Details</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    @foreach ($assignments as $assignment)
+                                        <tr class="tr-content">
+                                            <td>{{$assignment->displayName}}</td>
+                                            <td>
+                                                {{$assignment->dueDateTime ? (new DateTime($assignment->dueDateTime))->format("c") : ""}}
+                                            </td>
+                                            <td>{{$assignment->status}}</td>
+                                            <td>
+                                                <a class="detaillink"
+                                                   data-status="{{$assignment->status}}"
+                                                   data-id="{{$assignment->id}}"
+                                                   data-dueDate="{{$assignment->dueDateTime}}"
+                                                   data-title="{{$assignment->displayName}}"
+                                                   data-allowlate="{{$assignment->allowLateSubmissions}}"
+                                                   href="javascript:void(0)">Details</a>
+                                                @if (!$isStudent && $assignment->status != "draft")
+                                                    <span>|</span>
+                                                    <a href="javascript:void(0)" class="submissionslink"  data-status="{{$assignment->status}}" data-id="{{$assignment->id}}" data-dueDate="{{$assignment->dueDateTime ? (new DateTime($assignment->dueDateTime))->format("c") : ""}}" data-title="{{$assignment->displayName}}" > Submissions</a>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+
+                            @endif
+
+                                <div class="modal fade assignment-detail-modal" id="assignment-detail-form" role="dialog">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="alert alert-danger assignment-alert">
+                                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                                <span></span>
+                                            </div>
+                                            @if (!$isStudent)
+                                                <form action="/updateAssignment" enctype="multipart/form-data" id="assignment-detail-form-teacher" method="post">                                    <input name="schoolId" type="hidden" value="402aedc5-3189-451a-a2bd-ac294560326f">
+                                                    <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
+                                                <input name="schoolId" type="hidden" value="{{$school->id}}" />
+                                                <input name="classId" type="hidden" value="{{$section->id}}" />
+                                                <input name="assignmentId" type="hidden" />
+                                                <input name="assignmentStatus" type="hidden" />
+
+                                                <div class="modal-body">
+                                                    <div><h5 class="assignment-title"></h5></div>
+                                                    <div><h5 class="due-date"></h5></div>
+
+                                                    <div class="row resource-upload">
+                                                        <h5 class="resources-title col-md-8"></h5>
+                                                        <button type="button" class="btn btn-primary btn-new">+ New</button>
+                                                        <input type="file" id="newResourceFileCtrl" name="newResource[]" class="hidden">
+                                                    </div>
+
+                                                    <ul class="resource-list"></ul>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary btn-cancel" data-dismiss="modal">Cancel</button>
+                                                    <button type="button" class="btn btn-primary btn-save">Save</button>
+                                                    <button type="button" class="btn btn-primary btn-publish">Assign</button>
+                                                    <button type="submit" class="btn btn-primary btn-update">Update</button>
+                                                </div>
+                                                </form>
+                                               @else
+
+                                                <input name="schoolId" type="hidden" value="{{$school->id}}" />
+                                                <input name="classId" type="hidden" value="{{$section->id}}" />
+                                                <input name="assignmentId" type="hidden" />
+                                                <input name="submissionId" type="hidden" />
+
+                                                <div class="modal-body">
+                                                    <div><h5 class="assignment-title"></h5></div>
+                                                    <div><h5 class="due-date"></h5></div>
+                                                    <div><h5 class="allow-late"></h5></div>
+                                                    <div class="row">
+                                                        <h5 class="resources-title col-md-8"></h5>
+                                                    </div>
+                                                    <ul class="resource-list"></ul>
+                                                    <div class="row resource-upload">
+                                                        <h5 class="handin-title col-md-8"></h5>
+                                                        <button type="button" class="btn btn-primary btn-upload">Upload</button>
+                                                        <input type="file" id="newResourceFileCtrl" name="newResource" class="hidden">
+                                                    </div>
+                                                    <ul class="handin-list"></ul>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary btn-cancel" data-dismiss="modal">Cancel</button>
+                                                    <button type="button" class="btn btn-primary btn-submit">Submit</button>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                        </div>
+
+                </div>
+
                 <div id="documents" class="tab-pane fade">
                     @if (empty($driveItems))
                         <div class="nodata"> There is no data available for this page at this time.</div>
@@ -226,7 +346,12 @@
         </div>
     </div>
     <input type="hidden" name="hidSectionid" id="hidSectionid" value="{{$section->id}}"/>
+    <input type="hidden" name="hideIsStudent" id="hideIsStudent" value="@Convert.ToString(Model.IsStudent)" />
     <script src="{{ asset('/public/js/jquery.tablesorter.min.js') }}"></script>
+    <script src="{{ asset('/public/js/jquery-ui.js') }}"></script>
     <script src="{{ asset('/public/js/moment.min.js') }}"></script>
     <script src="{{ asset('/public/js/classdetail.js') }}"></script>
+    <script src="{{ asset('/public/js/assignments.js') }}"></script>
+
+
 @endsection

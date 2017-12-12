@@ -233,8 +233,7 @@ class  EducationService
            )
        );
        $data = json_encode($json);
-
-        $this->postJSON($url,$data);
+       $this->postJSON($url,$data);
     }
 
     /**
@@ -313,10 +312,12 @@ class  EducationService
         $token = $this->getToken();
         if ($token) {
             $url = Constants::MSGraph . '/' . Constants::MSGraph_VERSION . '/' . $endpoint;
-            $result = HttpUtils::postHttpResponseWithJSON( $token, $url,$data);
+            $result = HttpUtils::postJSON( $token, $url,$data);
             return $result;
         }
+        return null;
     }
+
 
     private function getPostResponseWithReturnObject($endpoint,$data,$returnType)
     {

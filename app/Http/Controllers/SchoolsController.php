@@ -154,29 +154,18 @@ class SchoolsController extends Controller
                 $oneDriveId= $this->getIdsFromResourceFolder($resourceFolder->resourceFolderURL);
                 $resourceUrl = Constants::MSGraph ."/v1.0/drives/".$oneDriveId[0]."/items/".$oneDriveFile["id"];
                 $this->educationService->addAssignmentResources($formDate['classId'],$formDate['assignmentId'],$oneDriveFile["name"],$resourceUrl);
-//                $graph = new MSGraphService();
-//                $url = Constants::MSGraph . '/' . Constants::MSGraph_VERSION . "/education/classes/".$formDate['classId']."/assignments/".$formDate['assignmentId']."/resources";
-//                $fileType = $this->getFileType($oneDriveFile["name"]);
-//                $json=array(
-//                    "resource"=>array(
-//                        "displayName"=>$oneDriveFile["name"],
-//                        "@odata.type"=>$fileType,
-//                        "file"=>array("odataid"=>$resourceUrl)
-//                    )
-//                );
-//                $data = json_encode($json);
-//                $graph->postJSONToURL($url,$data);
-                $a=1;
             }
         }
-       $b=0;
+        $url  = $_SERVER['HTTP_REFERER']."?tab=assignments";
+        header('Location: '.$url, true,302);
+        exit();
     }
 
     public function addCoTeacher($classId,$teacherId)
     {
         $this->educationService = $this->getEduServices();
         $this->educationService->addGroupMember($classId,$teacherId);
-        $a = $this->educationService->addGroupOwner($classId,$teacherId);
+        $this->educationService->addGroupOwner($classId,$teacherId);
         $url  = $_SERVER['HTTP_REFERER'];
         header('Location: '.$url, true,302);
         exit();

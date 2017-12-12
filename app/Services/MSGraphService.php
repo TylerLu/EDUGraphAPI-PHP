@@ -93,6 +93,15 @@ class MSGraphService
         return $this->getResponse("get", "/groups/$groupId/drive/root", DriveItem::class);
     }
 
+    public function  uploadFileToOneDrive($driveId,$itemId,$filePath,$fileName)
+    {
+       $token = $this->getToken();
+       return $this->graph->setAccessToken($token)
+            ->createRequest("PUT", "/drives/".$driveId."/items/".$itemId.":/".$fileName.":/content")
+            ->upload($filePath);
+
+    }
+
     /**
      * Get all pages.
      *

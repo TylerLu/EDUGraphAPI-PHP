@@ -1,19 +1,19 @@
 <?php
+use App\ViewModel\ParsableObject;
+
 /**
  * Created by PhpStorm.
  * User: zzq
- * Date: 2017/12/11
- * Time: 16:23
+ * Date: 2017/12/12
+ * Time: 11:01
  */
 
-namespace App\ViewModel;
-
-
-class DriveItem extends ParsableObject
+class OnedriveItem extends ParsableObject
 {
     public $id;
     public $parentReference;
     public $name;
+
     public function __construct()
     {
         $this->addPropertyMappings(

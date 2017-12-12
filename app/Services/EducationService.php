@@ -220,6 +220,15 @@ class  EducationService
         $url = "education/classes/".$sectionId."/assignments/".$assignmentId."/GetResourcesFolderUrl";
         return $this->getResponse($url,ResourcesFolder::class,null,null);
     }
+
+    public function addAssignmentResources($sectionId,$assignmentId,$fileName,$resourceURL)
+    {
+       $url = "education/classes/".$sectionId."/assignments/".$assignmentId."/resources";
+       $json = "{\"resource\":{\"displayName\":\"".$fileName."\",\"@odata.type\":\"#microsoft.graph.educationFileResource\",\"file\":{\"odataid\":\"".$resourceURL."\"}}}";
+       $jsonResult = json_decode($json);
+        $this->getPostResponse($url,json_decode($json));
+    }
+
     /**
      * Add a member to a class.
      * Reference URL: https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/api/group_post_members

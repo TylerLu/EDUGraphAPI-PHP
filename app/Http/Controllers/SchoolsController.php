@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Microsoft\Graph\Connect\Constants;
+use OnedriveItem;
 
 class SchoolsController extends Controller
 {
@@ -75,6 +76,7 @@ class SchoolsController extends Controller
      */
     public function classDetail($objectId, $classId)
     {
+
         $curUser = Auth::user();
         $this->educationService = $this->getEduServices();
         $me = $this->educationService->getMe();
@@ -133,7 +135,7 @@ class SchoolsController extends Controller
 
     public function updateAssignment(request $request)
     {
-        //$ids= $this->getIdsFromResourceFolder("https://graph.microsoft.com/v1.0/drives/b!SL9Uk3LQjEuffPg9XD6ipm0C2Yly5gFNnYUl0wD2wXRFlWlrWvV6SJ_IGS25d5Cu/items/01PSIOWBW4UYWIBFS235DKQ6M7SUWVI5NK");
+
        $formDate= Input::all();
         $input = $request->all();
         $files = $request->newResource;
@@ -143,12 +145,16 @@ class SchoolsController extends Controller
             $assignment = $this->educationService->publishAssignmentAsync($formDate['classId'], $formDate['assignmentId']);
         }
         $resourceFolder =  $this->educationService->getAssignmentResourceFolderURL($formDate['classId'], $formDate['assignmentId']);
-        $msGraph = new MSGraphService();
+
         foreach ($files as $file)
         {
             if($file!=null)
             {
-
+               $oneDriveFile = $this->uploadFileToOneDrive($resourceFolder->resourceFolderURL,$file);
+                $oneDriveId= $this->getIdsFromResourceFolder($resourceFolder->resourceFolderURL);
+                $resourceUrl = "https://graph.microsoft.com/v1.0/drives/".$oneDriveId[0]."/items/".$oneDriveFile["id"];
+                $this->educationService->addAssignmentResources($formDate['classId'],$formDate['assignmentId'],$oneDriveFile["name"],$resourceUrl);
+                $a=1;
             }
         }
        $b=0;
@@ -209,14 +215,20 @@ class SchoolsController extends Controller
         return response()->json([], $succeeded ? 200 : 500);
     }
 
-    private function uploadFileToOneDrive()
+    private function uploadFileToOneDrive( $resourceFolder,  $file)
     {
-        
+        $fileName = $file->getClientOriginalName();
+        $filePath = $file->path();
+        $graph = new MSGraphService();
+        $ids= $this->getIdsFromResourceFolder($resourceFolder);
+        $result =  $graph->uploadFileToOneDrive($ids[0],$ids[1],$filePath,$fileName);
+        return $result->getBody();
+
     }
 
     private function getIdsFromResourceFolder($resourceFolder)
     {
-        //https://graph.microsoft.com/v1.0/drives/b!SL9Uk3LQjEuffPg9XD6ipm0C2Yly5gFNnYUl0wD2wXRFlWlrWvV6SJ_IGS25d5Cu/items/01PSIOWBW4UYWIBFS235DKQ6M7SUWVI5NK
+
         $array = explode('/',$resourceFolder);
         $arrayLength = count($array);
         return array($array[$arrayLength-3],$array[$arrayLength-1]);

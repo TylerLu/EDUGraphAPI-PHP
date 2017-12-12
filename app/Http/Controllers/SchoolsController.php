@@ -152,8 +152,20 @@ class SchoolsController extends Controller
             {
                $oneDriveFile = $this->uploadFileToOneDrive($resourceFolder->resourceFolderURL,$file);
                 $oneDriveId= $this->getIdsFromResourceFolder($resourceFolder->resourceFolderURL);
-                $resourceUrl = "https://graph.microsoft.com/v1.0/drives/".$oneDriveId[0]."/items/".$oneDriveFile["id"];
+                $resourceUrl = Constants::MSGraph ."/v1.0/drives/".$oneDriveId[0]."/items/".$oneDriveFile["id"];
                 $this->educationService->addAssignmentResources($formDate['classId'],$formDate['assignmentId'],$oneDriveFile["name"],$resourceUrl);
+//                $graph = new MSGraphService();
+//                $url = Constants::MSGraph . '/' . Constants::MSGraph_VERSION . "/education/classes/".$formDate['classId']."/assignments/".$formDate['assignmentId']."/resources";
+//                $fileType = $this->getFileType($oneDriveFile["name"]);
+//                $json=array(
+//                    "resource"=>array(
+//                        "displayName"=>$oneDriveFile["name"],
+//                        "@odata.type"=>$fileType,
+//                        "file"=>array("odataid"=>$resourceUrl)
+//                    )
+//                );
+//                $data = json_encode($json);
+//                $graph->postJSONToURL($url,$data);
                 $a=1;
             }
         }
@@ -254,6 +266,7 @@ class SchoolsController extends Controller
         $token = (new TokenCacheService())->getMSGraphToken($user->o365UserId);
         return new EducationService($token);
     }
+
 
 
 }

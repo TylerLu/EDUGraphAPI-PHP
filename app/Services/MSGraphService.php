@@ -102,6 +102,19 @@ class MSGraphService
 
     }
 
+
+
+    public function postJSONToURL($url,$json)
+    {
+
+
+        $token = $this->getToken();
+        return $this->graph->setAccessToken($token)
+            ->createRequest("POST", $url)
+            ->attachBody($json)
+            ->execute();
+    }
+
     /**
      * Get all pages.
      *

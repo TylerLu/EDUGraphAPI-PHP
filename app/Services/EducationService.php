@@ -224,9 +224,17 @@ class  EducationService
     public function addAssignmentResources($sectionId,$assignmentId,$fileName,$resourceURL)
     {
        $url = "education/classes/".$sectionId."/assignments/".$assignmentId."/resources";
-       $json = "{\"resource\":{\"displayName\":\"".$fileName."\",\"@odata.type\":\"#microsoft.graph.educationFileResource\",\"file\":{\"odataid\":\"".$resourceURL."\"}}}";
-       $jsonResult = json_decode($json);
-        $this->getPostResponse($url,json_decode($json));
+        $fileType = $this->getFileType($fileName);
+       $json=array(
+           "resource"=>array(
+               "displayName"=>$fileName,
+               "@odata.type"=>$fileType,
+               "file"=>array("odataid"=>$resourceURL)
+           )
+       );
+       $data = json_encode($json);
+
+        $this->postJSON($url,$data);
     }
 
     /**
@@ -254,7 +262,31 @@ class  EducationService
         return $this->getPostResponse( "groups/".$classId."/owners/\$ref", $data);
     }
 
+    private function getFileType($fileName)
+    {
+        $defaultFileType = "#microsoft.graph.educationFileResource";
+        $ext ="";
+        if(strpos($fileName,".")>0)
+        {
+            $array = explode(".",$fileName);
+            $ext = $array[1];
+        }
+        switch ($ext)
+        {
+            case "docx":
+                $defaultFileType = "#microsoft.graph.educationWordResource";
+                break;
+            case "xlsx":
+                $defaultFileType = "#microsoft.graph.educationExcelResource";
+                break;
+            default:
+                $defaultFileType = "#microsoft.graph.educationFileResource"; //"#microsoft.graph.educationFileResource";
+                break;
+        }
 
+        return $defaultFileType;
+
+    }
     private function isUserStudent($licenses)
     {
         return AADGraphService::isUserStudent($licenses);
@@ -274,6 +306,16 @@ class  EducationService
             return $result;
         }
         return null;
+    }
+
+    private function postJSON($endpoint,$data)
+    {
+        $token = $this->getToken();
+        if ($token) {
+            $url = Constants::MSGraph . '/' . Constants::MSGraph_VERSION . '/' . $endpoint;
+            $result = HttpUtils::postHttpResponseWithJSON( $token, $url,$data);
+            return $result;
+        }
     }
 
     private function getPostResponseWithReturnObject($endpoint,$data,$returnType)

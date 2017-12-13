@@ -13,7 +13,9 @@ class EducationAssignmentResource extends ParsableObject
 {
     public $id;
     public $distributeForStudentWork;
-    public $resource;
+    public $resources; //For submission resources
+    public $resource;//For assignment resources
+    public $resourcesFolderUrl;
 
     public function __construct()
     {
@@ -21,7 +23,9 @@ class EducationAssignmentResource extends ParsableObject
             [
                 "id" => "id",
                 "distributeForStudentWork" => "distributeForStudentWork",
-                "resource" => "resource"
+                "resources" => "resources",
+                "resource" => "resource",
+                "resourcesFolderUrl"=>"resourcesFolderUrl"
             ]);
 
     }

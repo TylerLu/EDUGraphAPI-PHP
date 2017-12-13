@@ -112,7 +112,7 @@
             $("#new-assignment button").each(function () {
                 $(this).attr('disabled', 'true');
             });
-            $("input[name='fileUpload']").attr('disabled', 'true');
+            $("input[name='fileUpload[]']").attr('disabled', 'true');
         },
         updateAssignmentDetail: function (status) {
             if (!_isStudent) {
@@ -128,7 +128,7 @@
             $("#assignment-detail-form button").each(function () {
                 $(this).attr('disabled', 'true');
             });
-            $("input[name='newResource']").attr('disabled', 'true');
+            $("input[name='newResource[]']").attr('disabled', 'true');
 
         },
         //Recreate upload contorl on new assignment form.
@@ -167,7 +167,7 @@
                 multiple: 'multiple',
                 id: 'fileToUpload' + _assignment_api.storedFilesCount,
                 class: 'fUpload',
-                name: 'fileUpload',
+                name: 'fileUpload[]',
                 style: 'float: left',
                 title: '  ',
                 onchange: "AssignmentPlugin.doReCreateUploadControl(event)"
@@ -344,12 +344,12 @@
 
             $.ajax({
                 type: 'GET',
-                url: '/Classes/' + sectionId + '/Assignments/' + assignmentId + '/ResourcesSubmission',
+                url: '/getAssignmentResourcesSubmission/' + sectionId + '/' + assignmentId ,
                 success: function (data) {
                     var resourcesListHtml = "";
                     if (data.resources && data.resources.length > 0) {
                         for (var i = 0; i < data.resources.length; i++) {
-                            resourcesListHtml += '<li data-id="' + data.resources[i].Id + '">' + data.resources[i].Resource.DisplayName + '</li>';
+                            resourcesListHtml += '<li data-id="' + data.resources[i].id + '">' + data.resources[i].resource.displayName + '</li>';
                         }
                     } //else {
                     //    resourcesListHtml = "<li>There is no data available for this page at this time.</li>";
@@ -360,9 +360,9 @@
                     if (data.submission) {
                         $("input[name='submissionId']").val(data.submission.Id);
                     }
-                    if (data.submission && data.submission.Resources && data.submission.Resources.length > 0) {
-                        for (var i = 0; i < data.submission.Resources.length; i++) {
-                            submissionsListHtml += '<li data-id="' + data.submission.Resources[i].Id + '">' + data.submission.Resources[i].Resource.DisplayName + '</li>';
+                    if (data.submission && data.submission[0].resources && data.submission[0].resources.length > 0) {
+                        for (var i = 0; i < data.submission[0].resources.length; i++) {
+                            submissionsListHtml += '<li data-id="' + data.submission[0].resources[i].id + '">' + data.submission[0].resources[i].resource.displayName + '</li>';
                         }
                     } //else {
                     // submissionsListHtml = "<li class='emptyHint'>There is no data available for this page at this time.</li>";

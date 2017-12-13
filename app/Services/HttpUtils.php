@@ -88,7 +88,6 @@ class HttpUtils
      */
     public static function getAuthHeader($token)
     {
-        //;odata.metadata=minimal;odata.streaming=true
         return [
             'headers' => [
                 'Content-Type' => 'application/json;odata.metadata=minimal;odata.streaming=true',
@@ -99,7 +98,6 @@ class HttpUtils
 
     public static function getAuthHeaderForJSON($token)
     {
-
         return [
             'headers' => [
                 'Content-Type' => 'application/json',

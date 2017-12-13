@@ -8,6 +8,8 @@
 @extends('layouts.app')
 @section('title', 'Class Details')
 @section('content')
+    <link rel="stylesheet" type="text/css" href="/public/css/jquery-ui.css">
+
     <div class="row schools class-details">
         <div class="tophero">
             <div class="container">
@@ -151,7 +153,106 @@
                                 </table>
 
                             @endif
+                                @if (!$isStudent)
+                                <div class="modal fade"id="new-assignment" role="dialog">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="alert alert-danger assignment-alert">
+                                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                                <span></span>
+                                            </div>
+                                            <form action="/newAssignment" enctype="multipart/form-data" id="new-assignment-form" method="post">
+                                            <div class="modal-body">
 
+                                                <input id="FilesToBeUploaded" name="FilesToBeUploaded" type="hidden" value="">
+                                                <input id="status" name="status" type="hidden" />
+                                                <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
+                                                <input name="schoolId" type="hidden" value="{{$school->id}}" />
+                                                <input name="classId" type="hidden" value="{{$section->id}}" />
+
+
+                                                <fieldset>
+                                                    <label>Name</label>
+                                                    <input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all">
+                                                    <br />
+                                                    <label>Due Date</label>
+                                                    <input type="text" id="duedate" name="duedate" value="" class="text ui-widget-content ui-corner-all">
+                                                    <select class="ui-widget-content ui-corner-all" id="duetime" name="duetime">
+                                                        <option>12:00 AM</option>
+                                                        <option>12:30 AM</option>
+                                                        <option>1:00 AM</option>
+                                                        <option>1:30 AM</option>
+                                                        <option>2:00 AM</option>
+                                                        <option>2:30 AM</option>
+                                                        <option>3:00 AM</option>
+                                                        <option>3:30 AM</option>
+                                                        <option>4:00 AM</option>
+                                                        <option>4:30 AM</option>
+                                                        <option>5:00 AM</option>
+                                                        <option>5:30 AM</option>
+                                                        <option>6:00 AM</option>
+                                                        <option>6:30 AM</option>
+                                                        <option>7:00 AM</option>
+                                                        <option>7:30 AM</option>
+                                                        <option>8:00 AM</option>
+                                                        <option>8:30 AM</option>
+                                                        <option>9:00 AM</option>
+                                                        <option>9:30 AM</option>
+                                                        <option>10:00 AM</option>
+                                                        <option>10:30 AM</option>
+                                                        <option>11:00 AM</option>
+                                                        <option>11:30 AM</option>
+                                                        <option>12:00 PM</option>
+                                                        <option>12:30 PM</option>
+                                                        <option>1:00 PM</option>
+                                                        <option>1:30 PM</option>
+                                                        <option>2:00 PM</option>
+                                                        <option>2:30 PM</option>
+                                                        <option>3:00 PM</option>
+                                                        <option>3:30 PM</option>
+                                                        <option>4:00 PM</option>
+                                                        <option>4:30 PM</option>
+                                                        <option>5:00 PM</option>
+                                                        <option>5:30 PM</option>
+                                                        <option>6:00 PM</option>
+                                                        <option>6:30 PM</option>
+                                                        <option>7:00 PM</option>
+                                                        <option>7:30 PM</option>
+                                                        <option>8:00 PM</option>
+                                                        <option>8:30 PM</option>
+                                                        <option>9:00 PM</option>
+                                                        <option>9:30 PM</option>
+                                                        <option>10:00 PM</option>
+                                                        <option>10:30 PM</option>
+                                                        <option>11:00 PM</option>
+                                                        <option>11:30 PM</option>
+                                                        <option>11:59 PM</option>
+                                                    </select>
+                                                    <br />
+                                                    <div class="uploadcontainer">
+                                                        <label>Resources</label>
+                                                        <div id="uploaders">
+                                                            <input type="file" id="fileToUpload" name="fileUpload[]" />
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <span id="spnFile" style="color: #FF0000"></span>
+                                                    <div class="control-section" style="padding: 0px;">
+                                                        <div id="selectedFiles"></div>
+                                                    </div>
+                                                </fieldset>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary btn-cancel" data-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-primary btn-save">Save As Draft</button>
+                                                <button type="button" class="btn btn-primary btn-publish">Assign</button>
+                                            </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                                 <div class="modal fade assignment-detail-modal" id="assignment-detail-form" role="dialog">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
@@ -188,12 +289,12 @@
                                                 </div>
                                                 </form>
                                                @else
-
+                                                <form action="/newAssignmentSubmissionResource" enctype="multipart/form-data" id="assignment-detail-form-teacher" method="post">
                                                 <input name="schoolId" type="hidden" value="{{$school->id}}" />
                                                 <input name="classId" type="hidden" value="{{$section->id}}" />
                                                 <input name="assignmentId" type="hidden" />
                                                 <input name="submissionId" type="hidden" />
-
+                                                  <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
                                                 <div class="modal-body">
                                                     <div><h5 class="assignment-title"></h5></div>
                                                     <div><h5 class="due-date"></h5></div>
@@ -205,15 +306,16 @@
                                                     <div class="row resource-upload">
                                                         <h5 class="handin-title col-md-8"></h5>
                                                         <button type="button" class="btn btn-primary btn-upload">Upload</button>
-                                                        <input type="file" id="newResourceFileCtrl" name="newResource" class="hidden">
+                                                        <input type="file" id="newResourceFileCtrl" name="newResource[]" class="hidden">
                                                     </div>
                                                     <ul class="handin-list"></ul>
                                                 </div>
 
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary btn-cancel" data-dismiss="modal">Cancel</button>
-                                                    <button type="button" class="btn btn-primary btn-submit">Submit</button>
+                                                    <button type="submit" class="btn btn-primary btn-submit">Submit</button>
                                                 </div>
+                                                </form>
                                             @endif
                                         </div>
                                     </div>
@@ -346,7 +448,7 @@
         </div>
     </div>
     <input type="hidden" name="hidSectionid" id="hidSectionid" value="{{$section->id}}"/>
-    <input type="hidden" name="hideIsStudent" id="hideIsStudent" value="@Convert.ToString(Model.IsStudent)" />
+    <input type="hidden" name="hideIsStudent" id="hideIsStudent" value="{{$isStudent?"True":"False"}}" />
     <script src="{{ asset('/public/js/jquery.tablesorter.min.js') }}"></script>
     <script src="{{ asset('/public/js/jquery-ui.js') }}"></script>
     <script src="{{ asset('/public/js/moment.min.js') }}"></script>

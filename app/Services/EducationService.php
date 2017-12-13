@@ -204,6 +204,13 @@ class  EducationService
 
     }
 
+    public function getAssignmentResourcesSubmission($classId,$assignmentId,$userId)
+    {
+        return $this->getAllPages( 'education/classes/' . $classId . '/assignments/'.$assignmentId .'/submissions?$filter=submittedBy/user/id eq \''.$userId.'\'',
+            EducationAssignmentResource::class);
+
+    }
+
     public function getAssignment($sectionId, $assignmentId)
     {
         return $this->getResponse('education/classes/'.$sectionId.'/assignments/'.$assignmentId,Assignment::class,null,null);
@@ -234,6 +241,25 @@ class  EducationService
        );
        $data = json_encode($json);
        $this->postJSON($url,$data);
+    }
+
+    public function createAssignment($formDate)
+    {
+
+        $url = "education/classes/".$formDate['classId']."/assignments";
+        $json = array(
+            "displayName"=>$formDate['name'],
+            "status"=>"draft",
+            "dueDateTime"=>date('Y-m-d\TH:i:s\Z',strtotime($formDate['duedate'])),
+            "allowStudentsToAddResourcesToSubmission"=>true,
+            "assignTo"=>array(
+                "@odata.type"=>"#microsoft.graph.educationAssignmentClassRecipient"
+            )
+        );
+        $data = json_encode($json);
+        $result = $this->postJSON($url,$data);
+        $json  = json_decode($result->getBody(), true);
+        return $json;
     }
 
     /**

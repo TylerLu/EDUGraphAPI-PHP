@@ -13,6 +13,7 @@ use App\Services\MSGraphService;
 use App\Services\TokenCacheService;
 use App\Services\UserService;
 use App\ViewModel\ArrayResult;
+use App\ViewModel\Assignment;
 use App\ViewModel\SectionUser;
 use App\ViewModel\Student;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Microsoft\Graph\Connect\Constants;
 use OnedriveItem;
+use PhpParser\Node\Expr\Assign;
 
 class SchoolsController extends Controller
 {
@@ -133,29 +135,84 @@ class SchoolsController extends Controller
         return response()->json($assignments);
     }
 
+    public function getAssignmentResourcesSubmission($classId, $assignmentId)
+    {
+        $this->educationService = $this->getEduServices();
+        $me = $this->educationService->getMe();
+        $assignmentResources = $this->educationService->getAssignmentResources($classId,$assignmentId);
+        $submissions =  $this->educationService->getAssignmentResourcesSubmission($classId,$assignmentId,$me->id);
+        $result=array(
+            "resources"=>$assignmentResources,
+            "submission"=>$submissions
+        );
+        return response()->json($result);
+
+    }
+
+    public function newAssignmentSubmissionResource()
+    {
+        $this->educationService = $this->getEduServices();
+        $formDate= Input::all();
+        $me = $this->educationService->getMe();
+        $submissions =  $this->educationService->getAssignmentResourcesSubmission($formDate['classId'], $formDate["assignmentId"],$me->id);
+        if(count($submissions)>0)
+        {
+
+        }
+    }
+
+    public function newAssignment(request $request)
+    {
+        $formDate= Input::all();
+        $files = $request->fileUpload;
+        $this->educationService = $this->getEduServices();
+        $assignment = $this->educationService->createAssignment($formDate);
+        if($formDate["status"]=="assigned")
+        {
+            $this->educationService->publishAssignmentAsync($formDate["classId"],$assignment["id"]);
+        }
+        if($files!=null) {
+            $resourceFolder = $this->educationService->getAssignmentResourceFolderURL($formDate['classId'], $assignment["id"]);
+            foreach ($files as $file) {
+                if ($file != null) {
+                    $oneDriveFile = $this->uploadFileToOneDrive($resourceFolder->resourceFolderURL, $file);
+                    $oneDriveId = $this->getIdsFromResourceFolder($resourceFolder->resourceFolderURL);
+                    $resourceUrl = Constants::MSGraph . "/v1.0/drives/" . $oneDriveId[0] . "/items/" . $oneDriveFile["id"];
+                    $this->educationService->addAssignmentResources($formDate['classId'], $assignment["id"], $oneDriveFile["name"], $resourceUrl);
+                }
+            }
+        }
+        $url  = $_SERVER['HTTP_REFERER']."?tab=assignments";
+        header('Location: '.$url, true,302);
+        exit();
+    }
+
     public function updateAssignment(request $request)
     {
 
        $formDate= Input::all();
-        $input = $request->all();
         $files = $request->newResource;
         $this->educationService = $this->getEduServices();
         $assignment =  $this->educationService->getAssignment($formDate['classId'],$formDate['assignmentId']);
         if($assignment->status==='draft' && $formDate['assignmentStatus']==='assigned'){
             $assignment = $this->educationService->publishAssignmentAsync($formDate['classId'], $formDate['assignmentId']);
         }
-        $resourceFolder =  $this->educationService->getAssignmentResourceFolderURL($formDate['classId'], $formDate['assignmentId']);
-
-        foreach ($files as $file)
+        if($files!=null)
         {
-            if($file!=null)
+            $resourceFolder =  $this->educationService->getAssignmentResourceFolderURL($formDate['classId'], $formDate['assignmentId']);
+
+            foreach ($files as $file)
             {
-               $oneDriveFile = $this->uploadFileToOneDrive($resourceFolder->resourceFolderURL,$file);
-                $oneDriveId= $this->getIdsFromResourceFolder($resourceFolder->resourceFolderURL);
-                $resourceUrl = Constants::MSGraph ."/v1.0/drives/".$oneDriveId[0]."/items/".$oneDriveFile["id"];
-                $this->educationService->addAssignmentResources($formDate['classId'],$formDate['assignmentId'],$oneDriveFile["name"],$resourceUrl);
+                if($file!=null)
+                {
+                    $oneDriveFile = $this->uploadFileToOneDrive($resourceFolder->resourceFolderURL,$file);
+                    $oneDriveId= $this->getIdsFromResourceFolder($resourceFolder->resourceFolderURL);
+                    $resourceUrl = Constants::MSGraph ."/v1.0/drives/".$oneDriveId[0]."/items/".$oneDriveFile["id"];
+                    $this->educationService->addAssignmentResources($formDate['classId'],$formDate['assignmentId'],$oneDriveFile["name"],$resourceUrl);
+                }
             }
         }
+
         $url  = $_SERVER['HTTP_REFERER']."?tab=assignments";
         header('Location: '.$url, true,302);
         exit();

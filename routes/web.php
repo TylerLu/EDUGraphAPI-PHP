@@ -49,6 +49,7 @@ Route::group(['middleware' => ['web', 'auth', 'LinkRequired']], function () {
     Route::post('/newAssignment',"SchoolsController@newAssignment");
     Route::get("/getAssignmentResourcesSubmission/{classId}/{assignmentId}","SchoolsController@getAssignmentResourcesSubmission");
     Route::post("/newAssignmentSubmissionResource","SchoolsController@newAssignmentSubmissionResource");
+    Route::get("/submissions/{classId}/{assignmentId}","SchoolsController@submissions");
 });
 
 

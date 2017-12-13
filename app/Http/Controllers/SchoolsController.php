@@ -231,6 +231,22 @@ class SchoolsController extends Controller
         exit();
     }
 
+    public function submissions($classId, $assignmentId)
+    {
+        $this->educationService = $this->getEduServices();
+        $submissions = $this->educationService->getAssignmentSubmissions($classId,$assignmentId);
+        $graph = new MSGraphService();
+        foreach($submissions as $submission)
+        {
+            $userid=$submission->submittedBy["user"]["id"];
+            $user = $graph->getUserInfo($userid);
+            $submission->submittedBy["user"]["displayName"]= $user["displayName"];
+           $submission->resources=$this->educationService->getSubmissionResources($classId,$assignmentId,$submission->id);
+
+        }
+        return response()->json($submissions);
+    }
+
     public function addCoTeacher($classId,$teacherId)
     {
         $this->educationService = $this->getEduServices();

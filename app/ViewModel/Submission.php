@@ -7,24 +7,29 @@
 namespace App\ViewModel;
 
 
-class EducationAssignmentResource extends ParsableObject
+class Submission extends ParsableObject
 {
     public $id;
-    public $distributeForStudentWork;
-    public $resources; //For submission resources
-    public $resource;//For assignment resources
+    public $status;
+    public $submittedDateTime;
+    public $submittedBy;
+    public $resourcesFolder;
     public $resourcesFolderUrl;
+    public $resources;
+
 
     public function __construct()
     {
         $this->addPropertyMappings(
             [
                 "id" => "id",
-                "distributeForStudentWork" => "distributeForStudentWork",
-                "resources" => "resources",
-                "resource" => "resource",
+                "status" => "status",
+                "submittedDateTime" => "submittedDateTime",
+                "submittedBy" => "submittedBy",
+                "resourcesFolder"=>"resourcesFolder",
                 "resourcesFolderUrl"=>"resourcesFolderUrl"
             ]);
 
     }
 }
+

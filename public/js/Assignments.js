@@ -257,23 +257,21 @@
             $("#assignment-submissions-form tbody").html("<tr><td colspan='2'>Loading...</tr></td>");
             $.ajax({
                 type: 'GET',
-                url: '/Classes/' + _classId + '/Assignments/' + assignmentId + '/Submissions',
+                url: '/submissions/' + _classId + '/' + assignmentId ,
                 success: function (data) {
                     var resourcesListHtml = "";
                     if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             resourcesListHtml += "<tr>"
-                            resourcesListHtml += '<td>' + data[i].SubmittedBy.User.DisplayName + '</td><td>' + (data[i].SubmittedDateTime.length == 0 ? 'None' : data[i].SubmittedDateTime) + '</td>';
-                            if (data[i].Resources) {
-                                if (data[i].Resources.length > 0) {
-                                    for (var j = 0; j < data[i].Resources.length; j++) {
-                                        if (data[i].Resources[j].Resource && data[i].Resources[j].Resource.DisplayName) {
-                                            resourcesListHtml += "<tr><td colspan='2' class='files'>" + data[i].Resources[j].Resource.DisplayName + "</td></tr>";
+                            resourcesListHtml += '<td>' + data[i].submittedBy.user.displayName + '</td><td>' + (data[i].submittedDateTime==null ? 'None' : data[i].submittedDateTime) + '</td>';
+                            if (data[i].resources) {
+                                if (data[i].resources.length > 0) {
+                                    for (var j = 0; j < data[i].resources.length; j++) {
+                                        if (data[i].resources[j].resource && data[i].resources[j].resource.displayName) {
+                                            resourcesListHtml += "<tr><td colspan='2' class='files'>" + data[i].resources[j].resource.displayName + "</td></tr>";
                                         }
                                     }
-                                } //else {
-                                // resourcesListHtml += "<tr><td colspan='2' class='files'>There is no resources available for this user.</td></tr>";
-                                //}
+                                } 
                             }
                             resourcesListHtml += "</tr>"
                         }

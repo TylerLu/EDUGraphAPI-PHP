@@ -320,7 +320,35 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="modal fade assignment-detail-modal" id="assignment-submissions-form" role="dialog">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-body">
+                                                <div><h3>Assignment Submissions</h3></div>
+                                                <div><h5 class="assignment-title"></h5></div>
+                                                <div><h5 class="due-date"></h5></div>
+                                                <div class="row">
+                                                    <table class="table resource-list" id="assignment-submissions-table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Submitted by</th>
+                                                            <th>Submitted On</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
 
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary btn-update" data-dismiss="modal">Return to Assignments</button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                         </div>
 

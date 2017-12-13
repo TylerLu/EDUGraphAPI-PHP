@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: zzq
- * Date: 2017/12/7
- * Time: 9:29
+ *  Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
+ *  See LICENSE in the project root for license information.
  */
 
 namespace App\ViewModel;

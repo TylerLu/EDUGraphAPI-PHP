@@ -16,6 +16,7 @@ use App\ViewModel\School;
 use App\ViewModel\Section;
 use App\ViewModel\SectionUser;
 use App\ViewModel\Student;
+use App\ViewModel\Submission;
 use App\ViewModel\Teacher;
 use Illuminate\Support\Facades\Auth;
 use Microsoft\Graph\Connect\Constants;
@@ -204,10 +205,21 @@ class  EducationService
 
     }
 
+    public function getAssignmentSubmissions($classId,$assignmentId)
+    {
+        return $this->getAllPages( 'education/classes/' . $classId . '/assignments/'.$assignmentId .'/submissions',
+            Submission::class);
+    }
+
     public function getAssignmentResourcesSubmission($classId,$assignmentId,$userId)
     {
         return $this->getAllPages( 'education/classes/' . $classId . '/assignments/'.$assignmentId .'/submissions?$filter=submittedBy/user/id eq \''.$userId.'\'',
             EducationAssignmentResource::class);
+
+    }
+    public function getSubmissionResources($classId,$assignmentId,$sectionId)
+    {
+        return $this->getAllPages( 'education/classes/' . $classId . '/assignments/'.$assignmentId .'/submissions/'.$sectionId.'/resources', EducationAssignmentResource::class);
 
     }
 

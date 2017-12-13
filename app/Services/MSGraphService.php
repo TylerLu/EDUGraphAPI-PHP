@@ -54,6 +54,22 @@ class MSGraphService
         return false;
     }
 
+    public function getUserInfo($o365UserId)
+    {
+        $token = $this->getToken();
+        if ($token) {
+            try {
+                $result =  $this->graph->setAccessToken($token)
+                    ->createRequest("get", "/users/$o365UserId")
+                    ->execute();
+                return $result->getBody();
+            } catch (Exception $e) {
+                return null;
+            }
+        }
+        return false;
+    }
+
     /**
      *
      * Get all conversations of a group.

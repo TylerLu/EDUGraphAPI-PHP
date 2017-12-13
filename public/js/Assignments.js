@@ -271,7 +271,7 @@
                                             resourcesListHtml += "<tr><td colspan='2' class='files'>" + data[i].resources[j].resource.displayName + "</td></tr>";
                                         }
                                     }
-                                } 
+                                }
                             }
                             resourcesListHtml += "</tr>"
                         }

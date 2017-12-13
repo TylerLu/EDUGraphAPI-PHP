@@ -289,7 +289,7 @@
                                                 </div>
                                                 </form>
                                                @else
-                                                <form action="/newAssignmentSubmissionResource" enctype="multipart/form-data" id="assignment-detail-form-teacher" method="post">
+                                                <form action="/newAssignmentSubmissionResource" enctype="multipart/form-data" id="assignment-detail-form-student" method="post">
                                                 <input name="schoolId" type="hidden" value="{{$school->id}}" />
                                                 <input name="classId" type="hidden" value="{{$section->id}}" />
                                                 <input name="assignmentId" type="hidden" />

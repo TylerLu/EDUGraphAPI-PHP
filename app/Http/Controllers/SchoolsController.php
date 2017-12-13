@@ -149,16 +149,29 @@ class SchoolsController extends Controller
 
     }
 
-    public function newAssignmentSubmissionResource()
+    public function newAssignmentSubmissionResource(request $request)
     {
-        $this->educationService = $this->getEduServices();
-        $formDate= Input::all();
-        $me = $this->educationService->getMe();
-        $submissions =  $this->educationService->getAssignmentResourcesSubmission($formDate['classId'], $formDate["assignmentId"],$me->id);
-        if(count($submissions)>0)
-        {
-
+        $files = $request->newResource;
+       if($files!=null) {
+            $this->educationService = $this->getEduServices();
+            $formDate = Input::all();
+            $me = $this->educationService->getMe();
+            $submissions = $this->educationService->getAssignmentResourcesSubmission($formDate['classId'], $formDate["assignmentId"], $me->id);
+            if (count($submissions) > 0) {
+                $resourceFolder =$submissions[0]->resourcesFolderUrl;
+                foreach ($files as $file) {
+                    if ($file != null) {
+                        $oneDriveFile = $this->uploadFileToOneDrive($resourceFolder, $file);
+                        $oneDriveId = $this->getIdsFromResourceFolder($resourceFolder);
+                        $resourceUrl = Constants::MSGraph . "/v1.0/drives/" . $oneDriveId[0] . "/items/" . $oneDriveFile["id"];
+                        $this->educationService->addSubmissionResource($formDate['classId'], $formDate["assignmentId"],$submissions[0]->id, $oneDriveFile["name"], $resourceUrl);
+                    }
+                }
+            }
         }
+        $url  = $_SERVER['HTTP_REFERER']."?tab=assignments";
+        header('Location: '.$url, true,302);
+        exit();
     }
 
     public function newAssignment(request $request)

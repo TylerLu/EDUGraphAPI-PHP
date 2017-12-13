@@ -211,6 +211,21 @@ class  EducationService
 
     }
 
+    public function addSubmissionResource($classId,$assignmentId,$submissionId,$fileName,$resourceURL)
+    {
+        $url = "education/classes/".$classId."/assignments/".$assignmentId."/submissions/".$submissionId."/resources";
+        $fileType = $this->getFileType($fileName);
+        $json=array(
+            "resource"=>array(
+                "displayName"=>$fileName,
+                "@odata.type"=>$fileType,
+                "file"=>array("odataid"=>$resourceURL)
+            )
+        );
+        $data = json_encode($json);
+        $this->postJSON($url,$data);
+    }
+
     public function getAssignment($sectionId, $assignmentId)
     {
         return $this->getResponse('education/classes/'.$sectionId.'/assignments/'.$assignmentId,Assignment::class,null,null);

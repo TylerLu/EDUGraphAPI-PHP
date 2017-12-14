@@ -340,7 +340,7 @@ class SchoolsController extends Controller
     private function redirectToSelf()
     {
         $url  = $_SERVER['HTTP_REFERER'];
-        if(strpos($url,"?")<0)
+        if(strpos($url,"?")==false)
         {
             $url  = $_SERVER['HTTP_REFERER']."?tab=assignments";
         }

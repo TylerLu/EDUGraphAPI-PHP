@@ -169,9 +169,7 @@ class SchoolsController extends Controller
                 }
             }
         }
-        $url  = $_SERVER['HTTP_REFERER']."?tab=assignments";
-        header('Location: '.$url, true,302);
-        exit();
+        $this->redirectToSelf();
     }
 
     public function newAssignment(request $request)
@@ -195,9 +193,7 @@ class SchoolsController extends Controller
                 }
             }
         }
-        $url  = $_SERVER['HTTP_REFERER']."?tab=assignments";
-        header('Location: '.$url, true,302);
-        exit();
+        $this->redirectToSelf();
     }
 
     public function updateAssignment(request $request)
@@ -226,9 +222,8 @@ class SchoolsController extends Controller
             }
         }
 
-        $url  = $_SERVER['HTTP_REFERER']."?tab=assignments";
-        header('Location: '.$url, true,302);
-        exit();
+        $this->redirectToSelf();
+
     }
 
     public function submissions($classId, $assignmentId)
@@ -340,6 +335,17 @@ class SchoolsController extends Controller
         $user=Auth::user();
         $token = (new TokenCacheService())->getMSGraphToken($user->o365UserId);
         return new EducationService($token);
+    }
+
+    private function redirectToSelf()
+    {
+        $url  = $_SERVER['HTTP_REFERER'];
+        if(strpos($url,"?")<0)
+        {
+            $url  = $_SERVER['HTTP_REFERER']."?tab=assignments";
+        }
+        header('Location: '.$url, true,302);
+        exit();
     }
 
 

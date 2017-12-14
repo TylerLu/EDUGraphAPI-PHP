@@ -272,12 +272,11 @@ class  EducationService
 
     public function createAssignment($formDate)
     {
-
         $url = "education/classes/".$formDate['classId']."/assignments";
         $json = array(
             "displayName"=>$formDate['name'],
             "status"=>"draft",
-            "dueDateTime"=>date('Y-m-d\TH:i:s\Z',strtotime($formDate['duedate'])),
+            "dueDateTime"=>date('Y-m-d\TH:i:s\Z',strtotime($formDate['duedate']." " . $formDate['duetime'])),
             "allowStudentsToAddResourcesToSubmission"=>true,
             "assignTo"=>array(
                 "@odata.type"=>"#microsoft.graph.educationAssignmentClassRecipient"
@@ -287,6 +286,7 @@ class  EducationService
         $result = $this->postJSON($url,$data);
         $json  = json_decode($result->getBody(), true);
         return $json;
+
     }
 
     /**

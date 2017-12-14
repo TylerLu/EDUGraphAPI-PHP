@@ -131,7 +131,7 @@
                                         <tr class="tr-content">
                                             <td>{{$assignment->displayName}}</td>
                                             <td>
-                                                {{$assignment->dueDateTime ? (new DateTime($assignment->dueDateTime))->format("c") : ""}}
+                                                {{$assignment->dueDateTime ? (new DateTime($assignment->dueDateTime))->format("m/d/Y") : ""}}
                                             </td>
                                             <td>{{$assignment->status}}</td>
                                             <td>

@@ -203,6 +203,59 @@
         ]
       },
       {
+        "title": "Manage assignments of current class",
+        "tab": "#assignments",
+        "files": [
+
+          {
+            "url": "/blob/master/app/Services/EducationService.php",
+            "methods": [
+              {
+                "title": "getAssignments",
+                "description": "Get a class's assignments."
+              },
+              {
+                "title": "getAssignmentResources",
+                "description": "Get resources of an assignment."
+              },
+              {
+                "title": "getAssignmentSubmissions",
+                "description": "Get submissions of an assignment."
+              },
+              {
+                "title": "getAssignmentSubmissionsByUser",
+                "description": "Get a student's assignment submissions."
+              },
+              {
+                "title": "getSubmissionResources",
+                "description": "Get a submission's resources."
+              },
+              {
+                "title": "addSubmissionResource",
+                "description": "Add resource to an assignment."
+              },
+              {
+                "title": "getAssignment",
+                "description": "Get an assignment by id."
+              },
+              {
+                "title": "publishAssignmentAsync",
+                "description": "Publish an assignment. Set its status from draft to published."
+              },
+              {
+                "title": "getAssignmentResourceFolderURL",
+                "description": "Get an assignment's resource folder URL."
+              },
+              {
+                "title": "createAssignment",
+                "description": "Create an assignment."
+              }
+            ]
+          }
+
+        ]
+      },
+      {
         "title": "Get all conversations of current class",
         "tab": "#conversations",
         "files": [

@@ -211,7 +211,7 @@ class  EducationService
             Submission::class);
     }
 
-    public function getAssignmentResourcesSubmission($classId,$assignmentId,$userId)
+    public function getAssignmentSubmissionsByUser($classId, $assignmentId, $userId)
     {
         return $this->getAllPages( 'education/classes/' . $classId . '/assignments/'.$assignmentId .'/submissions?$filter=submittedBy/user/id eq \''.$userId.'\'',
             EducationAssignmentResource::class);

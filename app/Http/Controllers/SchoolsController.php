@@ -140,7 +140,7 @@ class SchoolsController extends Controller
         $this->educationService = $this->getEduServices();
         $me = $this->educationService->getMe();
         $assignmentResources = $this->educationService->getAssignmentResources($classId,$assignmentId);
-        $submissions =  $this->educationService->getAssignmentResourcesSubmission($classId,$assignmentId,$me->id);
+        $submissions =  $this->educationService->getAssignmentSubmissionsByUser($classId,$assignmentId,$me->id);
         $result=array(
             "resources"=>$assignmentResources,
             "submission"=>$submissions
@@ -156,7 +156,7 @@ class SchoolsController extends Controller
             $this->educationService = $this->getEduServices();
             $formDate = Input::all();
             $me = $this->educationService->getMe();
-            $submissions = $this->educationService->getAssignmentResourcesSubmission($formDate['classId'], $formDate["assignmentId"], $me->id);
+            $submissions = $this->educationService->getAssignmentSubmissionsByUser($formDate['classId'], $formDate["assignmentId"], $me->id);
             if (count($submissions) > 0) {
                 $resourceFolder =$submissions[0]->resourcesFolderUrl;
                 foreach ($files as $file) {

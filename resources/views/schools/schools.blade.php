@@ -53,7 +53,7 @@
                                     @if($school->city)
                                         <br/>
                                     @endif
-                                    {{$school->getCompoundAddress() }}
+                                    {!! $school->getCompoundAddress() !!}
                                     @if(!$school->address && !$school->city)
                                         -
                                     @endif

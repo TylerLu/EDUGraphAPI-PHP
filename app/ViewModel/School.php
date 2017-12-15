@@ -67,7 +67,7 @@ class School extends ParsableObject
         if (strlen($this->city) > 0) {
             $city = $this->city . ", ";
         }
-        return $city . $this->state . " " . $this->zip;
+        return $this->street ."<br/>". $city . $this->state . " " . $this->zip;
 
     }
 

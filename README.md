@@ -93,10 +93,10 @@ The sample is implemented with the PHP language and the [Laravel](https://larave
 
    - Click **Required permissions**. Add the following permissions:
 
-     | API                            | Application Permissions | Delegated Permissions                    |
-     | ------------------------------ | ----------------------- | ---------------------------------------- |
-     | Microsoft Graph                | Read directory data     | Read all users' full profiles<br>Read directory data<br>Access directory as the signed in user<br>Sign users in |
-     | Windows Azure Active Directory |                         | Sign in and read user profile<br>Read and write directory data |
+     | API                            | Application Permissions                  | Delegated Permissions                    |
+     | ------------------------------ | ---------------------------------------- | ---------------------------------------- |
+     | Microsoft Graph                | Read all users' full profiles<br> Read directory data<br> Read all groups | Read directory data<br>Access directory as the signed in user<br>Sign users in<br> Have full access to all files user can access<br> Have full access to user files<br> Read users' class assignments without grades<br> Read and write users' class assignments without grades<br> Read users' class assignments and their grades<br> Read and write users' class assignments and their grades |
+     | Windows Azure Active Directory |                                          | Sign in and read user profile<br>Read and write directory data |
 
      ![](/Images/aad-create-app-06.png)
 
@@ -317,7 +317,7 @@ Below are the main services used by the sample:
 | ----------------- | ---------------------------------------- |
 | AADGraphService   | Contains methods used to access AAD Graph REST APIs. |
 | MSGraphService    | Contains methods used to access MS Graph REST APIs. |
-| EducationService  | Contains methods like get user information,  get schools/classes/users, get/update seating arrangements. |
+| EducationService  | Contains methods like get user information,  get schools/classes/users/assignments, get/update seating arrangements. |
 | CookieService     | Contains methods that used to manage cookies. |
 | TokenCacheService | Contains methods used to get and update token cache from the database. |
 | UserService       | Contains methods used to manipulate users in the database. |
@@ -348,14 +348,14 @@ In this sample, the `App\Services\EducationService` class encapsulates the Offic
 ~~~typescript
 public function getSchools()
 {
-   return $this->getAllPages( "administrativeUnits", School::class);
+ return $this->getAllPages( "education/schools", School::class);
 }
 ~~~
 
 ~~~typescript
 public function getSchool($objectId)
 {
-    return $this->getResponse( "administrativeUnits/" . $objectId , School::class, null, null);
+    return $this->getResponse( "education/schools/" . $objectId , School::class, null, null);
 }
 ~~~
 
@@ -364,7 +364,7 @@ public function getSchool($objectId)
 ~~~typescript
 public function getSections($schoolId, $top, $skipToken)
 {
-           return $this->getResponse( 'groups?$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20\'Section\'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20\'' . $schoolId . '\'', Section::class, $top, $skipToken);
+    return $this->getResponse( 'education/schools/' . $schoolId . '/classes', Section::class, $top, $skipToken);
 
 }
 ~~~
@@ -372,22 +372,20 @@ public function getSections($schoolId, $top, $skipToken)
 ```typescript
 public function getSectionWithMembers($objectId)
 {
-    return $this->getResponse( 'groups/' . $objectId . '?$expand=members', Section::class, null, null);
+    return $this->getResponse( 'education/classes/' . $objectId . '?$expand=members', Section::class, null, null);
 }
 ```
-**Get users**
+**Get assignments**
 
 ```typescript
-public function getMembers($objectId, $top, $skipToken)
-{
-    return $this->getResponse( "administrativeUnits/" . $objectId . "/members", SectionUser::class, $top, $skipToken);
-}
+   public function getAssignments($classId)
+    {
+        return $this->getAllPages( 'education/classes/' . $classId . '/assignments', Assignment::class);
+    }
 ```
 Below are some screenshots of the sample app that show the education data.
 
 ![](Images/edu-schools.png)
-
-![](Images/edu-users.png)
 
 ![](Images/edu-classes.png)
 

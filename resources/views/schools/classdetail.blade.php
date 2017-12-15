@@ -26,7 +26,7 @@
             <div class="container coursedetail">
                 <div class="col-md-6">
 
-                    <span>Term Name:</span> {{$section->displayName}}
+                    <span>Term Name:</span> {{$section->term["displayName"]}}
                     <br/>
                     <span>Start/Finish Date:</span>
                     <span id="termdate">{{$section->term["startDate"] ? (new DateTime($section->term["startDate"]))->format("c") : ""}}</span>

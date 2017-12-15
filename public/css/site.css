@@ -371,6 +371,7 @@ textarea {
 .assignment-detail-modal .modal-footer{
     border-top:none;
 }
+#classdoclink{padding:15px 0 0 0;}
 
 /*User info popup window*/
 .navbar-right a{color:white;text-decoration:none;}

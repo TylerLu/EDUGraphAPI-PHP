@@ -88,7 +88,7 @@
                                             <h6>{{$user->displayName}}</h6>
                                         @endforeach
                                         <h5>Term Name:</h5>
-                                        <h6>{{$class->displayName}}</h6>
+                                        <h6>{{$class->term["displayName"]}}</h6>
                                         <h5>Start/Finish Date:</h5>
                                         <h6>
                                             <span id="termdate">{{$class->term["startDate"] ? (new DateTime($class->term["startDate"]))->format("c") : ""}}</span>
@@ -138,7 +138,7 @@
                                                 <h6>{{$user->displayName}}</h6>
                                         @endforeach
                                         <h5>Term Name:</h5>
-                                        <h6>{{$myClass->displayName}}</h6>
+                                        <h6>{{$myClass->term["displayName"]}}</h6>
                                         <h5>Start/Finish Date:</h5>
                                         <h6>
                                                 <span id="termdate">{{$myClass->term["startDate"] ? (new DateTime($myClass->term["startDate"]))->format("c") : ""}}</span>

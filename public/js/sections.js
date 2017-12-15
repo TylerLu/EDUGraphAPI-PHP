@@ -77,7 +77,7 @@ $(document).ready(function () {
                                             }, '') : '') +
 
                                             '<h5>Term Name:</h5>' +
-                                            '<h6>' + s.displayName + '</h6>' +
+                                            '<h6>' + s.term["displayName"] + '</h6>' +
                                             '<h5>Start/Finish Date:</h5>' +
                                             ((s.term["startDate"] || s.term["endDate"]) ?
                                             ('<h6><span id="termdate">' + s.term["startDate"] + '</span>' +

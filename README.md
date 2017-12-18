@@ -93,10 +93,10 @@ The sample is implemented with the PHP language and the [Laravel](https://larave
 
    - Click **Required permissions**. Add the following permissions:
 
-     | API                            | Application Permissions                  | Delegated Permissions                    |
-     | ------------------------------ | ---------------------------------------- | ---------------------------------------- |
-     | Microsoft Graph                | Read all users' full profiles<br> Read directory data<br> Read all groups | Read directory data<br>Access directory as the signed in user<br>Sign users in<br> Have full access to all files user can access<br> Have full access to user files<br> Read users' class assignments without grades<br> Read and write users' class assignments without grades<br> Read users' class assignments and their grades<br> Read and write users' class assignments and their grades |
-     | Windows Azure Active Directory |                                          | Sign in and read user profile<br>Read and write directory data |
+     | API                            | Application Permissions | Delegated Permissions                    |
+     | ------------------------------ | ----------------------- | ---------------------------------------- |
+     | Microsoft Graph                |                         | Read directory data<br>Access directory as the signed in user<br>Sign users in<br> Have full access to all files user can access<br> Have full access to user files<br> Read users' class assignments without grades<br> Read and write users' class assignments without grades<br> Read users' class assignments and their grades<br> Read and write users' class assignments and their grades |
+     | Windows Azure Active Directory |                         | Sign in and read user profile<br>Read and write directory data |
 
      ![](/Images/aad-create-app-06.png)
 

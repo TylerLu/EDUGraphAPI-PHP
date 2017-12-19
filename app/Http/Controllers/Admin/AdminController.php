@@ -7,6 +7,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Config\SiteConstants;
+use App\Config\UserType;
 use App\Http\Controllers\Controller;
 use App\Model\Organizations;
 use App\Services\AADGraphService;
@@ -18,6 +19,7 @@ use App\Services\UserService;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Session;
 use Lcobucci\JWT\Parser;
 use Microsoft\Graph\Connect\Constants;
 
@@ -145,7 +147,13 @@ class AdminController extends Controller
         $this->adminService->unconsent($tenantId, $this->tokenCacheService->getAADToken($o365UserId));
         $org = $this->organizationsService->getOrganization($tenantId);
         $this->userServices->unlinkAllUsers($org->id);
-        header('Location: ' . '/admin?consented=false');
+
+        Session::flush();
+        $_SESSION=array();
+        session_destroy();
+        Auth::logout();
+
+        header('Location: ' . '/admin');
         exit();
 
     }

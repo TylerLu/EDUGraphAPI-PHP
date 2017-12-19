@@ -23,6 +23,7 @@ use Microsoft\Graph\Connect\Constants;
 use OnedriveItem;
 use PhpParser\Node\Expr\Assign;
 
+
 class SchoolsController extends Controller
 {
     private $educationService;
@@ -110,6 +111,7 @@ class SchoolsController extends Controller
         $driveItems = $msGraph->getGroupDriveItems($classId);
         $seeMoreFilesUrl = $msGraph->getGroupDriveRoot($classId)->getWebUrl();
 
+        $browser = $this->getBrowser();
         $data =
             [
                 "school" => $school,
@@ -122,7 +124,8 @@ class SchoolsController extends Controller
                 "o365UserId" => $curUser->id,
                 "myFavoriteColor" => $curUser->favorite_color,
                 "filteredTeachers" => $filteredTeachers,
-                "assignments" =>$assignments
+                "assignments" =>$assignments,
+                "browser"=>$browser
             ];
 
         return view('schools.classdetail', $data);
@@ -152,6 +155,7 @@ class SchoolsController extends Controller
     public function newAssignmentSubmissionResource(request $request)
     {
         $files = $request->newResource;
+
        if($files!=null) {
             $this->educationService = $this->getEduServices();
             $formDate = Input::all();
@@ -348,6 +352,33 @@ class SchoolsController extends Controller
         exit();
     }
 
+    private function getBrowser()
+    {
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $browser        =   "Unknown Browser";
+        $browser_array  =   array(
+            '/(?:msie|trident)/i' => 'IE',
+            '/firefox/i'          => 'Firefox',
+            '/safari/i'           => 'Safari',
+            '/chrome/i'           => 'Chrome',
+            '/edge/i'             => 'Edge',
+            '/opera/i'            => 'Opera',
+            '/OPR/i'              => 'Opera',
+            '/netscape/i'         => 'Netscape',
+            '/maxthon/i'          => 'Maxthon',
+            '/konqueror/i'        => 'Konqueror',
+            '/mobile/i'           => 'Handheld Browser',
+        );
 
+        foreach ($browser_array as $regex => $value) {
+
+            if (preg_match($regex, $user_agent)) {
+                $browser    =   $value;
+            }
+
+        }
+
+        return $browser;
+    }
 
 }

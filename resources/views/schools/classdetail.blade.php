@@ -8,6 +8,7 @@
 @extends('layouts.app')
 @section('title', 'Class Details')
 @section('content')
+
     <link rel="stylesheet" type="text/css" href="/public/css/jquery-ui.css">
 
     <div class="row schools class-details">
@@ -295,6 +296,9 @@
                                                 <input name="assignmentId" type="hidden" />
                                                 <input name="submissionId" type="hidden" />
                                                   <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
+
+
+
                                                 <div class="modal-body">
                                                     <div><h5 class="assignment-title"></h5></div>
                                                     <div><h5 class="due-date"></h5></div>
@@ -303,10 +307,18 @@
                                                         <h5 class="resources-title col-md-8"></h5>
                                                     </div>
                                                     <ul class="resource-list"></ul>
+
                                                     <div class="row resource-upload">
                                                         <h5 class="handin-title col-md-8"></h5>
                                                         <button type="button" class="btn btn-primary btn-upload">Upload</button>
+
+                                                        @if ($browser=="IE")
+                                                        <input type="file" id="newResourceFileCtrl" name="newResource[]"   multiple="multiple" class="hidden">
+                                                       @else
                                                         <input type="file" id="newResourceFileCtrl" name="newResource[]" class="hidden">
+                                                       @endif
+
+
                                                     </div>
                                                     <ul class="handin-list"></ul>
                                                 </div>
@@ -477,6 +489,7 @@
     </div>
     <input type="hidden" name="hidSectionid" id="hidSectionid" value="{{$section->id}}"/>
     <input type="hidden" name="hideIsStudent" id="hideIsStudent" value="{{$isStudent?"True":"False"}}" />
+    <input type="hidden" name="browser" id="browser" value="{{$browser}}"/>
     <script src="{{ asset('/public/js/jquery.tablesorter.min.js') }}"></script>
     <script src="{{ asset('/public/js/jquery-ui.js') }}"></script>
     <script src="{{ asset('/public/js/moment.min.js') }}"></script>

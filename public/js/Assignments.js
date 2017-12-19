@@ -128,8 +128,9 @@
             $("#assignment-detail-form button").each(function () {
                 $(this).attr('disabled', 'true');
             });
-            $("input[name='newResource[]']").attr('disabled', 'true');
 
+            //$("input[name='newResource[]']").attr('disabled', 'true');
+            $("input[name='newResource']").attr('disabled', 'true');
         },
         //Recreate upload contorl on new assignment form.
         doReCreateUploadControl: function (e) {
@@ -229,13 +230,19 @@
 
         newResourceFileChange: function (e) {
             if (_isStudent) {
+                var browser = $("#browser").val();
+                var newResources = "newResource[]";
+                if(browser=="IE")
+                {
+                    newResources = "newResource";
+                }
                 AssignmentPlugin.doReCreateNewResourceControl(e,
                     "#assignment-detail-form .handin-list",
                     "li",
                     $("#assignment-detail-form .assignment-alert"),
                     $("input[id^='newResourceFileCtrl']"),
                     "newResourceFileCtrl",
-                    "newResource[]",
+                    newResources,
                     "#assignment-detail-form .resource-upload")
             }
             else {

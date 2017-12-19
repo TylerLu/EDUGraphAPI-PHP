@@ -161,11 +161,11 @@
                 }
             }
             $('#FilesToBeUploaded').val(_assignment_api.storedFiles);
-            $("input[id^='fileToUpload']").hide();
+            $("input[id^='fileToUpload']").css("hidden");
 
             $('<input>').attr({
                 type: 'file',
-                multiple: 'multiple',
+
                 id: 'fileToUpload' + _assignment_api.storedFilesCount,
                 class: 'fUpload',
                 name: 'fileUpload[]',
@@ -234,7 +234,7 @@
                 var newResources = "newResource[]";
                 if(browser=="IE")
                 {
-                    newResources = "newResource";
+                    newResources = "newResource[]";
                 }
                 AssignmentPlugin.doReCreateNewResourceControl(e,
                     "#assignment-detail-form .handin-list",

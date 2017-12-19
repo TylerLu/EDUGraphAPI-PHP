@@ -312,11 +312,7 @@
                                                         <h5 class="handin-title col-md-8"></h5>
                                                         <button type="button" class="btn btn-primary btn-upload">Upload</button>
 
-                                                        @if ($browser=="IE")
-                                                        <input type="file" id="newResourceFileCtrl" name="newResource[]"   multiple="multiple" class="hidden">
-                                                       @else
                                                         <input type="file" id="newResourceFileCtrl" name="newResource[]" class="hidden">
-                                                       @endif
 
 
                                                     </div>

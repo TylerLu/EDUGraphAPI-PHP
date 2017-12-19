@@ -161,7 +161,8 @@
                 }
             }
             $('#FilesToBeUploaded').val(_assignment_api.storedFiles);
-            $("input[id^='fileToUpload']").css("hidden");
+            $("input[id^='fileToUpload']").addClass("hidden");
+
 
             $('<input>').attr({
                 type: 'file',

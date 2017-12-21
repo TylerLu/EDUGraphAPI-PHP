@@ -131,8 +131,8 @@
                                     @foreach ($assignments as $assignment)
                                         <tr class="tr-content">
                                             <td>{{$assignment->displayName}}</td>
-                                            <td>
-                                                {{$assignment->dueDateTime ? (new DateTime($assignment->dueDateTime))->format("m/d/Y") : ""}}
+                                            <td class="assignmentdate">
+                                                {{$assignment->dueDateTime ? $assignment->dueDateTime : ""}}
                                             </td>
                                             <td>{{$assignment->status}}</td>
                                             <td>

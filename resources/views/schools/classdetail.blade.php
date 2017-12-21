@@ -396,7 +396,7 @@
                             </tbody>
                         </table>
                     @endif
-                    <span class="see-more"><a href="{{$seeMoreFilesUrl}}" target="_blank">See All</a></span>
+                    <span class="see-more"><a href="{{$seeMoreFilesUrl}}" target="_blank">See More</a></span>
                     <br style="clear:both"/>
                 </div>
                 <div id="conversations" class="tab-pane fade">
@@ -419,7 +419,7 @@
                             </tbody>
                         </table>
                     @endif
-                    <span class="see-more"><a target="_blank" href="{{$seeMoreConversationsUrl}}">See All</a></span>
+                    <span class="see-more"><a target="_blank" href="{{$seeMoreConversationsUrl}}">See More</a></span>
                     <br style="clear:both"/>
                 </div>
 

@@ -6,7 +6,7 @@
 
 use App\Config\Roles;
 use App\Config\SiteConstants;
-use App\Services\UserRolesService;use Illuminate\Http\Request;use Illuminate\Support\Facades\Input;use Illuminate\Support\Facades\Route;
+use App\Services\EducationService;use App\Services\TokenCacheService;use App\Services\UserRolesService;use App\ViewModel\Student;use App\ViewModel\Teacher;use Illuminate\Http\Request;use Illuminate\Support\Facades\Input;use Illuminate\Support\Facades\Route;
 ?>
 
 <!DOCTYPE html>
@@ -66,6 +66,20 @@ use App\Services\UserRolesService;use Illuminate\Http\Request;use Illuminate\Sup
 
                 if($o365userId)
                     $role = (new UserRolesService)->getUserRole($o365userId);
+
+                if($role =="" && $o365userId)
+                {
+                    $token = (new TokenCacheService())->getMSGraphToken($o365userId);
+                    $me =(new EducationService($token))->getMe();
+                    if($me instanceof Student)
+                    {
+                        $role="Student";
+                    }else if($me instanceof Teacher)
+                    {
+                        $role="Teacher";
+                    }
+                }
+
 
                 $isInASchool=false;
                 $objectId='';

@@ -56,8 +56,16 @@ class  EducationService
         $assignedLicenses = array_map(function ($license) {
             return new Model\AssignedLicense($license);
         }, $json["assignedLicenses"]);
-        $isStudent = $this->isUserStudent($assignedLicenses);
-        $isTeacher = $this->isUserTeacher($assignedLicenses);
+        $role = (new UserRolesService)->getUserRole($json["id"]);
+        if($role!="Admin")
+        {
+            $isStudent = $json["extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType"]=="Student"?true:false; //$this->isUserStudent($assignedLicenses);
+            $isTeacher =$json["extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType"]=="Teacher"?true:false; //$this->isUserTeacher($assignedLicenses);
+
+        }else{
+            $isStudent=false;
+            $isTeacher=false;
+        }
         $user = new SectionUser();
         if ($isStudent) {
             $user = new Student();
@@ -347,6 +355,11 @@ class  EducationService
     private function isUserTeacher($licenses)
     {
         return AADGraphService::isUserTeacher($licenses);
+    }
+
+    private function isUserAdmin($licenses)
+    {
+        return AADGraphService::ad($licenses);
     }
 
     private function getPostResponse($endpoint,$data)

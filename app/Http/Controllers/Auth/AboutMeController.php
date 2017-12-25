@@ -11,12 +11,15 @@ use App\Http\Controllers\Controller;
 use App\Services\EducationService;
 use App\Services\TokenCacheService;
 use App\Services\UserRolesService;
+use App\ViewModel\Student;
+use App\ViewModel\Teacher;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 
 
 class AboutMeController extends Controller
 {
+    private $educationService;
     public function index()
     {
         $displayName = $this->GetDisplayName();
@@ -84,6 +87,18 @@ class AboutMeController extends Controller
             $role = (new UserRolesService)->getUserRole($o365userId);
         if($role===Roles::Faculty)
             $role= EduConstants::TeacherObjectType;
+        if($role=="")
+        {
+            $this->educationService = $this->getEduServices();
+            $me = $this->educationService->getMe();
+            if($me instanceof Student)
+            {
+                $role="Student";
+            }else if($me instanceof Teacher)
+            {
+                $role="Teacher";
+            }
+        }
         return $role;
     }
 
@@ -94,5 +109,12 @@ class AboutMeController extends Controller
             $color = Auth::user()->favorite_color;
         }
         return $color;
+    }
+
+    private function getEduServices()
+    {
+        $user=Auth::user();
+        $token = (new TokenCacheService())->getMSGraphToken($user->o365UserId);
+        return new EducationService($token);
     }
 }

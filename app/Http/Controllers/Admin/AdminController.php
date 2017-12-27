@@ -153,7 +153,7 @@ class AdminController extends Controller
         session_destroy();
         Auth::logout();
 
-        header('Location: ' . '/admin');
+        header('Location: ' . '/admin/consent');
         exit();
 
     }

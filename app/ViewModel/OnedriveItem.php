@@ -6,12 +6,6 @@
 
 use App\ViewModel\ParsableObject;
 
-/**
- * Created by PhpStorm.
- * User: zzq
- * Date: 2017/12/12
- * Time: 11:01
- */
 
 class OnedriveItem extends ParsableObject
 {

@@ -30,6 +30,7 @@ class CreateUsersTable extends Migration
             $table->integer('OrganizationId')->nullable();
             $table->string('JobTitle')->nullable();
             $table->string('Department')->nullable();
+            $table->string('MobilePhone')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

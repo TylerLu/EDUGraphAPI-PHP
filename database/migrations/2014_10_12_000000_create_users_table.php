@@ -19,7 +19,6 @@ class CreateUsersTable extends Migration
     {
         Schema::create('Users', function (Blueprint $table) {
             $table->increments('id');
-            //$table->string('name')->nullable();
             $table->string('firstName')->nullable();
             $table->string('lastName')->nullable();
             $table->string('o365UserId')->nullable();
@@ -29,6 +28,8 @@ class CreateUsersTable extends Migration
             $table->string('salt')->nullable();
             $table->string('favorite_color')->nullable();
             $table->integer('OrganizationId')->nullable();
+            $table->string('JobTitle')->nullable();
+            $table->string('Department')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -41,9 +42,9 @@ class CreateUsersTable extends Migration
 
         Schema::create('TokenCache', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('refreshToken')->nullable();
+            $table->text('refreshToken')->nullable();
             $table->string('UserId')->nullable();
-            $table->string('accessTokens')->nullable();
+            $table->text('accessTokens')->nullable();
         });
 
         Schema::create('Organizations', function (Blueprint $table) {
@@ -60,6 +61,14 @@ class CreateUsersTable extends Migration
             $table->integer('position')->nullable();
             $table->string('o365UserId')->nullable();
             $table->string('classId')->nullable();
+        });
+
+        Schema::create('DataSyncRecords', function (Blueprint $table) {
+            $table->increments('id');
+            $table->text('TenantId')->nullable();
+            $table->text('Query')->nullable();
+            $table->text('DeltaLink')->nullable();
+            $table->dateTime('Updated')->nullable();
         });
 
     }

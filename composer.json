@@ -13,7 +13,8 @@
         "lcobucci/jwt": "3.2.1",
         "league/oauth2-client": "^1.4",
         "microsoft/microsoft-graph": "^0.1.0",
-        "socialiteproviders/microsoft-azure": "^3.0"
+        "socialiteproviders/microsoft-azure": "^3.0",
+        "fproject/php-jwt": "^4.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

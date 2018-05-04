@@ -1,6 +1,7 @@
 {
     "require": {
         "php": ">=5.3.0",
-        "league/oauth2-client": "^1.4"
+        "league/oauth2-client": "^1.4",
+        "fproject/php-jwt": "^4.0"
     }
 }

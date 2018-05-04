@@ -1,5 +1,4 @@
 <?php
-use Firebase\JWT\JWT;
 
 //require('JWT.php');
 class MSGraphHelper
@@ -34,22 +33,21 @@ class MSGraphHelper
         $jwt = $this->getJWT($tenantId,$clientId);
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://login.microsoftonline.com/'.$tenantId.'/oauth2/token?api-version=1.0",
+            CURLOPT_URL => "https://login.microsoftonline.com/".$tenantId."/oauth2/token?api-version=1.0",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => "grant_type=client_credentials&client_id='.$clientId.'&resource=https://graph.microsoft.com&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=".$jwt,
+            CURLOPT_POSTFIELDS => "grant_type=client_credentials&client_id=".$clientId."&resource=https://graph.microsoft.com&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=".$jwt,
             CURLOPT_HTTPHEADER => array(
                 "content-type: application/x-www-form-urlencoded"
             ),
         ));
         $response = curl_exec($curl);
-
-        var_dump($response);
-        return $response;
+        $json_a = json_decode($response, true);
+        return $json_a["access_token"];
     }
 
     function getJWT($tenantId,$clientId)
@@ -64,7 +62,7 @@ class MSGraphHelper
             ];
         $cert = $this-> getCert();
         $key = $cert['pkey'];
-        $jwt = JWT::encode($payload, $key,'RS256',null,['x5t'=> 'u1eozIBvJUJ_0BtXR4wMWdf2JIY=']);
+        $jwt = \Firebase\JWT\JWT::encode($payload, $key,'RS256',null,['x5t'=> 'u1eozIBvJUJ_0BtXR4wMWdf2JIY=']);
         return $jwt;
     }
 

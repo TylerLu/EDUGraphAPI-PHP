@@ -24,4 +24,5 @@ class User
     public $jobTitle;
     public $department;
     public $mobilePhone;
+    public $isRemoved;
 }

@@ -86,12 +86,19 @@ class DBHelper {
 
     public function updateUser($user)
     {
-        $sql = "select * from users where o365UserId=".$user->id;
+        $sql = "select * from users where o365UserId='$user->id '";
+
         $result = $this->execute($sql);
         if($result->num_rows==0) {
             error_log("Skipping updating user ".$user->id." who does not exist in the local database.");
             return;
         }
+        echo 123;
+//
+//        $sqlUpdate = "update users   set JobTitle='.$user->jobTitle.' , Department='.$user->department.' , MobilePhone='.$user->mobilePhone.' where id=".$result["id"];
+//        echo $sqlUpdate ."<br/>";
+        //$this->execute($sqlUpdate);
+        return;
 
     }
 }

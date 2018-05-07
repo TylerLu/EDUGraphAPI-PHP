@@ -37,12 +37,38 @@ class MSGraphHelper
             $response = curl_exec($curl);
             $json_a = json_decode($response, true);
 
+
             if(isset($json_a["value"])) {
                 foreach ($json_a["value"] as $item) {
                     $user = new User();
-                    $user->department = $item["officeLocation"];
-                    $user->jobTitle = $item["jobTitle"];
-                    $user->mobilePhone = $item["mobilePhone"];
+                    if(isset($item["officeLocation"]))
+                    {
+                        $user->department = $item["officeLocation"];
+                    }
+                    else{
+                        $user->department="";
+                    }
+                    if(isset($item["jobTitle"]))
+                    {
+                        $user->jobTitle = $item["jobTitle"];
+                    }
+                    else{
+                        $user->jobTitle="";
+                    }
+                    if(isset($item["mobilePhone"]))
+                    {
+                        $user->mobilePhone = $item["mobilePhone"];
+                    }
+                    else{
+                         $user->mobilePhone="";
+                    }
+                    if(isset($item["@removed"]))
+                    {
+                        $user->isRemoved = true;
+                    }
+                    else{
+                        $user->isRemoved=false;
+                    }
                     $user->id = $item["id"];
                     array_push($users,$user);
                 }

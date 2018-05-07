@@ -12,14 +12,16 @@ class DataSyncRecord
 class Organization
 {
     public $id ;
-
-    public $tenantId ;
-
     public $name ;
-
-    public $created ;
-
+    public $tenantId ;
     public $isAdminConsented ;
 
-    public $issuer = "https://sts.windows.net/";
+}
+
+class User
+{
+    public $id;
+    public $jobTitle;
+    public $department;
+    public $mobilePhone;
 }

@@ -1,21 +1,27 @@
 
 <?php
 require  'vendor/autoload.php';
+
 require('MSGraphHelper.php');
 require('DbHelper.php');
 
+
 $helper = new MSGraphHelper();
-$tenantId = '64446b5c-6d85-4d16-9ff2-94eddc0c2439';
+//$tenantId = '64446b5c-6d85-4d16-9ff2-94eddc0c2439';
 $clientId = 'dfc81b95-1a9c-4522-9f33-259de9acf68b';
 
-echo $helper->getAccessToken($tenantId,$clientId);
+$dbHelper = new DBHelper();
+$msGraphHelper = new MSGraphHelper();
+$organizations = $dbHelper->getOrganizations();
 
-//$jwt = $helper->getAccessToken($tenantId,$clientId);
-//echo( $jwt);
-
-//$dbhelper = new DBHelper();
-
-//$dbhelper->getOrCreateDataSyncRecord($tenantId);
+foreach ($organizations as $org)
+{
+    $dataSyncRecord = $dbHelper->getOrCreateDataSyncRecord($org);
+    $users = $msGraphHelper->queryUsers($dataSyncRecord->deltaLink,$org->tenantId,$clientId);
+    foreach ($users as $user) {
+        $dbHelper->updateUser($user);
+    }
+}
 
 
 //

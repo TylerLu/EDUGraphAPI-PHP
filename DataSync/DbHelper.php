@@ -33,30 +33,33 @@ class DBHelper {
         return $result;
     }
 
-    public function syncCore()
-    {
-
-    }
     public function getOrganizations()
     {
         $sql ='select * from organizations where isAdminConsented = 1 ';
         $result = $this->execute($sql);
-        $organization = new Organization();
+        $organizations = array();
         while ($row = $result->fetch_assoc())
         {
-            $record->deltaLink=$row['DeltaLink'];
-            $record->tenantId=$row['TenantId'];
-            $record->query=$row['Query'];
-            $record->id=$row['id'];
-            break;
+            $organization = new Organization();
+            $organization->name=$row['name'];
+            $organization->tenantId=$row['tenantId'];
+            $organization->isAdminConsented=$row['isAdminConsented'];
+            $organization->id=$row['id'];
+            array_push($organizations,$organization);
         }
+        if(count($organizations)==0)
+        {
+            error_log("No consented organization found. This sync was canceled.");
+        }
+        return $organizations;
     }
 
-    public function getOrCreateDataSyncRecord($tenantId )
+    public function getOrCreateDataSyncRecord($org )
     {
+        error_log("Starting to sync users for the ".$org->name." organization.");
         $record = new DataSyncRecord();
 
-        $sql ='select * from datasyncrecords where Query= "'.$this->usersQuery.'" and TenantId ="'.$tenantId.'"' ;
+        $sql ='select * from datasyncrecords where Query= "'.$this->usersQuery.'" and TenantId ="'.$org->tenantId.'"' ;
         $result = $this->execute($sql);
         while ($row = $result->fetch_assoc())
         {
@@ -67,16 +70,28 @@ class DBHelper {
             break;
         }
         if($result->num_rows==0){
-            $url  = "https://graph.microsoft.com/beta/".$this->usersQuery."/delta";
+            error_log("First time executing differential query; all items will return.");
+            $url  = "https://graph.microsoft.com/v1.0/".$this->usersQuery."/delta";
             $sqlInsert = "INSERT INTO datasyncrecords (TenantId, Query, DeltaLink)   VALUES ".
-                "('$tenantId','$this->usersQuery','$url')";
+                "('$org->tenantId','$this->usersQuery','$url')";
             $this->execute($sqlInsert);
             $record->deltaLink=$url;
-            $record->tenantId=$tenantId;
+            $record->tenantId=$org->tenantId;
             $record->query=$this->usersQuery;
             $record->id=0;
         }
-        return $result;
+
+        return $record;
     }
 
+    public function updateUser($user)
+    {
+        $sql = "select * from users where o365UserId=".$user->id;
+        $result = $this->execute($sql);
+        if($result->num_rows==0) {
+            error_log("Skipping updating user ".$user->id." who does not exist in the local database.");
+            return;
+        }
+
+    }
 }

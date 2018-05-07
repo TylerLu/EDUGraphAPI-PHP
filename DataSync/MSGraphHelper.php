@@ -12,25 +12,58 @@ class MSGraphHelper
 //        $this->certPassword = getenv("Cert_password");;
     }
 
-
-
-    public  function  getProvider()
+    public  function queryUsers($url,$tenantId,$clientId)
     {
-        $provider = new \League\OAuth2\Client\Provider\GenericProvider([
-            'clientId'                => '4e3fa16f-9909-4bf6-9a66-5560e97e7082',    // The client ID assigned to you by the provider
-            'clientSecret'            => 'IO0DqycDalD832ANxFFnVn9zwIjr/I3XXY1rjhinq/s=',    // The client password assigned to you by the provider
-            'redirectUri'             => 'http://test/',
-            'urlAuthorize'            => 'https://graph.microsoft.com/oauth2/authorize',
-            'urlAccessToken'          => 'https://login.microsoftonline.com/common/oauth2/token',
-            'urlResourceOwnerDetails' => ''
-        ]);
-        return $provider;
+        $accessToken  =$this->getAccessToken($tenantId,$clientId);
+        $nextLink = $url;
+        $users = array();
 
+        $request_headers   = array();
+        $request_headers[] ='Authorization: Bearer '.$accessToken;
+        $curl = curl_init();
+        while(true)
+        {
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $nextLink,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_POSTFIELDS => "",
+                CURLOPT_HTTPHEADER => $request_headers,
+            ));
+            $response = curl_exec($curl);
+            $json_a = json_decode($response, true);
+
+            if(isset($json_a["value"])) {
+                foreach ($json_a["value"] as $item) {
+                    $user = new User();
+                    $user->department = $item["officeLocation"];
+                    $user->jobTitle = $item["jobTitle"];
+                    $user->mobilePhone = $item["mobilePhone"];
+                    $user->id = $item["id"];
+                    array_push($users,$user);
+                }
+            }
+            if(isset($json_a["@odata.nextLink"]))
+            {
+                $nextLink  = $json_a["@odata.nextLink"];
+            }
+            else
+            {
+                break;
+            }
+        }
+        error_log("Get  ".count($users)." users.");
+        return $users;
     }
 
     public   function getAccessToken($tenantId,$clientId)
     {
         $jwt = $this->getJWT($tenantId,$clientId);
+        //echo $jwt;
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://login.microsoftonline.com/".$tenantId."/oauth2/token?api-version=1.0",
@@ -47,6 +80,7 @@ class MSGraphHelper
         ));
         $response = curl_exec($curl);
         $json_a = json_decode($response, true);
+
         return $json_a["access_token"];
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-//require('JWT.php');
+
 class MSGraphHelper
 {
     public  $certPath = 'app_only_cert.pfx';

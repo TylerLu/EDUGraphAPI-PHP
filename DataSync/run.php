@@ -1,18 +1,21 @@
 
 <?php
-require_once ('vendor/autoload.php');
+require  'vendor/autoload.php';
 require('MSGraphHelper.php');
 require('DbHelper.php');
 
-//$helper = new MSGraphHelper();
+$helper = new MSGraphHelper();
 $tenantId = '64446b5c-6d85-4d16-9ff2-94eddc0c2439';
 $clientId = 'dfc81b95-1a9c-4522-9f33-259de9acf68b';
+
+echo $helper->getAccessToken($tenantId,$clientId);
+
 //$jwt = $helper->getAccessToken($tenantId,$clientId);
 //echo( $jwt);
 
-$dbhelper = new DBHelper();
+//$dbhelper = new DBHelper();
 
-$dbhelper->getOrCreateDataSyncRecord($tenantId);
+//$dbhelper->getOrCreateDataSyncRecord($tenantId);
 
 
 //

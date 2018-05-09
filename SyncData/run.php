@@ -1,11 +1,11 @@
-
 <?php
+/**
+ *  Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
+ *  See LICENSE in the project root for license information.
+ */
 require  'vendor/autoload.php';
 require('MSGraphHelper.php');
 require('DbHelper.php');
-
-
-$helper = new MSGraphHelper();
 
 $clientId =getenv("CLIENT_ID");
 

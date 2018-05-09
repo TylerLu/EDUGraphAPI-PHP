@@ -12,6 +12,7 @@ School data is kept in sync in O365 Education tenants by [Microsoft School Data 
 - [Run the sample locally](#run-the-sample-locally)
 - [Deploy the sample to Azure](#deploy-the-sample-to-azure)
 - [Understand the code](#understand-the-code)
+- [[Optional] Build and debug the WebJob locally](#optional-build-and-debug-the-webjob-locally)
 - [Questions and comments](#questions-and-comments)
 - [Contributing](#contributing)
 
@@ -40,7 +41,7 @@ The sample is implemented with the PHP language and the [Laravel](https://larave
 
 ## Prerequisites
 
-**Deploying and running this sample requires**:
+## **Deploying and running this sample requires**:
 
 - An Azure subscription with permissions to register a new application, and deploy the web app.
 
@@ -54,6 +55,56 @@ The sample is implemented with the PHP language and the [Laravel](https://larave
   - [Composer](https://getcomposer.org/download/)
   - [Git](https://git-scm.com/download/win)
   - Familiarity with PHP and [Laravel](https://laravel.com/).
+
+## **Generate a self-signed certificate**
+
+**Generate certificate with PowerShell**
+
+This file will be used in web job.
+
+Run PowerShell **as administrator**, then execute the commands below:
+
+```powershell
+$cert = New-SelfSignedCertificate -Type Custom -KeyExportPolicy Exportable -KeySpec Signature -Subject "CN=App-only Cert" -NotAfter (Get-Date).AddYears(20) -CertStoreLocation "cert:\CurrentUser\My" -KeyLength 2048
+```
+
+> Note: please keep the PowerShell window open until you finish the steps below.
+
+**Get keyCredential**
+
+Execute the commands below to get keyCredential:
+
+> Note: Feel free to change the file path at the end of the command.
+
+```powershell
+$keyCredential = @{}
+$keyCredential.customKeyIdentifier = [System.Convert]::ToBase64String($cert.GetCertHash())
+$keyCredential.keyId = [System.Guid]::NewGuid().ToString()
+$keyCredential.type = "AsymmetricX509Cert"
+$keyCredential.usage = "Verify"
+$keyCredential.value = [System.Convert]::ToBase64String($cert.GetRawCertData())
+$keyCredential | ConvertTo-Json > c:\keyCredential.txt
+```
+
+The keyCredential is in the generated file, and will be used to create App Registrations in AAD.
+
+![cert-key-credential](/Images/cert-key-credential.png)
+
+### Export the Certificate and Convert to Base64 String
+
+The following commands will export the certificate and convert it to a base64 string.
+
+```powershell
+$password = Read-Host -Prompt "Enter password" -AsSecureString
+$bytes = $cert.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Pfx, $password)
+[System.Convert]::ToBase64String($bytes) | Out-File 'c:\cert-base64.txt'
+```
+
+You will be prompted to input a password to protect the certificate. Please copy aside the password. It will be used as the value of the **Certificate Pfx Password** parameter of the ARM Template
+
+The base64 string of the certificate is in the generated text file, and will be used as the value of the **Certificate Pfx Base64** parameter of the ARM Template.
+
+![cert-base64](/Images/cert-base64.png)
 
 ## Register the application in Azure Active Directory
 
@@ -122,6 +173,28 @@ The sample is implemented with the PHP language and the [Laravel](https://larave
      ![](Images/aad-create-app-07.png)
 
      Click **Save**, then copy aside the **VALUE** of the key. 
+
+     8. Click **Manifest**.
+
+     ![](Images/aad-create-app-08.png)
+
+     Insert the following JSON to the array of **keyCredentials**.
+
+     ```json
+         {
+           "customKeyIdentifier": "nNWUyxhgK5zcg7pPj8UFo1xFM9Y=",
+           "keyId": "fec5af6a-1cc8-45ec-829f-95999e623b2d",
+           "type": "AsymmetricX509Cert",
+           "usage": "Verify",
+           "value": "MIIDIzCCAg+gAwIBAgIQUWcl+kIoiZxPK2tT8v05WzAJBgUrDgMCHQUAMCQxIjAgBgNVBAMTGUVkdUdyYXBoQVBJIEFwcCBPbmx5IENlcnQwHhcNMTYxMDMxMTYwMDAwWhcNMzYxMDMwMTYwMDAwWjAkMSIwIAYDVQQDExlFZHVHcmFwaEFQSSBBcHAgT25seSBDZXJ0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwND0Wclbty/5UYwsrjAvSFaw8JOi33lXP1QI4qecOH4HXvrhz4L5ZN8thG6L/nSIcocuELNbDfJhLehBzxKwtvq9tO0o3MpFK0aloQS5JmoAstMns427osG8DpfnaqwiFyMv558fUHSEkx8GSU/IQgZ6IoSLahTSGCy0LRFHKIyZ6Xo0z9zYN07eQO53obakNlF6YzUg+2v6jLmKnmSXbog+46F9yVvTK2/4MLdPy7lKO2lycec+mljlBWJF4shLacaVrdtQZtanY0zN+XlM48mUVSToNz18tGX/cW9PT5WqIO/O5liEnz9O5u4NTBUUYDqiSuxA4yHV63A+zxhwPwIDAQABo1kwVzBVBgNVHQEETjBMgBAUkYVZ6pBIdTnoV4pmTRzwoSYwJDEiMCAGA1UEAxMZRWR1R3JhcGhBUEkgQXBwIE9ubHkgQ2VydIIQUWcl+kIoiZxPK2tT8v05WzAJBgUrDgMCHQUAA4IBAQBwRDrFpLRYGFARs20Ez+sK6ACrtFbVC5tAnFxr97FWTbixXFm1GPC/pmSnYsiRtiLMliX1+QmTIT80OFk2rfnv3EjY2uCF0XWXH7oRonUFpScA2rQ0geEPRVDXHQ9TJcdEX6+QD6/hAFyANUkWb9uHT1srIxUHerwPCmprOfSCqLVkYXZgvnvWC9XeJP4KriftiqNkfr2FIjqvWrkUMn7iHBHRMW42gfsHoX9LmRLjoqnm1YEyS/t2tibL3FAsJvWv0T03JDCwePF13oItzV0lp0jJDz+xahz8aG3gkacmjzliBeXWWEo9VfxOGLsHjonj3lRSsQLfOn5k3e6lxsJG"
+         }
+     ```
+
+     ![](Images/aad-create-app-09.png)
+
+     Click **Save**.
+
+     > Note: this step configures the certification used by a Web Job. Check **Application Authentication Flow** section for more details.
 
    Close the Settings window.
 
@@ -271,7 +344,7 @@ We utilized the built-in [authentication](https://laravel.com/docs/5.4/authentic
 
 **Data Access**
 
-[Eloquent](https://laravel.com/docs/5.4/eloquent) is used to access data stored in the SQLite database.
+[Eloquent](https://laravel.com/docs/5.4/eloquent) is used to access data stored in the MySQL database.
 
 The tables used in this demo:
 
@@ -417,6 +490,18 @@ This flow is implemented in the AdminController.
 
 ![](Images/auth-flow-admin-login.png)
 
+**Application Authentication Flow**
+
+This flow in implemented in the SyncData WebJob.
+
+![](Images/auth-flow-app-login.png)
+
+An X509 certificate is used. For more details, please check the following links:
+
+- [Daemon or Server Application to Web API](https://docs.microsoft.com/en-us/azure/active-directory/active-directory-authentication-scenarios#daemon-or-server-application-to-web-api)
+- [Authenticating to Azure AD in daemon apps with certificates](https://azure.microsoft.com/en-us/resources/samples/active-directory-dotnet-daemon-certificate-credential/)
+- [Build service and daemon apps in Office 365](https://msdn.microsoft.com/en-us/office/office365/howto/building-service-apps-in-office-365)
+
 ### Two Kinds of Graph APIs
 
 There are two distinct Graph APIs used in this sample:
@@ -448,6 +533,63 @@ public function getMe()
 Note that in the AAD Application settings, permissions for each Graph API are configured separately:
 
 ![](Images/aad-create-app-06.png) 
+
+### Differential Query
+
+A [differential query](https://msdn.microsoft.com/en-us/Library/Azure/Ad/Graph/howto/azure-ad-graph-api-differential-query) request returns all changes made to specified entities during the time between two consecutive requests. For example, if you make a differential query request an hour after the previous differential query request, only the changes made during that hour will be returned. This functionality is especially useful when synchronizing tenant directory data with an application’s data store.
+
+The related code is in the following folder of the project:
+
+- **/DataSync**: contains classes that are used to demonstrate how to sync users.
+
+To sync users, we defined the User class:
+
+```c#
+class User
+{
+    public $id;
+    public $jobTitle;
+    public $department;
+    public $mobilePhone;
+    public $isRemoved;
+}
+```
+
+Notice that the changeable properties *JobTitle*, *Department*, *Mobile* are virtual. 
+
+In run.php, we demonstrate how to use the **DifferentialQuery** to send differential query and get differential result.
+
+```c#
+$users = $msGraphHelper->queryUsers($dataSyncRecord->deltaLink,$org->tenantId,$clientId);
+```
+
+And how to update (or delete) users in local database with the delta result:
+
+```c#
+    foreach ($users as $user) {
+        $dbHelper->updateUser($user);
+    }
+```
+
+Below is the log generated by the SyncData WebJob:
+
+![](Images/sync-data-web-job-log.png) 
+
+## [Optional] Build and debug the WebJob locally
+
+1. Open the project with PHPStorm. 
+2. Create the .env file in the SyncData folder and configure the values:
+
+- **DB_HOST:** the name of your MySQL server.
+- **DB_PORT:** default value to 3306.
+- **DB_DATABASE:** the database name want to connect to.
+- **DB_USERNAME:**  the database user for the connection.
+- **DB_PASSWORD:** the password for DB user.
+- **CLIENT_ID:** use the Client Id of the app registration you created earlier.
+- **Cert_Path:** the path of the cert file.
+- **Cert_password:** the password of the cert file.
+  3. Run "Composer update" command under SyncData folder.
+  4. after composer updated, input http://yoururl/datasync/run.php it will run the web job locally.
 
 ## Questions and comments
 

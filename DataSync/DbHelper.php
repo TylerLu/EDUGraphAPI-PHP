@@ -71,7 +71,7 @@ class DBHelper {
         }
         if($result->num_rows==0){
             error_log("First time executing differential query; all items will return.");
-            $url  = "https://graph.microsoft.com/v1.0/".$this->usersQuery."/delta";
+            $url  = "https://graph.microsoft.com/v1.0/".$this->usersQuery."/delta?$select=jobTitle,department,mobilePhone";
             $sqlInsert = "INSERT INTO datasyncrecords (TenantId, Query, DeltaLink)   VALUES ".
                 "('$org->tenantId','$this->usersQuery','$url')";
             $this->execute($sqlInsert);
@@ -95,17 +95,18 @@ class DBHelper {
         }
 
         if($user->isRemoved){
-
+            $sql = 'delete from users where o365UserId="'.$user->id .'"';
+            $this->execute($sql);
         }
         else
+        {
+            if(isset($user->jobTitle) || isset($user->mobilePhone) || isset($user->department))
             {
-
+                $sql = 'update users set JobTitle = "'.$user->jobTitle.'",  Department = "'.$user->department.'" , MobilePhone = "'.$user->mobilePhone.'" where o365UserId="'.$user->id .'"';
+                $this->execute($sql);
             }
+        }
 
-
-        $sqlUpdate = "update users   set JobTitle='.$user->jobTitle.' , Department='.$user->department.' , MobilePhone='.$user->mobilePhone.' where id=".$result["id"];
-        echo $sqlUpdate ."<br/>";
-        $this->execute($sqlUpdate);
         return;
 
     }

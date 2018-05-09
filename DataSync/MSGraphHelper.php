@@ -37,13 +37,12 @@ class MSGraphHelper
             $response = curl_exec($curl);
             $json_a = json_decode($response, true);
 
-
             if(isset($json_a["value"])) {
                 foreach ($json_a["value"] as $item) {
                     $user = new User();
-                    if(isset($item["officeLocation"]))
+                    if(isset($item["department"]))
                     {
-                        $user->department = $item["officeLocation"];
+                        $user->department = $item["department"];
                     }
                     else{
                         $user->department="";
@@ -89,7 +88,7 @@ class MSGraphHelper
     public   function getAccessToken($tenantId,$clientId)
     {
         $jwt = $this->getJWT($tenantId,$clientId);
-        //echo $jwt;
+
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://login.microsoftonline.com/".$tenantId."/oauth2/token?api-version=1.0",

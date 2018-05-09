@@ -19,9 +19,10 @@ foreach ($organizations as $org)
     $users = $msGraphHelper->queryUsers($dataSyncRecord->deltaLink,$org->tenantId,$clientId);
     foreach ($users as $user) {
         $dbHelper->updateUser($user);
-
     }
 }
+
+$dbHelper->close();
 
 
 

@@ -28,6 +28,11 @@ class DBHelper {
         return $result;
     }
 
+    public function close()
+    {
+        mysqli_close($this->connection);
+    }
+
     public function getOrganizations()
     {
         $sql ='select * from organizations where isAdminConsented = 1 ';

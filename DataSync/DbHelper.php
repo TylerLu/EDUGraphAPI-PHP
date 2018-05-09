@@ -10,15 +10,10 @@ class DBHelper {
     public $usersQuery = "users";
 
     public function __construct() {
-//        $this->databaseName = getenv('DB_DATABASE');
-//        $this->username=getenv("DB_USERNAME");
-//        $this->password=getenv("DB_PASSWORD");
-//        $this->hostName=getenv("DB_HOST");
-        $this->databaseName = 'eduphp';
-        $this->username='azureuser@edugraphapipython';
-        $this->password='Beat@Apple';
-        $this->hostName='edugraphapipython.mysql.database.azure.com';
-
+        $this->databaseName = getenv('DB_DATABASE');
+        $this->username=getenv("DB_USERNAME");
+        $this->password=getenv("DB_PASSWORD");
+        $this->hostName=getenv("DB_HOST");
 
         $this->connection=mysqli_connect($this->hostName,$this->username,$this->password,$this->databaseName);
         if (!$this->connection) {

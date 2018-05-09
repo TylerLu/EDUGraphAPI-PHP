@@ -3,13 +3,13 @@
 
 class MSGraphHelper
 {
-    public  $certPath = 'app_only_cert.pfx';
-    public  $certPassword = 'J48W23RQeZv85vj';
+    public  $certPath = null;
+    public  $certPassword = null;
 
     public function __construct()
     {
-//        $this->certPath = getenv("Cert_Path");;
-//        $this->certPassword = getenv("Cert_password");;
+        $this->certPath = getenv("Cert_Path");;
+        $this->certPassword = getenv("Cert_password");;
     }
 
     public  function queryUsers($url,$tenantId,$clientId)

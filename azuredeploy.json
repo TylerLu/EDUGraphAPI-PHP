@@ -121,9 +121,9 @@
               "storageMB": 5120,
               "backupRetentionDays": "7",
               "geoRedundantBackup": "Disabled"
-          }
+          },
+        "sslEnforcement":"Disabled"
       },
-      "sslEnforcement":"Disabled",
       "sku": {
           "name": "B_Gen4_1",
           "family": "Gen4",

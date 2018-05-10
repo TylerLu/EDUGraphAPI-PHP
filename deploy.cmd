@@ -1,3 +1,4 @@
+echo %cd%
 
 # Install Composer
 

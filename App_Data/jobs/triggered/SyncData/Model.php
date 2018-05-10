@@ -3,29 +3,28 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
  *  See LICENSE in the project root for license information.
  */
-class DataSyncRecord
+namespace SyncData;
+use Illuminate\Database\Eloquent\Model;
+class DataSyncRecord extends Model
 {
-    public $id;
-    public $tenantId ;
-    public $query ;
-    public $deltaLink;
-    public $updated;
+    protected $table='datasyncrecords';
+    protected $fillable = [
+        'tenantId', 'query', 'deltaLink','updated'
+    ];
 }
 
-class Organization
+class Organization extends Model
 {
-    public $id ;
-    public $name ;
-    public $tenantId ;
-    public $isAdminConsented ;
-
+    protected $table='organizations';
+    protected $fillable = [
+        'name', 'tenantId', 'isAdminConsented'
+    ];
 }
 
-class User
+class User extends Model
 {
-    public $id;
-    public $jobTitle;
-    public $department;
-    public $mobilePhone;
-    public $isRemoved;
+    protected $table='users';
+    protected $fillable = [
+        'jobTitle', 'department', 'mobilePhone','isRemoved'
+    ];
 }

@@ -6,56 +6,30 @@
 require_once ('model.php');
 
 class DBHelper {
-    public $connection=null;
-    public $databaseName = null;
-    public $username=null;
-    public $password=null;
-    public $hostName=null;
     public $usersQuery = "users";
 
     public function __construct() {
-        $this->databaseName = getenv('DB_DATABASE');
-        $this->username=getenv("DB_USERNAME");
-        $this->password=getenv("DB_PASSWORD");
-        $this->hostName=getenv("DB_HOST");
-
-        $this->connection=mysqli_connect($this->hostName,$this->username,$this->password,$this->databaseName);
-        if (!$this->connection) {
-            mysqli_error($this->connection);
-        }
-        mysqli_query($this->connection, "set names utf8") or die(mysqli_error($this->connection));
     }
 
 
-    public function execute($sql) {
-        $result=mysqli_query($this->connection,$sql) or die(mysqli_error($this->connection));
-        return $result;
-    }
+//    public function execute($sql) {
+//        $result=mysqli_query($this->connection,$sql) or die(mysqli_error($this->connection));
+//        return $result;
+//    }
 
-    public function close()
-    {
-        mysqli_close($this->connection);
-    }
+//    public function close()
+//    {
+//        mysqli_close($this->connection);
+//    }
 
     public function getOrganizations()
     {
-        $sql ='select * from organizations where isAdminConsented = 1 ';
-        $result = $this->execute($sql);
-        $organizations = array();
-        while ($row = $result->fetch_assoc())
-        {
-            $organization = new Organization();
-            $organization->name=$row['name'];
-            $organization->tenantId=$row['tenantId'];
-            $organization->isAdminConsented=$row['isAdminConsented'];
-            $organization->id=$row['id'];
-            array_push($organizations,$organization);
-        }
-        if(count($organizations)==0)
+        $orgs = SyncData\Organization::where('isAdminConsented', 1)->get();
+        if(count($orgs)==0)
         {
             error_log("No consented organization found. This sync was canceled.");
         }
-        return $organizations;
+       return $orgs;
     }
 
     public function getOrCreateDataSyncRecord($org )

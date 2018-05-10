@@ -18,6 +18,8 @@ IF NOT EXIST "%LOCALAPPDATA%\Composer" (
 
 php -r "readfile('https://getcomposer.org/installer');" | php
 
+@php "%~dp0\composer.phar" %*
+
 echo %LOCALAPPDATA%
 
 @echo off

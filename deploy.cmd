@@ -1,16 +1,23 @@
 
-:: Composer.phar
-IF EXIST "%DEPLOYMENT_TARGET%\composer.json" (
-  cd %DEPLOYMENT_TARGET%
+# Install Composer
 
-  IF NOT EXIST "%DEPLOYMENT_TARGET%\composer.phar" (
-    call curl -s http://getcomposer.org/installer | php > nul
-    IF !ERRORLEVEL! NEQ 0 goto error
-  )
+cd Commands
 
-  call php composer.phar install
-  IF !ERRORLEVEL! NEQ 0 goto error
+IF EXIST composer.phar (
+  rm -f composer.phar
 )
+
+IF NOT EXIST "%APPDATA%\Composer" (
+  mkdir "%APPDATA%\Composer"
+)
+
+IF NOT EXIST "%LOCALAPPDATA%\Composer" (
+  mkdir "%LOCALAPPDATA%\Composer"
+)
+
+php -r "readfile('https://getcomposer.org/installer');" | php
+
+echo %LOCALAPPDATA%
 
 @echo off
 

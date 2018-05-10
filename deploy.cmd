@@ -1,27 +1,3 @@
-echo %cd%
-
-# Install Composer
-
-cd Commands
-
-IF EXIST composer.phar (
-  rm -f composer.phar
-)
-
-IF NOT EXIST "%APPDATA%\Composer" (
-  mkdir "%APPDATA%\Composer"
-)
-
-IF NOT EXIST "%LOCALAPPDATA%\Composer" (
-  mkdir "%LOCALAPPDATA%\Composer"
-)
-
-php -r "readfile('https://getcomposer.org/installer');" | php
-
-@php "%~dp0\composer.phar" %*
-
-echo %LOCALAPPDATA%
-
 @echo off
 
 :: ----------------------
@@ -78,7 +54,8 @@ IF NOT DEFINED KUDU_SYNC_CMD (
 echo Install Dependencies with Composer
 
 if exist %DEPLOYMENT_SOURCE%\composer.json (
-  call composer install %COMPOSER_ARGS%
+  php -r "readfile('https://getcomposer.org/installer');" | php
+  php composer.phar install %COMPOSER_ARGS%
 ) else (
   echo No composer.json found in %DEPLOYMENT_SOURCE%.  Skipping composer.
 )

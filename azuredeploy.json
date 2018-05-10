@@ -123,6 +123,7 @@
               "geoRedundantBackup": "Disabled"
           }
       },
+      "sslEnforcement":"Disabled",
       "sku": {
           "name": "B_Gen4_1",
           "family": "Gen4",
@@ -197,12 +198,13 @@
             "CLIENT_SECRET": "[parameters('clientSecret')]",
             "ClientCertificatePath": "[parameters('clientCertificatePath')]",
             "ClientCertificatePassword": "[parameters('clientCertificatePassword')]",
-            "MySQLHost": "[concat(variables('mySQLName'), '.mysql.database.azure.com')]",
-            "MySQLUser": "[concat(parameters('mySqlAdministratorLogin'), '@', variables('mySQLName'))]",
-            "MySQLPassword": "[parameters('mySqlAdministratorLoginPassword')]",
+            "DB_HOST": "[concat(variables('mySQLName'), '.mysql.database.azure.com')]",
+            "DB_USERNAME": "[concat(parameters('mySqlAdministratorLogin'), '@', variables('mySQLName'))]",
+            "DB_PASSWORD": "[parameters('mySqlAdministratorLoginPassword')]",
+            "DB_DATABASE":"edu",
             "SOURCECODERESPOSITORYURL": "[parameters('SourceCodeRepositoryUrl')]",
-      "PHP_INI_SCAN_DIR":"d:\\home\\site\\wwwroot",
-      "command": "deploy.cmd"
+            "PHP_INI_SCAN_DIR":"d:\\home\\site\\wwwroot",
+            "command": "deploy.cmd"
           }
         },
         {

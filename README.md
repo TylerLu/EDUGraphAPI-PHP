@@ -106,6 +106,16 @@ The base64 string of the certificate is in the generated text file, and will be 
 
 ![cert-base64](/Images/cert-base64.png)
 
+Export the certificate 
+
+```
+$password = Read-Host -Prompt "Enter password" -AsSecureString
+
+Export-PfxCertificate -Cert cert -Password password -FilePath c:\app_only_cert.pfx
+```
+
+
+
 ## Register the application in Azure Active Directory
 
 1. Sign into the new Azure portal: [https://portal.azure.com/](https://portal.azure.com/).

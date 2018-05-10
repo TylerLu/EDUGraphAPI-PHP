@@ -1,3 +1,17 @@
+
+:: Composer.phar
+IF EXIST "%DEPLOYMENT_TARGET%\composer.json" (
+  cd %DEPLOYMENT_TARGET%
+
+  IF NOT EXIST "%DEPLOYMENT_TARGET%\composer.phar" (
+    call curl -s http://getcomposer.org/installer | php > nul
+    IF !ERRORLEVEL! NEQ 0 goto error
+  )
+
+  call php composer.phar install
+  IF !ERRORLEVEL! NEQ 0 goto error
+)
+
 @echo off
 
 :: ----------------------

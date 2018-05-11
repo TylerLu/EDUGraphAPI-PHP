@@ -93,10 +93,10 @@
     {
       "type": "Microsoft.Web/serverfarms",
       "sku": {
-        "name": "F1",
-        "tier": "Free",
-        "size": "F1",
-        "family": "F",
+        "name": "B1",
+        "tier": "Basic",
+        "size": "B1",
+        "family": "B",
         "capacity": 0
       },
       "name": "[parameters('hostingPlanName')]",
@@ -170,7 +170,8 @@
         "name": "[variables('webSiteName')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
         "siteConfig": {
-          "PhpVersion": "7.0"
+          "PhpVersion": "7.0",
+          "AlwaysOn": true
         }
       },
       "resources": [

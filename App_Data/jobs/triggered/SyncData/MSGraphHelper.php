@@ -14,6 +14,7 @@ class MSGraphHelper
     {
         $this->certPath = getenv("Cert_Path");;
         $this->certPassword = getenv("Cert_password");
+
     }
 
     public  function queryUsers($url,$tenantId,$clientId)
@@ -43,7 +44,7 @@ class MSGraphHelper
 
             if(isset($json_a["value"])) {
                 foreach ($json_a["value"] as $item) {
-                    $user = new User();
+                    $user = new SyncData\User();
                     if(isset($item["department"]))
                     {
                         $user->department = $item["department"];

@@ -32,6 +32,7 @@ class DBHelper {
         {
             error_log('First time executing differential query; all items will return.');
             $url  = 'https://graph.microsoft.com/v1.0/'.$this->usersQuery.'/delta?$select=jobTitle,department,mobilePhone';
+
             $dataSyncRecord = SyncData\DataSyncRecord::create(['tenantId' => $org->tenantId, 'query'=>$this->usersQuery,'deltaLink'=>$url]);
         }
         return $dataSyncRecord;
@@ -48,7 +49,6 @@ class DBHelper {
 
         if($user->isRemoved) {
             SyncData\User::destroy($result->id);
-            echo 'user to remove;' . $user->id;
         }
         else{
             if(isset($user->jobTitle) || isset($user->mobilePhone) || isset($user->department)) {

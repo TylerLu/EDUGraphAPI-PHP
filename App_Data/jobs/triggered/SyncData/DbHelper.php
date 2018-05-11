@@ -56,6 +56,7 @@ class DBHelper {
                 $result->mobilePhone = $user->mobilePhone;
                 $result->department = $user->department;
                 $result->save();
+                error_log('Update information for user: ' . $user->id);
            }
         }
         return;

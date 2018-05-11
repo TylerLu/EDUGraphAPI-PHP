@@ -4,13 +4,12 @@
  *  See LICENSE in the project root for license information.
  */
 require  ('/home/site/wwwroot/vendor/autoload.php');
-//require  ('../../../../vendor/autoload.php');
 require ('bootstrap.php');
 require('MSGraphHelper.php');
 require('DbHelper.php');
 
 $clientId =getenv("CLIENT_ID");
-//$clientId ='4e3fa16f-9909-4bf6-9a66-5560e97e7082';
+
 
 $dbHelper = new DBHelper();
 $msGraphHelper = new MSGraphHelper();

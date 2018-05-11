@@ -91,14 +91,6 @@ The keyCredential is in the generated file, and will be used to create App Regis
 
 ### Export the Certificate and Convert to Base64 String
 
-The following commands will export the certificate and convert it to a base64 string.
-
-```powershell
-$password = Read-Host -Prompt "Enter password" -AsSecureString
-$bytes = $cert.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Pfx, $password)
-[System.Convert]::ToBase64String($bytes) | Out-File 'c:\cert-base64.txt'
-```
-
 You will be prompted to input a password to protect the certificate. Please copy aside the password. It will be used as the value of the **Certificate Pfx Password** parameter of the ARM Template
 
 The base64 string of the certificate is in the generated text file, and will be used as the value of the **Certificate Pfx Base64** parameter of the ARM Template.
@@ -109,8 +101,7 @@ Export the certificate
 
 ```
 $password = Read-Host -Prompt "Enter password" -AsSecureString
-
-Export-PfxCertificate -Cert cert -Password password -FilePath c:\app_only_cert.pfx
+Export-PfxCertificate -Cert $cert -Password $password -FilePath c:\app_only_cert.pfx
 ```
 
 

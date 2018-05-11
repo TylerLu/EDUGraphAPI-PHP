@@ -62,6 +62,10 @@ if exist %DEPLOYMENT_SOURCE%\composer.json (
 
 IF !ERRORLEVEL! NEQ 0 goto error
 
+echo Begin to create database tables.
+php artisan migrate --force
+IF !ERRORLEVEL! NEQ 0 goto error
+
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
 :: ----------

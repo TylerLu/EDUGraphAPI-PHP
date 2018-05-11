@@ -12,16 +12,6 @@ class DBHelper {
     }
 
 
-//    public function execute($sql) {
-//        $result=mysqli_query($this->connection,$sql) or die(mysqli_error($this->connection));
-//        return $result;
-//    }
-
-//    public function close()
-//    {
-//        mysqli_close($this->connection);
-//    }
-
     public function getOrganizations()
     {
         $orgs = SyncData\Organization::where('isAdminConsented', 1)->get();
@@ -35,56 +25,39 @@ class DBHelper {
     public function getOrCreateDataSyncRecord($org )
     {
         error_log("Starting to sync users for the ".$org->name." organization.");
-        $record = new DataSyncRecord();
 
-        $sql ='select * from datasyncrecords where Query= "'.$this->usersQuery.'" and TenantId ="'.$org->tenantId.'"' ;
-        $result = $this->execute($sql);
-        while ($row = $result->fetch_assoc())
+        $dataSyncRecord =  SyncData\DataSyncRecord::where("Query",$this->usersQuery)->where("TenantId",$org->tenantId)->first();
+
+        if(!isset($dataSyncRecord))
         {
-            $record->deltaLink=$row['DeltaLink'];
-            $record->tenantId=$row['TenantId'];
-            $record->query=$row['Query'];
-            $record->id=$row['id'];
-            break;
+            error_log('First time executing differential query; all items will return.');
+            $url  = 'https://graph.microsoft.com/v1.0/'.$this->usersQuery.'/delta?$select=jobTitle,department,mobilePhone';
+            $dataSyncRecord = SyncData\DataSyncRecord::create(['tenantId' => $org->tenantId, 'query'=>$this->usersQuery,'deltaLink'=>$url]);
         }
-        if($result->num_rows==0){
-            error_log("First time executing differential query; all items will return.");
-            $url  = "https://graph.microsoft.com/v1.0/".$this->usersQuery."/delta?$select=jobTitle,department,mobilePhone";
-            $sqlInsert = "INSERT INTO datasyncrecords (TenantId, Query, DeltaLink)   VALUES ".
-                "('$org->tenantId','$this->usersQuery','$url')";
-            $this->execute($sqlInsert);
-            $record->deltaLink=$url;
-            $record->tenantId=$org->tenantId;
-            $record->query=$this->usersQuery;
-            $record->id=0;
-        }
-
-        return $record;
+        return $dataSyncRecord;
     }
 
     public function updateUser($user)
     {
-        $sql = 'select id from users where o365UserId="'.$user->id .'"';
-
-        $result = $this->execute($sql);
-        if($result->num_rows==0) {
-            error_log("Skipping updating user ".$user->id." who does not exist in the local database.");
-            return;
-        }
-
-        if($user->isRemoved){
-            $sql = 'delete from users where o365UserId="'.$user->id .'"';
-            $this->execute($sql);
-        }
-        else
+        $result = SyncData\User::where('o365UserId',$user->id)->first();
+        if(!isset($result))
         {
-            if(isset($user->jobTitle) || isset($user->mobilePhone) || isset($user->department))
-            {
-                $sql = 'update users set JobTitle = "'.$user->jobTitle.'",  Department = "'.$user->department.'" , MobilePhone = "'.$user->mobilePhone.'" where o365UserId="'.$user->id .'"';
-                $this->execute($sql);
-            }
+            error_log("Skipping updating user ".$user->id." who does not exist in the local database.");
+             return;
         }
 
+        if($user->isRemoved) {
+            SyncData\User::destroy($result->id);
+            echo 'user to remove;' . $user->id;
+        }
+        else{
+            if(isset($user->jobTitle) || isset($user->mobilePhone) || isset($user->department)) {
+                $result->jobTitle = $user->jobTitle;
+                $result->mobilePhone = $user->mobilePhone;
+                $result->department = $user->department;
+                $result->save();
+           }
+        }
         return;
 
     }

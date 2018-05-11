@@ -12,10 +12,10 @@ class MSGraphHelper
 
     public function __construct()
     {
-//        $this->certPath = getenv("Cert_Path");;
-//        $this->certPassword = getenv("Cert_password");
-        $this->certPath = 'app_only_cert.pfx';
-        $this->certPassword = 'J48W23RQeZv85vj';
+        $this->certPath = getenv("Cert_Path");;
+        $this->certPassword = getenv("Cert_password");
+//        $this->certPath = 'app_only_cert.pfx';
+//        $this->certPassword = 'J48W23RQeZv85vj';
     }
 
     public  function queryUsers($url,$tenantId,$clientId)

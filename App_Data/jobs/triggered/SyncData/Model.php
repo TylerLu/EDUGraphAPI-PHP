@@ -9,8 +9,9 @@ class DataSyncRecord extends Model
 {
     protected $table='datasyncrecords';
     protected $fillable = [
-        'tenantId', 'query', 'deltaLink','updated'
+        'tenantId', 'query', 'deltaLink'
     ];
+    public $timestamps=false;
 }
 
 class Organization extends Model
@@ -19,6 +20,7 @@ class Organization extends Model
     protected $fillable = [
         'name', 'tenantId', 'isAdminConsented'
     ];
+    public $timestamps=false;
 }
 
 class User extends Model
@@ -27,4 +29,5 @@ class User extends Model
     protected $fillable = [
         'jobTitle', 'department', 'mobilePhone','isRemoved'
     ];
+    public $timestamps=false;
 }

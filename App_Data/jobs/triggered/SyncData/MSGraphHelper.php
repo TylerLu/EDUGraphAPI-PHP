@@ -44,7 +44,7 @@ class MSGraphHelper
 
             if(isset($json_a["value"])) {
                 foreach ($json_a["value"] as $item) {
-                    $user = new SyncData\User();
+                    $user = new SyncData\GraphUser();
                     if(isset($item["department"]))
                     {
                         $user->department = $item["department"];

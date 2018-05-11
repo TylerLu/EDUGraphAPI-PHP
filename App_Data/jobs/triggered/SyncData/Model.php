@@ -31,3 +31,12 @@ class User extends Model
     ];
     public $timestamps=false;
 }
+
+class GraphUser
+{
+    public $id;
+    public $jobTitle;
+    public $department;
+    public $mobilePhone;
+    public $isRemoved;
+}

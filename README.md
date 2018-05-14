@@ -183,7 +183,7 @@ Export-PfxCertificate -Cert $cert -Password $password -FilePath c:\app_only_cert
 
      Click **Save**, then copy aside the **VALUE** of the key. 
 
-     8. Click **Manifest**.
+8. Click **Manifest**.
 
      ![](Images/aad-create-app-08.png)
 

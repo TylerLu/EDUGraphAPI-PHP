@@ -57,6 +57,14 @@ The sample is implemented with the PHP language and the [Laravel](https://larave
 
 ## **Generate a self-signed certificate**
 
+A self-signed certificate is required by the SyncData WebJob. For preview, you may skip the steps below and use the default certificate we provided:
+
+- Certificate file: `/webjobs/sync_data/app_only_cert.pfx`
+- Password: `J48W23RQeZv85vj`
+- Key credential: `/webjobs/sync_data/key_credential.txt`
+
+For production, you should you own certifcate:
+
 **Generate certificate with PowerShell**
 
 This file will be used in web job.
@@ -64,7 +72,7 @@ This file will be used in web job.
 Run PowerShell **as administrator**, then execute the commands below:
 
 ```powershell
-$cert = New-SelfSignedCertificate -Type Custom -KeyExportPolicy Exportable -KeySpec Signature -Subject "CN=App-only Cert" -NotAfter (Get-Date).AddYears(20) -CertStoreLocation "cert:\CurrentUser\My" -KeyLength 2048
+$cert = New-SelfSignedCertificate -Type Custom -KeyExportPolicy Exportable -KeySpec Signature -Subject "CN=Edu App-only Cert" -NotAfter (Get-Date).AddYears(20) -CertStoreLocation "cert:\CurrentUser\My" -KeyLength 2048
 ```
 
 > Note: please keep the PowerShell window open until you finish the steps below.
@@ -178,17 +186,11 @@ Export-PfxCertificate -Cert $cert -Password $password -FilePath c:\app_only_cert
 
      ![](Images/aad-create-app-08.png)
 
-     Insert the following JSON to the array of **keyCredentials**.
+     
 
-     ```json
-         {
-           "customKeyIdentifier": "nNWUyxhgK5zcg7pPj8UFo1xFM9Y=",
-           "keyId": "fec5af6a-1cc8-45ec-829f-95999e623b2d",
-           "type": "AsymmetricX509Cert",
-           "usage": "Verify",
-           "value": "MIIDIzCCAg+gAwIBAgIQUWcl+kIoiZxPK2tT8v05WzAJBgUrDgMCHQUAMCQxIjAgBgNVBAMTGUVkdUdyYXBoQVBJIEFwcCBPbmx5IENlcnQwHhcNMTYxMDMxMTYwMDAwWhcNMzYxMDMwMTYwMDAwWjAkMSIwIAYDVQQDExlFZHVHcmFwaEFQSSBBcHAgT25seSBDZXJ0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwND0Wclbty/5UYwsrjAvSFaw8JOi33lXP1QI4qecOH4HXvrhz4L5ZN8thG6L/nSIcocuELNbDfJhLehBzxKwtvq9tO0o3MpFK0aloQS5JmoAstMns427osG8DpfnaqwiFyMv558fUHSEkx8GSU/IQgZ6IoSLahTSGCy0LRFHKIyZ6Xo0z9zYN07eQO53obakNlF6YzUg+2v6jLmKnmSXbog+46F9yVvTK2/4MLdPy7lKO2lycec+mljlBWJF4shLacaVrdtQZtanY0zN+XlM48mUVSToNz18tGX/cW9PT5WqIO/O5liEnz9O5u4NTBUUYDqiSuxA4yHV63A+zxhwPwIDAQABo1kwVzBVBgNVHQEETjBMgBAUkYVZ6pBIdTnoV4pmTRzwoSYwJDEiMCAGA1UEAxMZRWR1R3JhcGhBUEkgQXBwIE9ubHkgQ2VydIIQUWcl+kIoiZxPK2tT8v05WzAJBgUrDgMCHQUAA4IBAQBwRDrFpLRYGFARs20Ez+sK6ACrtFbVC5tAnFxr97FWTbixXFm1GPC/pmSnYsiRtiLMliX1+QmTIT80OFk2rfnv3EjY2uCF0XWXH7oRonUFpScA2rQ0geEPRVDXHQ9TJcdEX6+QD6/hAFyANUkWb9uHT1srIxUHerwPCmprOfSCqLVkYXZgvnvWC9XeJP4KriftiqNkfr2FIjqvWrkUMn7iHBHRMW42gfsHoX9LmRLjoqnm1YEyS/t2tibL3FAsJvWv0T03JDCwePF13oItzV0lp0jJDz+xahz8aG3gkacmjzliBeXWWEo9VfxOGLsHjonj3lRSsQLfOn5k3e6lxsJG"
-         }
-     ```
+     Copy the keyCredential (all the text) from `key_credential.txt` file.
+
+     Insert the keyCredential into the square brackets of the **keyCredentials** node.
 
      ![](Images/aad-create-app-09.png)
 

@@ -530,17 +530,17 @@ A [differential query](https://msdn.microsoft.com/en-us/Library/Azure/Ad/Graph/h
 
 The related code is in the following folder of the project:
 
-- **/DataSync**: contains classes that are used to demonstrate how to sync users.
+- **/App_Data**: contains classes that are used to demonstrate how to sync users.
 
 In run.php, we demonstrate how to use the **DifferentialQuery** to send differential query and get differential result.
 
-```c#
+```php
 $users = $msGraphHelper->queryUsers($dataSyncRecord->deltaLink,$org->tenantId,$clientId);
 ```
 
 And how to update (or delete) users in local database with the delta result:
 
-```c#
+```php
     foreach ($users as $user) {
         $dbHelper->updateUser($user);
     }

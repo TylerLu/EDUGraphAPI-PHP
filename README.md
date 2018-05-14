@@ -106,7 +106,7 @@ The base64 string of the certificate is in the generated text file, and will be 
 
 ![cert-base64](/Images/cert-base64.png)
 
-Export the certificate 
+Execute the commands below to export the certificate.
 
 ```
 $password = Read-Host -Prompt "Enter password" -AsSecureString
@@ -531,19 +531,6 @@ A [differential query](https://msdn.microsoft.com/en-us/Library/Azure/Ad/Graph/h
 The related code is in the following folder of the project:
 
 - **/DataSync**: contains classes that are used to demonstrate how to sync users.
-
-To sync users, we defined the User class:
-
-```c#
-class User
-{
-    public $id;
-    public $jobTitle;
-    public $department;
-    public $mobilePhone;
-    public $isRemoved;
-}
-```
 
 In run.php, we demonstrate how to use the **DifferentialQuery** to send differential query and get differential result.
 

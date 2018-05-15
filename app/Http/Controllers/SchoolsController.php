@@ -266,8 +266,11 @@ class SchoolsController extends Controller
         $this->educationService = $this->getEduServices();
         $me = $this->educationService->getMe();
         $school = $this->educationService->getSchool($objectId);
+        $myClasses = [];
+        if($school->schoolNumber === $me->schoolId){
+            $myClasses = $this->educationService->getMySectionsOfSchool($school->schoolNumber);
+        }
 
-        $myClasses = $this->educationService->getMySectionsOfSchool($school->schoolNumber);
         $allClasses = $this->educationService->getSections($school->id);
         $this->markMyClasses($allClasses, $myClasses);
 

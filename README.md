@@ -60,9 +60,9 @@ The sample is implemented with the PHP language and the [Laravel](https://larave
 
 A self-signed certificate is required by the SyncData WebJob. For preview, you may skip the steps below and use the default certificate we provided:
 
-- Certificate file: `/webjobs/sync_data/app_only_cert.pfx`
+- Certificate file: `/App_Data/jobs/triggered/SyncData/app_only_cert.pfx`
 - Password: `J48W23RQeZv85vj`
-- Key credential: `/webjobs/sync_data/key_credential.txt`
+- Key credential: `/App_Data/jobs/triggered/SyncData/key_credential.txt`
 
 For production, you should you own certifcate:
 

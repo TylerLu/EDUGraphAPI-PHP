@@ -5,7 +5,7 @@
  */
 ?>
 
-@extends('layouts.app')
+@extends('layouts.appwithoutlogin')
 @section('title', 'Login to Office 365 is required')
 @section('content')
     <h2>Login to Office 365 is required</h2>

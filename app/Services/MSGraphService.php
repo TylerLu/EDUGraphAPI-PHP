@@ -93,7 +93,12 @@ class MSGraphService
      */
     public function getGroupDriveItems($groupId)
     {
+        try{
         return $this->getAllPages("get", "/groups/$groupId/drive/root/children", DriveItem::class);
+        }
+        catch (Exception $e){
+            return [];
+        }
     }
 
     /**
@@ -106,7 +111,12 @@ class MSGraphService
      */
     public function getGroupDriveRoot($groupId)
     {
+        try{
         return $this->getResponse("get", "/groups/$groupId/drive/root", DriveItem::class);
+     }
+        catch (Exception $e){
+        return '';
+        }
     }
 
     public function  uploadFileToOneDrive($driveId,$itemId,$filePath,$fileName)

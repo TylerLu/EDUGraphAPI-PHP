@@ -6,6 +6,7 @@
 
 namespace App\Services;
 
+use \Exception;
 use App\Config\Roles;
 use App\Config\SiteConstants;
 use App\ViewModel\ArrayResult;
@@ -88,7 +89,13 @@ class  EducationService
      */
     public function getSchools()
     {
-        return $this->getAllPages( "education/schools", School::class);
+        try{
+            return $this->getAllPages( "education/schools", School::class);
+        }
+        catch (Exception $e){
+            return [];
+        }
+
     }
 
     /**

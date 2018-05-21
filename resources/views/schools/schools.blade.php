@@ -20,7 +20,7 @@
             </div>
             <div style="clear:both;"></div>
             <table class="table  table-green table-schools">
-                @if($schools)
+
                     <tbody>
                     <tr class="table-green-header">
                         <th class="tdleft">School Name</th>
@@ -29,7 +29,8 @@
                         <th>Address</th>
                         <th></th>
                     </tr>
-                    @if(empty($schools))
+                   
+                    @if(empty($schools) || count($schools)==0 )
                         <tr>
                             <td colspan="5">
                                 <div class="nodata"> There is no data available for this page at this time.</div>
@@ -66,7 +67,7 @@
                         </tr>
                     @endforeach
                     </tbody>
-                @endif
+
             </table>
         </div>
 

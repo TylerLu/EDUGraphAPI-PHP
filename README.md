@@ -64,7 +64,7 @@ A self-signed certificate is required by the SyncData WebJob. For preview, you m
 - Password: `J48W23RQeZv85vj`
 - Key credential: `/App_Data/jobs/triggered/SyncData/key_credential.txt`
 
-For production, you should you own certifcate:
+For production, you should use your certificate:
 
 **Generate certificate with PowerShell**
 
@@ -482,7 +482,7 @@ This flow is implemented in the AdminController.
 
 **Application Authentication Flow**
 
-This flow in implemented in the SyncData WebJob.
+This flow is implemented in the SyncData WebJob.
 
 ![](Images/auth-flow-app-login.png)
 

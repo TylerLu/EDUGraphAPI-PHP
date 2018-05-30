@@ -5,6 +5,7 @@
  */
 namespace SyncData;
 use Illuminate\Database\Eloquent\Model;
+
 class DataSyncRecord extends Model
 {
     protected $table='datasyncrecords';

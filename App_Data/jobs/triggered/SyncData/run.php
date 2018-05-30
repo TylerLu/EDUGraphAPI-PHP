@@ -17,7 +17,9 @@ $organizations = $dbHelper->getOrganizations();
 foreach ($organizations as $org)
 {
      $dataSyncRecord = $dbHelper->getOrCreateDataSyncRecord($org);
-     $users = $msGraphHelper->queryUsers($dataSyncRecord->DeltaLink,$org->tenantId,$clientId);
+     $results = $msGraphHelper->queryUsers($dataSyncRecord->DeltaLink,$org->tenantId,$clientId);
+     $users = $results[0];
+     $deltaLink = $results[1];
      foreach ($users as $user) {
           $dbHelper->updateUser($user);
      }

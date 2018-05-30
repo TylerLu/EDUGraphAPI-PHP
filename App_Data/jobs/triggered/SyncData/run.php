@@ -21,6 +21,7 @@ foreach ($organizations as $org)
      foreach ($users as $user) {
           $dbHelper->updateUser($user);
      }
+     $dbHelper->updateDatasyncRecorderDeltaLink($org,$deltaLink);
 }
 
 error_log('Succeed!');

@@ -4,7 +4,6 @@
  *  See LICENSE in the project root for license information.
  */
 
-
 class MSGraphHelper
 {
     public  $certPath = null;
@@ -14,10 +13,9 @@ class MSGraphHelper
     {
         $this->certPath = getenv("Cert_Path");;
         $this->certPassword = getenv("Cert_password");
-
     }
 
-    public  function queryUsers($url,$tenantId,$clientId)
+    public function queryUsers($url,$tenantId,$clientId)
     {
         $accessToken  =$this->getAccessToken($tenantId,$clientId);
         $nextLink = $url;
@@ -90,7 +88,7 @@ class MSGraphHelper
         return $users;
     }
 
-    public   function getAccessToken($tenantId,$clientId)
+    public function getAccessToken($tenantId,$clientId)
     {
         $jwt = $this->getJWT($tenantId,$clientId);
 

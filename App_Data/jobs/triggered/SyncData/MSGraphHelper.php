@@ -19,6 +19,7 @@ class MSGraphHelper
     {
         $accessToken  =$this->getAccessToken($tenantId,$clientId);
         $nextLink = $url;
+        $deltaLink='';
         $users = array();
 
         $request_headers   = array();
@@ -81,11 +82,14 @@ class MSGraphHelper
             }
             else
             {
+                if(isset($json_a["@odata.deltaLink"])){
+                    $deltaLink = $json_a["@odata.deltaLink"];    
+                } 
                 break;
             }
         }
         error_log("Get  ".count($users)." users.");
-        return $users;
+        return array($users,$deltaLink);
     }
 
     public function getAccessToken($tenantId,$clientId)

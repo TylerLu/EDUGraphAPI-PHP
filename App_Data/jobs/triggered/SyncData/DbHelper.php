@@ -11,7 +11,6 @@ class DBHelper {
     public function __construct() {
     }
 
-
     public function getOrganizations()
     {
         $orgs = SyncData\Organization::where('isAdminConsented', 1)->get();
@@ -60,6 +59,5 @@ class DBHelper {
            }
         }
         return;
-
     }
 }

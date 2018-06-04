@@ -129,7 +129,7 @@ Export-PfxCertificate -Cert $cert -Password $password -FilePath c:\app_only_cert
 
 4. Input a **Name**, and select **Web app / API** as **Application Type**.
 
-   Input **Sign-on URL**: http://localhost. 
+   Input **Sign-on URL**: http://localhost/*. 
 
    ![](Images/aad-create-app-02.png)
 

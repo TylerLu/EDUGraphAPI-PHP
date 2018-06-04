@@ -298,7 +298,7 @@ Follow the steps below to run this sample on a windows server:
 
    ![](Images/azure-web-app.png)
 
-   Copy the URL aside and change the schema to **https**. This is the replay URL and will be used in next step.
+   Copy the URL aside, then append `/*` . We get a new reply URL `https://edugraphapi.azurewebsites.net/*`.
 
 3. Navigate to the app registration in the new Azure portal, then open the setting windows.
 
@@ -306,7 +306,7 @@ Follow the steps below to run this sample on a windows server:
 
    ![](Images/aad-add-reply-url.png)
 
-   > Note: to debug the sample locally, make sure that http://localhost is in the reply URLs.
+   > Note: to debug the sample locally, make sure that http://localhost/* is in the reply URLs.
 
 4. Click **SAVE**.
 

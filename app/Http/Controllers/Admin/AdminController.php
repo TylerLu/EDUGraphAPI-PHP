@@ -103,10 +103,12 @@ class AdminController extends Controller
      */
     public function adminConsent()
     {
+        $user = Auth::user();
         $redirectUrl = 'http' . (empty($_SERVER['HTTPS']) ? '' : 's') . '://' . $_SERVER['HTTP_HOST'] . '/admin/processcode';
         $state = uniqid();
         $_SESSION[SiteConstants::Session_State] = $state;
         $url = $this->adminService->getConsentUrl($state, $redirectUrl);
+        $url = $this->AddNewParameter($url,'login_hint',$user->email);
         header('Location: ' . $url);
         exit();
     }
@@ -198,5 +200,14 @@ class AdminController extends Controller
         $message = 'Login cache cleared successfully!';
         header('Location: ' . '/admin?successMsg=' . $message);
         exit();
+    }
+
+    private function AddNewParameter($url,$parameter,$value)
+    {
+        if (strpos($url, '?') > 0) {
+            return $url . '&' . $parameter .'=' . $value;
+        } else {
+            return $url = $url . '?' . $parameter .'=' . $value;
+        }
     }
 }

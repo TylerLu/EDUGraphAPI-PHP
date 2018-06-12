@@ -52,7 +52,7 @@ class DBHelper {
         $result = SyncData\User::where('o365UserId',$user->id)->first();
         if(!isset($result))
         {
-            //Note: for real-world projects, you may need to add users to the database.
+            // Note: for real-world projects, you may need to add users to the database.
             error_log("Skipping updating user ".$user->id." who does not exist in the local database.");
              return;
         }

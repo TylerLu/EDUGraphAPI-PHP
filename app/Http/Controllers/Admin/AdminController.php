@@ -108,7 +108,8 @@ class AdminController extends Controller
         $state = uniqid();
         $_SESSION[SiteConstants::Session_State] = $state;
         $url = $this->adminService->getConsentUrl($state, $redirectUrl);
-        $url = $this->AddNewParameter($url,'login_hint',$user->email);
+        if(isset($user))
+            $url = $this->AddNewParameter($url,'login_hint',$user->email);
         header('Location: ' . $url);
         exit();
     }
